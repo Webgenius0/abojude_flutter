@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.abojude_flutter"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36 // Updated to meet plugin SDK requirements
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -19,8 +19,9 @@ android {
         applicationId = "com.example.abojude_flutter"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
+        // compileSdk moved to top-level; using top-level compileSdk=36
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 36 // Updated to match compileSdk
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
