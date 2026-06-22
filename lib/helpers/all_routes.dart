@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:abojude_flutter/features/home/presentation/home_screen.dart';
-import 'package:abojude_flutter/navigation_menu.dart';
 import 'package:abojude_flutter/welcome_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:abojude_flutter/features/auth/register/presentation/register_screen.dart';
 import 'package:abojude_flutter/features/auth/register/presentation/register_verify_screen.dart';
+import 'package:abojude_flutter/features/auth/login/presentation/login_screen.dart';
 import 'package:abojude_flutter/features/auth/register/presentation/select_location_screen.dart';
 
 final class Routes {
@@ -15,6 +15,10 @@ final class Routes {
   //---------------- Welcome Screen Start----------------
   static const String welcomeScreen = '/welcomeScreen';
   //---------------- Welcome Screen End----------------
+
+  //---------------- Login Screen Start----------------
+  static const String loginScreen = '/loginScreen';
+  //---------------- Login Screen End----------------
 
   //---------------- Register Screen Start----------------
   static const String registerScreen = '/registerScreen';
@@ -78,10 +82,13 @@ final class RouteGenerator {
             : CupertinoPageRoute(builder: (context) => WelcomeScreen());
 
       // ----------- Auth Routes start-----------
-      // case Routes.logInScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(widget: LoginScreen(), settings: settings)
-      //       : CupertinoPageRoute(builder: (context) => LoginScreen());
+      case Routes.loginScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const LoginScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const LoginScreen());
 
       case Routes.homeScreen:
         return Platform.isAndroid
