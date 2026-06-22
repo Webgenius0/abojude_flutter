@@ -3,9 +3,7 @@ import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'features/home/presentation/home_screen.dart';
 import 'features/home/presentation/journal_screen.dart';
 import 'features/insights/presentation/insights_screen.dart';

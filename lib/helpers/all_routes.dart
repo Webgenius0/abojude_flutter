@@ -1,7 +1,11 @@
 import 'dart:io';
+import 'package:abojude_flutter/features/home/presentation/home_screen.dart';
+import 'package:abojude_flutter/navigation_menu.dart';
 import 'package:abojude_flutter/welcome_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:abojude_flutter/features/auth/register/presentation/register_screen.dart';
+import 'package:abojude_flutter/features/auth/register/presentation/register_verify_screen.dart';
+import 'package:abojude_flutter/features/auth/register/presentation/select_location_screen.dart';
 
 final class Routes {
   static final Routes _routes = Routes._internal();
@@ -14,6 +18,10 @@ final class Routes {
 
   //---------------- Register Screen Start----------------
   static const String registerScreen = '/registerScreen';
+  static const String registerVerifyScreen = '/registerVerifyScreen';
+  static const String selectLocationScreen = '/selectLocationScreen';
+  static const String homeScreen = '/homeScreen';
+
   // --------------- Register Screen End---------------
 
   // static const String navigationMenu = '/navigationMenu';
@@ -75,13 +83,13 @@ final class RouteGenerator {
       //       ? _FadedTransitionRoute(widget: LoginScreen(), settings: settings)
       //       : CupertinoPageRoute(builder: (context) => LoginScreen());
 
-      // case Routes.navigationMenu:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const NavigationMenu(),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(builder: (context) => const NavigationMenu());
+      case Routes.homeScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const HomeScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const HomeScreen());
 
       // case Routes.newDrimeEnterScreen:
       //   return Platform.isAndroid
@@ -119,15 +127,25 @@ final class RouteGenerator {
               )
             : CupertinoPageRoute(builder: (context) => const RegisterScreen());
 
-      // case Routes.registerVerifyScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const RegisterVerifyScreen(),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(
-      //           builder: (context) => const RegisterVerifyScreen(),
-      //         );
+      case Routes.registerVerifyScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const RegisterVerifyScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const RegisterVerifyScreen(),
+              );
+
+      case Routes.selectLocationScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const SelectLocationScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const SelectLocationScreen(),
+              );
 
       // case Routes.forgetPasswordScreen:
       //   return Platform.isAndroid
