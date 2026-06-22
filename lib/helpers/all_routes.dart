@@ -1,11 +1,14 @@
 import 'dart:io';
+import 'package:abojude_flutter/features/auth/forget_password/presentation/forget_password_screen.dart';
+import 'package:abojude_flutter/features/auth/forget_password/presentation/forget_password_verify_otp_screen.dart';
+import 'package:abojude_flutter/features/auth/login/presentation/login_screen.dart';
+import 'package:abojude_flutter/features/auth/register/presentation/register_screen.dart';
+import 'package:abojude_flutter/features/auth/register/presentation/register_verify_screen.dart';
+import 'package:abojude_flutter/features/auth/register/presentation/select_location_screen.dart';
+import 'package:abojude_flutter/features/auth/set_new_password/presentation/set_new_password.dart';
 import 'package:abojude_flutter/features/home/presentation/home_screen.dart';
 import 'package:abojude_flutter/welcome_screen.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:abojude_flutter/features/auth/register/presentation/register_screen.dart';
-import 'package:abojude_flutter/features/auth/register/presentation/register_verify_screen.dart';
-import 'package:abojude_flutter/features/auth/login/presentation/login_screen.dart';
-import 'package:abojude_flutter/features/auth/register/presentation/select_location_screen.dart';
 
 final class Routes {
   static final Routes _routes = Routes._internal();
@@ -26,46 +29,11 @@ final class Routes {
   static const String selectLocationScreen = '/selectLocationScreen';
   static const String homeScreen = '/homeScreen';
 
-  // --------------- Register Screen End---------------
+  static const String forgetPasswordScreen = '/forgetPasswordScreen';
+  static const String forgetPasswordVerifyOtpScreen =
+      '/forgetPasswordVerifyOtpScreen';
+  static const String setNewPassword = '/setNewPassword';
 
-  // static const String navigationMenu = '/navigationMenu';
-
-  // static const String newDrimeEnterScreen = '/newDrimeEnterScreen';
-  // static const String interpretationScren = '/interpretationScren';
-
-  // static const String onboardingScreenOne = '/onboardingScreenOne';
-  // static const String onboardingScreenTwo = '/onboardingScreenTwo';
-  // static const String onboardingScreenThree = '/onboardingScreenThree';
-  // static const String chooseRoleScreen = '/chooseRoleScreen';
-  // static const String registerScreen = '/registerScreen';
-  // static const String registerVerifyScreen = '/registerVerifyScreen';
-  // static const String chooseRoleDemo = '/chooseRoleDemo';
-  // static const String orgAchievementsScreen = '/orgAchievementsScreen';
-  // static const String orgNotificationSettingScreen =
-  //     '/orgNotificationSettingScreen';
-  // static const String editProfileScreen = '/editProfileScreen';
-  // static const String orgChangePasswordScren = '/orgChangePasswordScren';
-  // static const String forgetPasswordScreen = '/forgetPasswordScreen';
-  // static const String forgetPasswordVerifyOtpScreen =
-  //     '/forgetPasswordVerifyOtpScreen';
-  // static const String setNewPassword = '/setNewPassword';
-  // static const String orgEmailSendScreen = '/orgEmailSendScreen';
-  // static const String orgPayoutScreen = '/orgPayoutScreen';
-  // static const String organiserProfileScreen = '/organiserProfileScreen';
-  // static const String allRecentEventsScreen = '/allRecentEventsScreen';
-  // static const String detailsAndPublishScreen = '/detailsAndPublishScreen';
-  // static const String createEventScreen = '/createEventScreen';
-  // static const String organizerCreateDetailsScreen =
-  //     '/organizerCreateDetailsScreen';
-  // static const String clubAllMemberScreen = '/clubAllMemberScreen';
-  // static const String joinPendingRequestScreen = '/joinPendingRequestScreen';
-  // static const String createClubBasicInfoScreen = '/createClubBasicInfoScreen';
-  // static const String productDetailsScreen = '/productDetailsScreen';
-  // static const String cartScreen = '/cartScreen';
-  // static const String favoritesListScreen = '/favoritesListScreen';
-  // static const String userNavigationMenu = '/userNavigationMenu';
-  // static const String notificationOrganizerScreen =
-  //     '/notificationOrganizerScreen';
 }
 
 final class RouteGenerator {
@@ -98,6 +66,54 @@ final class RouteGenerator {
               )
             : CupertinoPageRoute(builder: (context) => const HomeScreen());
 
+      case Routes.registerScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const RegisterScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const RegisterScreen());
+
+      case Routes.registerVerifyScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const RegisterVerifyScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const RegisterVerifyScreen());
+
+      case Routes.selectLocationScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const SelectLocationScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const SelectLocationScreen());
+
+      case Routes.forgetPasswordScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const ForgetPasswordScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const ForgetPasswordScreen());
+
+      case Routes.forgetPasswordVerifyOtpScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const ForgetPasswordVerifyOtpScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const ForgetPasswordVerifyOtpScreen());
+
+      case Routes.setNewPassword:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const SetNewPassword(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const SetNewPassword());
+
       // case Routes.newDrimeEnterScreen:
       //   return Platform.isAndroid
       //       ? _FadedTransitionRoute(
@@ -126,61 +142,7 @@ final class RouteGenerator {
       //         )
       //       : CupertinoPageRoute(builder: (context) => const NavigationMenu());
 
-      case Routes.registerScreen:
-        return Platform.isAndroid
-            ? _FadedTransitionRoute(
-                widget: const RegisterScreen(),
-                settings: settings,
-              )
-            : CupertinoPageRoute(builder: (context) => const RegisterScreen());
 
-      case Routes.registerVerifyScreen:
-        return Platform.isAndroid
-            ? _FadedTransitionRoute(
-                widget: const RegisterVerifyScreen(),
-                settings: settings,
-              )
-            : CupertinoPageRoute(
-                builder: (context) => const RegisterVerifyScreen(),
-              );
-
-      case Routes.selectLocationScreen:
-        return Platform.isAndroid
-            ? _FadedTransitionRoute(
-                widget: const SelectLocationScreen(),
-                settings: settings,
-              )
-            : CupertinoPageRoute(
-                builder: (context) => const SelectLocationScreen(),
-              );
-
-      // case Routes.forgetPasswordScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const ForgetPasswordScreen(),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(
-      //           builder: (context) => const ForgetPasswordScreen(),
-      //         );
-
-      // case Routes.forgetPasswordVerifyOtpScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const ForgetPasswordVerifyOtpScreen(),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(
-      //           builder: (context) => const ForgetPasswordVerifyOtpScreen(),
-      //         );
-
-      // case Routes.setNewPassword:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const SetNewPassword(),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(builder: (context) => const SetNewPassword());
 
       default:
         return null;

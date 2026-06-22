@@ -201,7 +201,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          // Action for forget password
+                          NavigationService.navigateTo(
+                            Routes.forgetPasswordScreen,
+                          );
                         },
                         child: Text(
                           'Forget password?',
