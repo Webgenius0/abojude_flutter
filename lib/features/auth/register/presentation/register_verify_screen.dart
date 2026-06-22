@@ -258,6 +258,8 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
     FocusNode? nextFocusNode,
     FocusNode? previousFocusNode,
   }) {
+    final bool isNotEmpty = controller.text.isNotEmpty;
+
     return SizedBox(
       width: 58.w,
       height: 58.w,
@@ -275,23 +277,31 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
         decoration: InputDecoration(
           counterText: '',
           filled: true,
-          fillColor: const Color(0xFFF9FAFB),
+          fillColor:
+              isNotEmpty ? const Color(0xFFEEF2F6) : const Color(0xFFF9FAFB),
           contentPadding: EdgeInsets.zero,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
             borderSide: BorderSide(
-              color: _hasError ? Colors.red : const Color(0xFFE5E7EB),
+              color:
+                  _hasError
+                      ? Colors.red
+                      : (isNotEmpty
+                          ? const Color(0xFF03045E)
+                          : const Color(0xFFE5E7EB)),
+              width: isNotEmpty ? 1.2 : 1.0,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
             borderSide: BorderSide(
-              color: _hasError ? Colors.red : const Color(0xFF03045E),
+              color: _hasError ? Colors.red : const Color(0xFF1F2937),
               width: 1.5,
             ),
           ),
         ),
         onChanged: (value) {
+          setState(() {});
           if (_hasError) {
             setState(() {
               _hasError = false;
