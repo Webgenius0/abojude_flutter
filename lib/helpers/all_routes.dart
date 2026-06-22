@@ -1,25 +1,20 @@
 import 'dart:io';
-import 'package:abojude_flutter/features/auth/forget_password/presentation/forget_password_screen.dart';
-import 'package:abojude_flutter/features/auth/forget_password/presentation/forget_password_verify_otp_screen.dart';
-import 'package:abojude_flutter/features/auth/register/presentation/register_screen.dart';
-import 'package:abojude_flutter/features/auth/register/presentation/register_verify_screen.dart';
-import 'package:abojude_flutter/features/auth/set_new_password/presentation/set_new_password.dart';
-import 'package:abojude_flutter/features/home/presentation/Interpretation_scren.dart';
-import 'package:abojude_flutter/features/home/presentation/new_drime_enter_screen.dart';
-import 'package:abojude_flutter/navigation_menu.dart';
 import 'package:abojude_flutter/welcome_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:abojude_flutter/features/auth/register/presentation/register_screen.dart';
 
 final class Routes {
   static final Routes _routes = Routes._internal();
   Routes._internal();
   static Routes get instance => _routes;
 
-  //---------------- Welcome Screen----------------
+  //---------------- Welcome Screen Start----------------
   static const String welcomeScreen = '/welcomeScreen';
-  //---------------- Auth Routes Start---------------
-  // static const String logInScreen = '/logInScreen';
-  // --------------- Auth Routes End---------------
+  //---------------- Welcome Screen End----------------
+
+  //---------------- Register Screen Start----------------
+  static const String registerScreen = '/registerScreen';
+  // --------------- Register Screen End---------------
 
   // static const String navigationMenu = '/navigationMenu';
 
@@ -68,13 +63,11 @@ final class RouteGenerator {
 
   static Route<dynamic>? generateRoute(RouteSettings settings) {
     switch (settings.name) {
-
-         // ----------- Welcome Routes start-----------
+      // ----------- Welcome Routes start-----------
       case Routes.welcomeScreen:
         return Platform.isAndroid
             ? _FadedTransitionRoute(widget: WelcomeScreen(), settings: settings)
             : CupertinoPageRoute(builder: (context) => WelcomeScreen());
-
 
       // ----------- Auth Routes start-----------
       // case Routes.logInScreen:
@@ -118,13 +111,13 @@ final class RouteGenerator {
       //         )
       //       : CupertinoPageRoute(builder: (context) => const NavigationMenu());
 
-      // case Routes.registerScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const RegisterScreen(),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(builder: (context) => const RegisterScreen());
+      case Routes.registerScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const RegisterScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const RegisterScreen());
 
       // case Routes.registerVerifyScreen:
       //   return Platform.isAndroid
