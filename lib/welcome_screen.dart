@@ -244,7 +244,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        // NavigationService.navigateTo(Routes.registerScreen); // Temporary fallback to register
+                        NavigationService.navigateTo(Routes.loginScreen);
                       },
                       child: Text(
                         'Sign In',
