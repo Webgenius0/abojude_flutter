@@ -7,54 +7,58 @@ import 'package:abojude_flutter/features/auth/set_new_password/presentation/set_
 import 'package:abojude_flutter/features/home/presentation/Interpretation_scren.dart';
 import 'package:abojude_flutter/features/home/presentation/new_drime_enter_screen.dart';
 import 'package:abojude_flutter/navigation_menu.dart';
+import 'package:abojude_flutter/welcome_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 final class Routes {
   static final Routes _routes = Routes._internal();
   Routes._internal();
   static Routes get instance => _routes;
-  // --------------- Auth Routes Start---------------
-  static const String logInScreen = '/logInScreen';
+
+  //---------------- Welcome Screen----------------
+  static const String welcomeScreen = '/welcomeScreen';
+  //---------------- Auth Routes Start---------------
+  // static const String logInScreen = '/logInScreen';
   // --------------- Auth Routes End---------------
 
-  static const String navigationMenu = '/navigationMenu';
+  // static const String navigationMenu = '/navigationMenu';
 
-  static const String newDrimeEnterScreen = '/newDrimeEnterScreen';
-  static const String interpretationScren = '/interpretationScren';
+  // static const String newDrimeEnterScreen = '/newDrimeEnterScreen';
+  // static const String interpretationScren = '/interpretationScren';
 
-  static const String onboardingScreenOne = '/onboardingScreenOne';
-  static const String onboardingScreenTwo = '/onboardingScreenTwo';
-  static const String onboardingScreenThree = '/onboardingScreenThree';
-  static const String chooseRoleScreen = '/chooseRoleScreen';
-  static const String registerScreen = '/registerScreen';
-  static const String registerVerifyScreen = '/registerVerifyScreen';
-  static const String chooseRoleDemo = '/chooseRoleDemo';
-  static const String orgAchievementsScreen = '/orgAchievementsScreen';
-  static const String orgNotificationSettingScreen =
-      '/orgNotificationSettingScreen';
-  static const String editProfileScreen = '/editProfileScreen';
-  static const String orgChangePasswordScren = '/orgChangePasswordScren';
-  static const String forgetPasswordScreen = '/forgetPasswordScreen';
-  static const String forgetPasswordVerifyOtpScreen =
-      '/forgetPasswordVerifyOtpScreen';
-  static const String setNewPassword = '/setNewPassword';
-  static const String orgEmailSendScreen = '/orgEmailSendScreen';
-  static const String orgPayoutScreen = '/orgPayoutScreen';
-  static const String organiserProfileScreen = '/organiserProfileScreen';
-  static const String allRecentEventsScreen = '/allRecentEventsScreen';
-  static const String detailsAndPublishScreen = '/detailsAndPublishScreen';
-  static const String createEventScreen = '/createEventScreen';
-  static const String organizerCreateDetailsScreen =
-      '/organizerCreateDetailsScreen';
-  static const String clubAllMemberScreen = '/clubAllMemberScreen';
-  static const String joinPendingRequestScreen = '/joinPendingRequestScreen';
-  static const String createClubBasicInfoScreen = '/createClubBasicInfoScreen';
-  static const String productDetailsScreen = '/productDetailsScreen';
-  static const String cartScreen = '/cartScreen';
-  static const String favoritesListScreen = '/favoritesListScreen';
-  static const String userNavigationMenu = '/userNavigationMenu';
-  static const String notificationOrganizerScreen =
-      '/notificationOrganizerScreen';
+  // static const String onboardingScreenOne = '/onboardingScreenOne';
+  // static const String onboardingScreenTwo = '/onboardingScreenTwo';
+  // static const String onboardingScreenThree = '/onboardingScreenThree';
+  // static const String chooseRoleScreen = '/chooseRoleScreen';
+  // static const String registerScreen = '/registerScreen';
+  // static const String registerVerifyScreen = '/registerVerifyScreen';
+  // static const String chooseRoleDemo = '/chooseRoleDemo';
+  // static const String orgAchievementsScreen = '/orgAchievementsScreen';
+  // static const String orgNotificationSettingScreen =
+  //     '/orgNotificationSettingScreen';
+  // static const String editProfileScreen = '/editProfileScreen';
+  // static const String orgChangePasswordScren = '/orgChangePasswordScren';
+  // static const String forgetPasswordScreen = '/forgetPasswordScreen';
+  // static const String forgetPasswordVerifyOtpScreen =
+  //     '/forgetPasswordVerifyOtpScreen';
+  // static const String setNewPassword = '/setNewPassword';
+  // static const String orgEmailSendScreen = '/orgEmailSendScreen';
+  // static const String orgPayoutScreen = '/orgPayoutScreen';
+  // static const String organiserProfileScreen = '/organiserProfileScreen';
+  // static const String allRecentEventsScreen = '/allRecentEventsScreen';
+  // static const String detailsAndPublishScreen = '/detailsAndPublishScreen';
+  // static const String createEventScreen = '/createEventScreen';
+  // static const String organizerCreateDetailsScreen =
+  //     '/organizerCreateDetailsScreen';
+  // static const String clubAllMemberScreen = '/clubAllMemberScreen';
+  // static const String joinPendingRequestScreen = '/joinPendingRequestScreen';
+  // static const String createClubBasicInfoScreen = '/createClubBasicInfoScreen';
+  // static const String productDetailsScreen = '/productDetailsScreen';
+  // static const String cartScreen = '/cartScreen';
+  // static const String favoritesListScreen = '/favoritesListScreen';
+  // static const String userNavigationMenu = '/userNavigationMenu';
+  // static const String notificationOrganizerScreen =
+  //     '/notificationOrganizerScreen';
 }
 
 final class RouteGenerator {
@@ -64,93 +68,101 @@ final class RouteGenerator {
 
   static Route<dynamic>? generateRoute(RouteSettings settings) {
     switch (settings.name) {
+
+         // ----------- Welcome Routes start-----------
+      case Routes.welcomeScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(widget: WelcomeScreen(), settings: settings)
+            : CupertinoPageRoute(builder: (context) => WelcomeScreen());
+
+
       // ----------- Auth Routes start-----------
       // case Routes.logInScreen:
       //   return Platform.isAndroid
       //       ? _FadedTransitionRoute(widget: LoginScreen(), settings: settings)
       //       : CupertinoPageRoute(builder: (context) => LoginScreen());
 
-      case Routes.navigationMenu:
-        return Platform.isAndroid
-            ? _FadedTransitionRoute(
-                widget: const NavigationMenu(),
-                settings: settings,
-              )
-            : CupertinoPageRoute(builder: (context) => const NavigationMenu());
+      // case Routes.navigationMenu:
+      //   return Platform.isAndroid
+      //       ? _FadedTransitionRoute(
+      //           widget: const NavigationMenu(),
+      //           settings: settings,
+      //         )
+      //       : CupertinoPageRoute(builder: (context) => const NavigationMenu());
 
-      case Routes.newDrimeEnterScreen:
-        return Platform.isAndroid
-            ? _FadedTransitionRoute(
-                widget: const NewDrimeEnterScreen(),
-                settings: settings,
-              )
-            : CupertinoPageRoute(
-                builder: (context) => const NewDrimeEnterScreen(),
-              );
+      // case Routes.newDrimeEnterScreen:
+      //   return Platform.isAndroid
+      //       ? _FadedTransitionRoute(
+      //           widget: const NewDrimeEnterScreen(),
+      //           settings: settings,
+      //         )
+      //       : CupertinoPageRoute(
+      //           builder: (context) => const NewDrimeEnterScreen(),
+      //         );
 
-      case Routes.interpretationScren:
-        return Platform.isAndroid
-            ? _FadedTransitionRoute(
-                widget: const InterpretationScren(),
-                settings: settings,
-              )
-            : CupertinoPageRoute(
-                builder: (context) => const InterpretationScren(),
-              );
+      // case Routes.interpretationScren:
+      //   return Platform.isAndroid
+      //       ? _FadedTransitionRoute(
+      //           widget: const InterpretationScren(),
+      //           settings: settings,
+      //         )
+      //       : CupertinoPageRoute(
+      //           builder: (context) => const InterpretationScren(),
+      //         );
 
-      case Routes.userNavigationMenu:
-        return Platform.isAndroid
-            ? _FadedTransitionRoute(
-                widget: const NavigationMenu(),
-                settings: settings,
-              )
-            : CupertinoPageRoute(builder: (context) => const NavigationMenu());
+      // case Routes.userNavigationMenu:
+      //   return Platform.isAndroid
+      //       ? _FadedTransitionRoute(
+      //           widget: const NavigationMenu(),
+      //           settings: settings,
+      //         )
+      //       : CupertinoPageRoute(builder: (context) => const NavigationMenu());
 
-      case Routes.registerScreen:
-        return Platform.isAndroid
-            ? _FadedTransitionRoute(
-                widget: const RegisterScreen(),
-                settings: settings,
-              )
-            : CupertinoPageRoute(builder: (context) => const RegisterScreen());
+      // case Routes.registerScreen:
+      //   return Platform.isAndroid
+      //       ? _FadedTransitionRoute(
+      //           widget: const RegisterScreen(),
+      //           settings: settings,
+      //         )
+      //       : CupertinoPageRoute(builder: (context) => const RegisterScreen());
 
-      case Routes.registerVerifyScreen:
-        return Platform.isAndroid
-            ? _FadedTransitionRoute(
-                widget: const RegisterVerifyScreen(),
-                settings: settings,
-              )
-            : CupertinoPageRoute(
-                builder: (context) => const RegisterVerifyScreen(),
-              );
+      // case Routes.registerVerifyScreen:
+      //   return Platform.isAndroid
+      //       ? _FadedTransitionRoute(
+      //           widget: const RegisterVerifyScreen(),
+      //           settings: settings,
+      //         )
+      //       : CupertinoPageRoute(
+      //           builder: (context) => const RegisterVerifyScreen(),
+      //         );
 
-      case Routes.forgetPasswordScreen:
-        return Platform.isAndroid
-            ? _FadedTransitionRoute(
-                widget: const ForgetPasswordScreen(),
-                settings: settings,
-              )
-            : CupertinoPageRoute(
-                builder: (context) => const ForgetPasswordScreen(),
-              );
+      // case Routes.forgetPasswordScreen:
+      //   return Platform.isAndroid
+      //       ? _FadedTransitionRoute(
+      //           widget: const ForgetPasswordScreen(),
+      //           settings: settings,
+      //         )
+      //       : CupertinoPageRoute(
+      //           builder: (context) => const ForgetPasswordScreen(),
+      //         );
 
-      case Routes.forgetPasswordVerifyOtpScreen:
-        return Platform.isAndroid
-            ? _FadedTransitionRoute(
-                widget: const ForgetPasswordVerifyOtpScreen(),
-                settings: settings,
-              )
-            : CupertinoPageRoute(
-                builder: (context) => const ForgetPasswordVerifyOtpScreen(),
-              );
+      // case Routes.forgetPasswordVerifyOtpScreen:
+      //   return Platform.isAndroid
+      //       ? _FadedTransitionRoute(
+      //           widget: const ForgetPasswordVerifyOtpScreen(),
+      //           settings: settings,
+      //         )
+      //       : CupertinoPageRoute(
+      //           builder: (context) => const ForgetPasswordVerifyOtpScreen(),
+      //         );
 
-      case Routes.setNewPassword:
-        return Platform.isAndroid
-            ? _FadedTransitionRoute(
-                widget: const SetNewPassword(),
-                settings: settings,
-              )
-            : CupertinoPageRoute(builder: (context) => const SetNewPassword());
+      // case Routes.setNewPassword:
+      //   return Platform.isAndroid
+      //       ? _FadedTransitionRoute(
+      //           widget: const SetNewPassword(),
+      //           settings: settings,
+      //         )
+      //       : CupertinoPageRoute(builder: (context) => const SetNewPassword());
 
       default:
         return null;
