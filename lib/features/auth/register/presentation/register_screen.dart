@@ -1,3 +1,5 @@
+import 'package:abojude_flutter/helpers/all_routes.dart';
+import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -200,7 +202,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   GestureDetector(
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                        // Action for creating account
+                        NavigationService.navigateTo(
+                          Routes.registerVerifyScreen,
+                          arguments: _emailController.text,
+                        );
                       }
                     },
                     child: Container(
