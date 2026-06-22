@@ -1,4 +1,3 @@
-
 import 'package:abojude_flutter/assets_helper/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,7 +11,7 @@ class CustomLogoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      AppImages.logo_with_color,
+      AppImages.logo,
       height: height ?? 78.h,
       width: width ?? 58.5.w,
     );
