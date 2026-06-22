@@ -1,3 +1,4 @@
+import 'package:abojude_flutter/common_widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -140,8 +141,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 SizedBox(height: 24.h),
 
                 // --------------- Social Login Buttons ---------------
-                _buildCustomButton(
-                  text: 'Continue with Google',
+                CustomButton(
                   icon: SvgPicture.asset(
                     'assets/icons/google.svg',
                     width: 22.w,
@@ -151,9 +151,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     // Google Auth Action
                   },
                   border: Border.all(color: const Color(0xFFE5E7EB)),
+                  text: 'Continue with Google',
                 ),
-
-                _buildCustomButton(
+                SizedBox(height: 14.h),
+                CustomButton(
                   text: 'Continue with Apple',
                   icon: SvgPicture.asset(
                     'assets/icons/apple.svg',
@@ -165,8 +166,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   },
                   border: Border.all(color: const Color(0xFFE5E7EB)),
                 ),
+                SizedBox(height: 14.h),
 
-                _buildCustomButton(
+                CustomButton(
                   text: 'Continue as Guest',
                   backgroundColor: const Color(0xFFF3F4F6),
                   icon: SvgPicture.asset(
@@ -210,7 +212,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
 
                 // --------------- Sign Up Button ---------------
-                _buildCustomButton(
+                CustomButton(
                   text: 'Sign Up with Email',
                   backgroundColor: const Color(0xFF03045E),
                   textColor: Colors.white,
@@ -288,43 +290,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildCustomButton({
-    required String text,
-    required Widget icon,
-    required VoidCallback onTap,
-    Color? backgroundColor,
-    Color? textColor,
-    Border? border,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 52.h,
-        margin: EdgeInsets.symmetric(vertical: 6.h),
-        decoration: BoxDecoration(
-          color: backgroundColor ?? Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
-          border: border,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            icon,
-            SizedBox(width: 12.w),
-            Text(
-              text,
-              style: GoogleFonts.inter(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-                color: textColor ?? const Color(0xFF1F2937),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
