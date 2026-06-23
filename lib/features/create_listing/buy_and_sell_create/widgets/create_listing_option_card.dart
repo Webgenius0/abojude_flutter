@@ -27,10 +27,7 @@ class CreateListingOptionCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(
-            color: const Color(0xFFF3F4F6),
-            width: 1.5,
-          ),
+          border: Border.all(color: const Color(0xFFF3F4F6), width: 1.5),
           boxShadow: const [
             BoxShadow(
               color: Color(0x04000000), // black with 0.015 opacity (4/255)
@@ -54,7 +51,7 @@ class CreateListingOptionCard extends StatelessWidget {
                   iconPath,
                   width: 24.w,
                   height: 24.w,
-                  colorFilter: const ColorFilter.mode(
+                  colorFilter: ColorFilter.mode(
                     Color(0xFF1D3B71),
                     BlendMode.srcIn,
                   ),
@@ -67,10 +64,7 @@ class CreateListingOptionCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: TextFontStyle.textStyle16IbmPlexSansW600,
-                  ),
+                  Text(title, style: TextFontStyle.textStyle16IbmPlexSansW600),
                   SizedBox(height: 4.h),
                   Text(
                     subtitle,

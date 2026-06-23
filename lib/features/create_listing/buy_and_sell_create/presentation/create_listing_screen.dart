@@ -1,6 +1,6 @@
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
-import 'package:abojude_flutter/assets_helper/app_images.dart';
+import 'package:abojude_flutter/assets_helper/app_icons.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/create_listing_option_card.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
@@ -18,9 +18,9 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColor.cFFFFFF,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColor.cFFFFFF,
         elevation: 0,
         leading: Navigator.canPop(context)
             ? IconButton(
@@ -49,12 +49,14 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
               // Subtitle
               Text(
                 "Choose the type of listing you would like to create.",
-                style: TextFontStyle.textStyle14IbmPlexSansW400,
+                style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
+                  fontSize: 18.sp,
+                ),
               ),
               SizedBox(height: 28.h),
               // Option Cards
               CreateListingOptionCard(
-                iconPath: AppImages.buy_sell,
+                iconPath: AppIcons.bag,
                 title: "Buy & Sell",
                 subtitle: "List items for sale or trade",
                 onTap: () {
@@ -62,27 +64,27 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
                 },
               ),
               CreateListingOptionCard(
-                iconPath: AppImages.job,
+                iconPath: AppIcons.job,
                 title: "Jobs",
                 subtitle: "Post a job opportunity",
                 onTap: () {
-                  debugPrint("Tapped Jobs");
+                  NavigationService.navigateTo(Routes.jobStep1Photos);
                 },
               ),
               CreateListingOptionCard(
-                iconPath: AppImages.business,
+                iconPath: AppIcons.business,
                 title: "Business Directory",
                 subtitle: "Add your business profile",
                 onTap: () {
-                  debugPrint("Tapped Business Directory");
+                  NavigationService.navigateTo(Routes.businessStep1Photos);
                 },
               ),
               CreateListingOptionCard(
-                iconPath: AppImages.service,
+                iconPath: AppIcons.service,
                 title: "Services",
                 subtitle: "Offer your professional services",
                 onTap: () {
-                  debugPrint("Tapped Services");
+                  NavigationService.navigateTo(Routes.serviceStep1Photos);
                 },
               ),
             ],

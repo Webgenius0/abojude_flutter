@@ -6,20 +6,20 @@ import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/helpers/toast.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
-import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/buy_sell_listing_model.dart';
-import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/buy_sell_step_header.dart';
-import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/buy_sell_button.dart';
+import 'package:abojude_flutter/features/create_listing/services_create/widgets/service_listing_model.dart';
+import 'package:abojude_flutter/features/create_listing/services_create/widgets/service_step_header.dart';
+import 'package:abojude_flutter/features/create_listing/services_create/widgets/service_button.dart';
 
-class BuySellStep1PhotosScreen extends StatefulWidget {
-  const BuySellStep1PhotosScreen({super.key});
+class ServiceStep1PhotosScreen extends StatefulWidget {
+  const ServiceStep1PhotosScreen({super.key});
 
   @override
-  State<BuySellStep1PhotosScreen> createState() =>
-      _BuySellStep1PhotosScreenState();
+  State<ServiceStep1PhotosScreen> createState() =>
+      _ServiceStep1PhotosScreenState();
 }
 
-class _BuySellStep1PhotosScreenState extends State<BuySellStep1PhotosScreen> {
-  final BuySellListingModel _model = BuySellListingModel();
+class _ServiceStep1PhotosScreenState extends State<ServiceStep1PhotosScreen> {
+  final ServiceListingModel _model = ServiceListingModel();
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
@@ -45,7 +45,7 @@ class _BuySellStep1PhotosScreenState extends State<BuySellStep1PhotosScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: BuySellStepHeader(currentStep: 1, title: "Photos"),
+      appBar: const ServiceStepHeader(currentStep: 1, title: "Photos"),
       body: SafeArea(
         child: Column(
           children: [
@@ -56,8 +56,11 @@ class _BuySellStep1PhotosScreenState extends State<BuySellStep1PhotosScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Add up to 5 photos on your product. The first photo will be the main thumbnail.",
-                      style: TextFontStyle.textStyle14IbmPlexSansW400,
+                      "Add up to 5 photos on your Service. The first photo will be the main thumbnail.",
+                      style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
+                        color: const Color(0xFF6B7280),
+                        height: 1.4,
+                      ),
                     ),
                     SizedBox(height: 24.h),
                     // Photo grid
@@ -177,7 +180,9 @@ class _BuySellStep1PhotosScreenState extends State<BuySellStep1PhotosScreen> {
                     SizedBox(height: 24.h),
                     Text(
                       "${_model.images.length} / 5 photos added",
-                      style: TextFontStyle.textStyle14IbmPlexSansW400,
+                      style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
+                        color: const Color(0xFF6B7280),
+                      ),
                     ),
                   ],
                 ),
@@ -186,7 +191,7 @@ class _BuySellStep1PhotosScreenState extends State<BuySellStep1PhotosScreen> {
             // Bottom Continue Button
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-              child: BuySellButton(
+              child: ServiceButton(
                 text: "Continue",
                 onTap: () {
                   if (_model.images.isEmpty) {
@@ -194,7 +199,7 @@ class _BuySellStep1PhotosScreenState extends State<BuySellStep1PhotosScreen> {
                     return;
                   }
                   NavigationService.navigateTo(
-                    Routes.buySellStep2Details,
+                    Routes.serviceStep2Info,
                     arguments: _model,
                   );
                 },
