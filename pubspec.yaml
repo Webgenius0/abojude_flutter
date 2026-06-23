@@ -73,6 +73,8 @@ dependencies:
   animated_bottom_navigation_bar: ^1.4.0
   # -------- Curved Bottom Navigation Bar --------
   curved_labeled_navigation_bar: ^2.0.6
+  share_plus: ^13.1.0
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

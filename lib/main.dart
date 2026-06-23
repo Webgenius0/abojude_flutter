@@ -1,4 +1,3 @@
-import 'package:abojude_flutter/splash_screen.dart';
 import 'package:auto_animated/auto_animated.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

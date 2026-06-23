@@ -1,8 +1,12 @@
-
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:abojude_flutter/features/explore_deatils_screen/buy_&_sell_screen.dart';
+import 'package:abojude_flutter/features/explore_deatils_screen/business_screen.dart';
+import 'package:abojude_flutter/features/explore_deatils_screen/job_screen.dart';
+import 'package:abojude_flutter/features/explore_deatils_screen/services_screen.dart';
+import 'package:abojude_flutter/features/home/presentation/product_details_screen.dart';
 
 import 'notificatosn_screen.dart';
 
@@ -15,7 +19,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentBannerIndex = 0;
-  final CarouselSliderController _carouselController = CarouselSliderController();
+  final CarouselSliderController _carouselController =
+      CarouselSliderController();
+
+  bool _showAllFeatured = false;
+  bool _showAllRecent = false;
 
   static const Color navyBlue = Color(0xFF1B2D6B);
   static const Color lightGreen = Color(0xFF4CAF50);
@@ -27,27 +35,60 @@ class _HomeScreenState extends State<HomeScreen> {
       'tag': 'TRUSTED SERVICES',
       'title': 'Find Trusted',
       'highlight': 'Services Near You',
-      'subtitle': 'From home repairs to cleaning, connect with reliable professionals for every need.',
-      'stats': ['Verified\nProfessionals', 'Quality\nService', 'Save Time\n& Effort', 'Satisfaction\nGuaranteed'],
-      'statIcons': [Icons.verified_user, Icons.star, Icons.access_time, Icons.thumb_up],
+      'subtitle':
+          'From home repairs to cleaning, connect with reliable professionals for every need.',
+      'stats': [
+        'Verified\nProfessionals',
+        'Quality\nService',
+        'Save Time\n& Effort',
+        'Satisfaction\nGuaranteed',
+      ],
+      'statIcons': [
+        Icons.verified_user,
+        Icons.star,
+        Icons.access_time,
+        Icons.thumb_up,
+      ],
       'bgColor': Color(0xFF1B4332),
     },
     {
       'tag': 'HOME REPAIRS',
       'title': 'Expert Repair',
       'highlight': 'At Your Doorstep',
-      'subtitle': 'Skilled technicians ready to fix plumbing, electrical, and more.',
-      'stats': ['Licensed\nExperts', 'Fast\nResponse', 'Affordable\nRates', '5-Star\nRatings'],
-      'statIcons': [Icons.construction, Icons.bolt, Icons.attach_money, Icons.grade],
+      'subtitle':
+          'Skilled technicians ready to fix plumbing, electrical, and more.',
+      'stats': [
+        'Licensed\nExperts',
+        'Fast\nResponse',
+        'Affordable\nRates',
+        '5-Star\nRatings',
+      ],
+      'statIcons': [
+        Icons.construction,
+        Icons.bolt,
+        Icons.attach_money,
+        Icons.grade,
+      ],
       'bgColor': Color(0xFF1A237E),
     },
     {
       'tag': 'CLEANING',
       'title': 'Spotless Homes',
       'highlight': 'Every Single Time',
-      'subtitle': 'Professional cleaning services for homes, offices, and commercial spaces.',
-      'stats': ['Eco\nFriendly', 'Deep\nClean', 'Flexible\nSchedule', '100%\nSafe'],
-      'statIcons': [Icons.eco, Icons.cleaning_services, Icons.calendar_month, Icons.security],
+      'subtitle':
+          'Professional cleaning services for homes, offices, and commercial spaces.',
+      'stats': [
+        'Eco\nFriendly',
+        'Deep\nClean',
+        'Flexible\nSchedule',
+        '100%\nSafe',
+      ],
+      'statIcons': [
+        Icons.eco,
+        Icons.cleaning_services,
+        Icons.calendar_month,
+        Icons.security,
+      ],
       'bgColor': Color(0xFF004D40),
     },
   ];
@@ -62,6 +103,8 @@ class _HomeScreenState extends State<HomeScreen> {
       'isFeatured': true,
       'hasPrice': true,
       'icon': Icons.phone_android,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500&auto=format&fit=crop&q=80',
     },
     {
       'price': '',
@@ -72,6 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
       'isFeatured': true,
       'hasPrice': false,
       'icon': Icons.person,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&auto=format&fit=crop&q=80',
     },
     {
       'price': '\$450',
@@ -82,6 +127,44 @@ class _HomeScreenState extends State<HomeScreen> {
       'isFeatured': true,
       'hasPrice': true,
       'icon': Icons.phone_iphone,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=500&auto=format&fit=crop&q=80',
+    },
+    {
+      'price': '',
+      'title': 'Professional Cleaning Services',
+      'category': 'Services',
+      'location': 'Toronto, Manitoba',
+      'time': '21 hours ago',
+      'isFeatured': true,
+      'hasPrice': false,
+      'icon': Icons.cleaning_services,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=500&auto=format&fit=crop&q=80',
+    },
+    {
+      'price': '\$800',
+      'title': 'Sony PlayStation 5 Slim Edition',
+      'category': 'Buy & Sell',
+      'location': 'Montreal, Quebec',
+      'time': '1 day ago',
+      'isFeatured': true,
+      'hasPrice': true,
+      'icon': Icons.sports_esports,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=500&auto=format&fit=crop&q=80',
+    },
+    {
+      'price': '',
+      'title': 'Software Developer Internship',
+      'category': 'Jobs',
+      'location': 'Ottawa, Ontario',
+      'time': '3 days ago',
+      'isFeatured': true,
+      'hasPrice': false,
+      'icon': Icons.code,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=500&auto=format&fit=crop&q=80',
     },
   ];
 
@@ -95,6 +178,8 @@ class _HomeScreenState extends State<HomeScreen> {
       'isFeatured': false,
       'hasPrice': true,
       'icon': Icons.phone_android,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500&auto=format&fit=crop&q=80',
     },
     {
       'price': '',
@@ -105,6 +190,8 @@ class _HomeScreenState extends State<HomeScreen> {
       'isFeatured': true,
       'hasPrice': false,
       'icon': Icons.storefront,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&auto=format&fit=crop&q=80',
     },
     {
       'price': '\$250',
@@ -115,6 +202,8 @@ class _HomeScreenState extends State<HomeScreen> {
       'isFeatured': false,
       'hasPrice': true,
       'icon': Icons.laptop_mac,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&auto=format&fit=crop&q=80',
     },
     {
       'price': '',
@@ -125,27 +214,53 @@ class _HomeScreenState extends State<HomeScreen> {
       'isFeatured': true,
       'hasPrice': false,
       'icon': Icons.storefront,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1607349913338-fca6f7fc42d0?w=500&auto=format&fit=crop&q=80',
+    },
+    {
+      'price': '\$35',
+      'title': 'Premium Ergonomic Office Chair',
+      'category': 'Buy & Sell',
+      'location': 'Edmonton, Alberta',
+      'time': '4 hours ago',
+      'isFeatured': false,
+      'hasPrice': true,
+      'icon': Icons.chair,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1505797149-43b0069ec26b?w=500&auto=format&fit=crop&q=80',
+    },
+    {
+      'price': '',
+      'title': 'Arabic Tutor for Children',
+      'category': 'Services',
+      'location': 'Halifax, Nova Scotia',
+      'time': '2 days ago',
+      'isFeatured': false,
+      'hasPrice': false,
+      'icon': Icons.school,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1577896851231-70ef18881754?w=500&auto=format&fit=crop&q=80',
     },
   ];
 
   final List<Map<String, dynamic>> _categoryList = [
     {
-      'icon': Icons.shopping_bag_outlined,
+      'iconPath': 'assets/icons/buySell.png',
       'label': 'Buy & Sell',
       'subtitle': 'Your Local Marketplace',
     },
     {
-      'icon': Icons.work_outline,
+      'iconPath': 'assets/icons/jobsIcon.png',
       'label': 'Jobs',
       'subtitle': 'Find your next career opportunity',
     },
     {
-      'icon': Icons.business_outlined,
+      'iconPath': 'assets/icons/buinesss.png',
       'label': 'Business Directory',
       'subtitle': 'Discover local businesses & service',
     },
     {
-      'icon': Icons.build_outlined,
+      'iconPath': 'assets/icons/scurity.png',
       'label': 'Services',
       'subtitle': 'Professional services near you',
     },
@@ -187,13 +302,15 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             children: [
               Container(
-                width: 36,
-                height: 36,
+                width: 36.w,
+                height: 36.h,
                 decoration: BoxDecoration(
-                  color: navyBlue,
-                  borderRadius: BorderRadius.circular(8),
+
+                  image: DecorationImage(image: AssetImage('assets/icons/Logos.png'),fit: BoxFit.contain),
+                  borderRadius: BorderRadius.circular(8.r),
+
                 ),
-                child: const Icon(Icons.handyman, color: Colors.white, size: 20),
+
               ),
               const SizedBox(width: 8),
               RichText(
@@ -202,7 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     TextSpan(
                       text: 'WASEL ',
                       style: TextStyle(
-                        color: lightGreen,
+                        color: Color(0xFF278738),
                         fontWeight: FontWeight.w900,
                         fontSize: 18,
                         letterSpacing: 0.5,
@@ -224,7 +341,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const Spacer(),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               Get.to(NotificationScreen());
             },
             child: Container(
@@ -241,7 +358,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              child:   Icon(Icons.notifications_outlined, color: navyBlue, size: 22),
+              child: Icon(
+                Icons.notifications_outlined,
+                color: navyBlue,
+                size: 22,
+              ),
             ),
           ),
         ],
@@ -259,7 +380,11 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(width: 4),
           Text(
             'Thompson, Manitoba',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black87),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
+            ),
           ),
           Icon(Icons.chevron_right, color: Colors.black54, size: 18),
         ],
@@ -296,7 +421,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: InputDecoration(
                       hintText: 'What are you looking for?',
                       hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
-                      prefixIcon: Icon(Icons.search, color: Colors.grey, size: 22),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.grey,
+                        size: 22,
+                      ),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(vertical: 15),
                     ),
@@ -327,7 +456,7 @@ class _HomeScreenState extends State<HomeScreen> {
         CarouselSlider(
           carouselController: _carouselController,
           options: CarouselOptions(
-            height: 200,
+            height: 215,
             viewportFraction: 0.92,
             autoPlay: true,
             autoPlayInterval: const Duration(seconds: 4),
@@ -344,7 +473,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
             _banners.length,
-                (index) => GestureDetector(
+            (index) => GestureDetector(
               onTap: () => _carouselController.animateToPage(index),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
@@ -352,7 +481,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: _currentBannerIndex == index ? 24 : 8,
                 height: 8,
                 decoration: BoxDecoration(
-                  color: _currentBannerIndex == index ? lightGreen : Colors.grey.shade300,
+                  color: _currentBannerIndex == index
+                      ? lightGreen
+                      : Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -397,12 +528,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: lightGreen.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(20),
@@ -428,16 +562,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 8),
                 Text(
                   banner['title'] as String,
-                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 Text(
                   banner['highlight'] as String,
-                  style: const TextStyle(color: lightGreen, fontSize: 18, fontWeight: FontWeight.w800),
+                  style: const TextStyle(
+                    color: lightGreen,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   banner['subtitle'] as String,
-                  style: TextStyle(color: Colors.white.withOpacity(0.75), fontSize: 10),
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.75),
+                    fontSize: 10,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -446,9 +591,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(
                     4,
-                        (i) => Column(
+                    (i) => Column(
                       children: [
-                        Icon((banner['statIcons'] as List<IconData>)[i], color: Colors.white, size: 16),
+                        Icon(
+                          (banner['statIcons'] as List<IconData>)[i],
+                          color: Colors.white,
+                          size: 16,
+                        ),
                         const SizedBox(height: 2),
                         Text(
                           (banner['stats'] as List<String>)[i],
@@ -472,20 +621,40 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // ─── Section Title ────────────────────────────────────────
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(
+    String title, {
+    VoidCallback? onTapSeeAll,
+    String seeAllText = 'See All',
+  }) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
       child: Row(
         children: [
           Text(
             title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black87),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Colors.black87,
+            ),
           ),
           const Spacer(),
-          const Text(
-            'See All',
-            style: TextStyle(fontSize: 13, color: navyBlue, fontWeight: FontWeight.w600),
-          ),
+          if (onTapSeeAll != null)
+            GestureDetector(
+              onTap: onTapSeeAll,
+              behavior: HitTestBehavior.opaque,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                child: Text(
+                  seeAllText,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: navyBlue,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -493,18 +662,30 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ─── Featured Listings ────────────────────────────────────
   Widget _buildFeaturedListings() {
+    final int count = _showAllFeatured
+        ? _featuredItems.length
+        : (_featuredItems.length > 3 ? 3 : _featuredItems.length);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('Featured Listings'),
+        _buildSectionTitle(
+          'Featured Listings',
+          seeAllText: _showAllFeatured ? 'See Less' : 'See All',
+          onTapSeeAll: () {
+            setState(() {
+              _showAllFeatured = !_showAllFeatured;
+            });
+          },
+        ),
         SizedBox(
           height: 230,
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
-            itemCount: _featuredItems.length,
+            itemCount: count,
             separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (context, index) => _buildListingCard(_featuredItems[index]),
+            itemBuilder: (context, index) =>
+                _buildListingCard(_featuredItems[index]),
           ),
         ),
       ],
@@ -512,137 +693,219 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildListingCard(Map<String, dynamic> item) {
-    return Container(
-      width: 165,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image area
-          Stack(
-            children: [
-              Container(
-                height: 110,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                ),
-                child: Center(
-                  child: Icon(
-                    item['icon'] as IconData,
-                    size: 48,
-                    color: Colors.grey.shade400,
-                  ),
-                ),
-              ),
-              if (item['isFeatured'] as bool)
-                Positioned(
-                  top: 8,
-                  left: 8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: accentYellow,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.star, color: Colors.white, size: 10),
-                        SizedBox(width: 3),
-                        Text(
-                          'Featured',
-                          style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              Positioned(
-                bottom: 8,
-                left: 8,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: Colors.black54,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    item['time'] as String,
-                    style: const TextStyle(color: Colors.white, fontSize: 9),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Container(
-                  width: 28,
-                  height: 28,
-                  decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                  child: const Icon(Icons.favorite_border, size: 16, color: Colors.grey),
-                ),
-              ),
-            ],
-          ),
-          // Info
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: () {
+        final category = item['category'] as String? ?? '';
+        if (category == 'Buy & Sell') {
+          Get.to(() => const ProductDetailsScreen());
+        } else if (category == 'Business') {
+          Get.to(() => const BusinessScreen());
+        } else if (category == 'Jobs') {
+          Get.to(() => const JobScreen());
+        } else if (category == 'Services') {
+          Get.to(() => const ServicesScreen());
+        }
+      },
+      child: Container(
+        width: 165,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image area
+            Stack(
               children: [
-                if (item['hasPrice'] as bool)
-                  Text(
-                    item['price'] as String,
-                    style: const TextStyle(color: navyBlue, fontWeight: FontWeight.w800, fontSize: 14),
-                  ),
-                Text(
-                  item['title'] as String,
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black87),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 6),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  height: 110,
+                  width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(6),
+                    color: Colors.grey.shade200,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(12),
+                    ),
                   ),
-                  child: Text(
-                    item['category'] as String,
-                    style: TextStyle(fontSize: 10, color: Colors.grey.shade700),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(12),
+                    ),
+                    child: item['imageUrl'] != null
+                        ? Image.network(
+                            item['imageUrl'] as String,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Center(
+                                child: Icon(
+                                  item['icon'] as IconData,
+                                  size: 48,
+                                  color: Colors.grey.shade400,
+                                ),
+                              );
+                            },
+                          )
+                        : Center(
+                            child: Icon(
+                              item['icon'] as IconData,
+                              size: 48,
+                              color: Colors.grey.shade400,
+                            ),
+                          ),
                   ),
                 ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    Icon(Icons.location_on_outlined, size: 12, color: Colors.grey.shade500),
-                    const SizedBox(width: 2),
-                    Expanded(
-                      child: Text(
-                        item['location'] as String,
-                        style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
-                        overflow: TextOverflow.ellipsis,
+                if (item['isFeatured'] as bool)
+                  Positioned(
+                    top: 8,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: accentYellow,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.star, color: Colors.white, size: 10),
+                          SizedBox(width: 3),
+                          Text(
+                            'Featured',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
+                Positioned(
+                  bottom: 8,
+                  left: 8,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      item['time'] as String,
+                      style: const TextStyle(color: Colors.white, fontSize: 9),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        item['isFavorite'] =
+                            !(item['isFavorite'] as bool? ?? false);
+                      });
+                    },
+                    child: Container(
+                      width: 28,
+                      height: 28,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        (item['isFavorite'] as bool? ?? false)
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        size: 16,
+                        color: (item['isFavorite'] as bool? ?? false)
+                            ? Colors.red
+                            : Colors.grey,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
+            // Info
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (item['hasPrice'] as bool)
+                    Text(
+                      item['price'] as String,
+                      style: const TextStyle(
+                        color: navyBlue,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 14,
+                      ),
+                    ),
+                  Text(
+                    item['title'] as String,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      item['category'] as String,
+                      style: TextStyle(fontSize: 10, color: Colors.grey.shade700),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on_outlined,
+                        size: 12,
+                        color: Colors.grey.shade500,
+                      ),
+                      const SizedBox(width: 2),
+                      Expanded(
+                        child: Text(
+                          item['location'] as String,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey.shade500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -661,49 +924,93 @@ class _HomeScreenState extends State<HomeScreen> {
           separatorBuilder: (_, __) => const SizedBox(height: 10),
           itemBuilder: (context, index) {
             final cat = _categoryList[index];
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 42,
-                    height: 42,
-                    decoration: BoxDecoration(
-                      color: navyBlue.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(10),
+
+            return GestureDetector(
+              onTap: () {
+                final label = cat['label'] as String;
+                if (label == 'Buy & Sell') {
+                  Get.to(() => const BuySellScreen());
+                } else if (label == 'Jobs') {
+                  Get.to(() => const JobScreen());
+                } else if (label == 'Business Directory') {
+                  Get.to(() => const BusinessScreen());
+                } else if (label == 'Services') {
+                  Get.to(() => const ServicesScreen());
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
                     ),
-                    child: Icon(cat['icon'] as IconData, color: navyBlue, size: 22),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          cat['label'] as String,
-                          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: Colors.black87),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    // Icon Container
+                    Container(
+                      width: 42,
+                      height: 42,
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: navyBlue.withOpacity(0.08),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Image.asset(
+                        cat['iconPath'] as String,
+                        color: navyBlue,
+                        width: 35.w,
+                        height: 35.h,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) => const Icon(
+                          Icons.shopping_bag_outlined,
+                          color: Colors.grey,
+                          size: 22,
                         ),
-                        const SizedBox(height: 2),
-                        Text(
-                          cat['subtitle'] as String,
-                          style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                  const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
-                ],
+
+                    const SizedBox(width: 14),
+
+                    // Text Content
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            cat['label'] as String,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            cat['subtitle'] as String,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Right Arrow
+                    const Icon(
+                      Icons.chevron_right,
+                      color: Colors.grey,
+                      size: 20,
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -714,22 +1021,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ─── Recent Listings ──────────────────────────────────────
   Widget _buildRecentListings() {
+    final int count = _showAllRecent
+        ? _recentItems.length
+        : (_recentItems.length > 3 ? 3 : _recentItems.length);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('Recent Listings'),
+        _buildSectionTitle(
+          'Recent Listings',
+          seeAllText: _showAllRecent ? 'See Less' : 'See All',
+          onTapSeeAll: () {
+            setState(() {
+              _showAllRecent = !_showAllRecent;
+            });
+          },
+        ),
         GridView.builder(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: _recentItems.length,
+          itemCount: count,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
             childAspectRatio: 0.75,
           ),
-          itemBuilder: (context, index) => _buildListingCard(_recentItems[index]),
+          itemBuilder: (context, index) =>
+              _buildListingCard(_recentItems[index]),
         ),
       ],
     );

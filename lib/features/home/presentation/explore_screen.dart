@@ -1,13 +1,17 @@
 import 'package:abojude_flutter/features/home/presentation/product_details_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:abojude_flutter/features/explore_deatils_screen/buy_&_sell_screen.dart';
+import 'package:abojude_flutter/features/explore_deatils_screen/business_screen.dart';
+import 'package:abojude_flutter/features/explore_deatils_screen/job_screen.dart';
+import 'package:abojude_flutter/features/explore_deatils_screen/services_screen.dart';
 
 import '../widget/filter_screeen.dart';
 
 
 // ─── Data Models ────────────────────────────────────────────────────────────
 
-enum ListingCategory { all, buyAndSell, jobs, businessDirectory }
+enum ListingCategory { all, buyAndSell, business, jobs, services }
 
 class Listing {
   final String id;
@@ -168,9 +172,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
               listing.category == 'Buy & Sell') ||
           (_selectedCategory == ListingCategory.jobs &&
               listing.category == 'Jobs') ||
-          (_selectedCategory == ListingCategory.businessDirectory &&
-              (listing.category == 'Business' ||
-                  listing.category == 'Services'));
+          (_selectedCategory == ListingCategory.business &&
+              listing.category == 'Business') ||
+          (_selectedCategory == ListingCategory.services &&
+              listing.category == 'Services');
 
       return matchesSearch && matchesCategory;
     }).toList();
@@ -304,8 +309,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
     final categories = [
       (ListingCategory.all, 'All'),
       (ListingCategory.buyAndSell, 'Buy & Sell'),
+      (ListingCategory.business, 'Business'),
       (ListingCategory.jobs, 'Jobs'),
-      (ListingCategory.businessDirectory, 'Business Directory'),
+      (ListingCategory.services, 'Services'),
     ];
 
     return SingleChildScrollView(
@@ -317,19 +323,17 @@ class _ExploreScreenState extends State<ExploreScreen> {
           return Padding(
             padding: const EdgeInsets.only(right: 8),
             child: GestureDetector(
-              onTap: () => _selectCategory(cat.$1),
+              onTap: () {
+                _selectCategory(cat.$1);   // Only keep category selection
+              },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color:
-                  isSelected ? const Color(0xFF1A56DB) : Colors.transparent,
+                  color: isSelected ? const Color(0xFF1A56DB) : Colors.transparent,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: isSelected
-                        ? const Color(0xFF1A56DB)
-                        : const Color(0xFFD1D5DB),
+                    color: isSelected ? const Color(0xFF1A56DB) : const Color(0xFFD1D5DB),
                   ),
                 ),
                 child: Text(
