@@ -4,6 +4,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'message_screeen_list.dart'; // import to access ChatMessage data model
+import 'package:google_fonts/google_fonts.dart';
+import '../home/presentation/report_screen.dart';
 
 // 1. Details Message Data Model
 class DetailsMessage {
@@ -378,10 +380,58 @@ class _MessageScreenState extends State<MessageScreen> {
                       shape: BoxShape.circle,
                       border: Border.all(color: const Color(0xFFF1F3F5), width: 1.5),
                     ),
-                    child: IconButton(
+                    child: PopupMenuButton<String>(
                       icon: const Icon(Icons.more_vert_rounded, color: Colors.black87, size: 20),
-                      onPressed: () {},
                       padding: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      color: Colors.white,
+                      surfaceTintColor: Colors.white,
+                      onSelected: (value) {
+                        if (value == 'report') {
+                          Get.to(() => ReportScreen(
+                            targetName: widget.chat.name,
+                            isReportUser: true,
+                          ));
+                        } else if (value == 'block') {
+                          _showBlockUserDialog(context);
+                        }
+                      },
+                      itemBuilder: (BuildContext context) => [
+                        PopupMenuItem<String>(
+                          value: 'report',
+                          child: Row(
+                            children: [
+                              const Icon(Icons.report_gmailerrorred_outlined, color: Colors.redAccent, size: 20),
+                              const SizedBox(width: 10),
+                              Text(
+                                'Report User',
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        PopupMenuItem<String>(
+                          value: 'block',
+                          child: Row(
+                            children: [
+                              const Icon(Icons.block_flipped, color: Colors.black54, size: 20),
+                              const SizedBox(width: 10),
+                              Text(
+                                'Block User',
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -843,5 +893,110 @@ class _MessageScreenState extends State<MessageScreen> {
         ],
       ),
     );
+  }
+
+  void _showBlockUserDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          contentPadding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 56,
+                height: 56,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFEF2F2),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.warning_amber_rounded,
+                  color: Color(0xFFDC2626),
+                  size: 28,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Block ${widget.chat.name}?',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  color: const Color(0xFF1F2937),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Are you sure you want to block ${widget.chat.name}? You will no longer receive messages or see listings from this user.',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+                  color: const Color(0xFF6B7280),
+                  height: 1.4,
+                ),
+              ),
+              const SizedBox(height: 24),
+              // Block Button
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFDC2626),
+                  minimumSize: const Size(double.infinity, 44),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  elevation: 0,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close dialog
+                  _performBlockUser();
+                },
+                child: Text(
+                  'Block User',
+                  style: GoogleFonts.inter(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              // Cancel Button
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Color(0xFFE5E7EB)),
+                  minimumSize: const Size(double.infinity, 44),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(
+                  'Cancel',
+                  style: GoogleFonts.inter(
+                    color: const Color(0xFF374151),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _performBlockUser() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          '${widget.chat.name} has been blocked successfully.',
+          style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: Colors.red[600],
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+    Get.back();
   }
 }

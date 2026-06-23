@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:abojude_flutter/features/home/presentation/report_screen.dart';
 
 class BusinessScreen extends StatefulWidget {
   const BusinessScreen({super.key});
@@ -81,9 +82,10 @@ class _BusinessScreenState extends State<BusinessScreen> {
           IconButton(
             icon: const Icon(Icons.outlined_flag, color: Colors.black54, size: 20),
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Listing reported successfully.')),
-              );
+              Get.to(() => const ReportScreen(
+                targetName: 'Halal Butcher Shop - Vancouver',
+                isReportUser: false,
+              ));
             },
           ),
         ],
