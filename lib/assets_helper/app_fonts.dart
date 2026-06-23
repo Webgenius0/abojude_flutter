@@ -1,4 +1,3 @@
-
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,10 +22,26 @@ class TextFontStyle {
     letterSpacing: 0,
   );
 
-  static final textStyle12UrbanistW600 = GoogleFonts.urbanist(
-    color: Colors.black,
-    fontSize: 12.sp,
-    fontWeight: FontWeight.w500,
+  static final textStyle22IbmPlexSansW600 = GoogleFonts.ibmPlexSans(
+    color: AppColor.c2E3227,
+    fontSize: 22.sp,
+    fontWeight: FontWeight.w600,
+    height: 1.5.h,
+    letterSpacing: 0,
+  );
+
+  static final textStyle16IbmPlexSansW600 = GoogleFonts.ibmPlexSans(
+    color: AppColor.c2E3227,
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w600,
+    height: 1.5.h,
+    letterSpacing: 0,
+  );
+
+  static final textStyle14IbmPlexSansW400 = GoogleFonts.ibmPlexSans(
+    color: AppColor.c797A7C,
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w400,
     height: 1.5.h,
     letterSpacing: 0,
   );
@@ -56,7 +71,7 @@ class TextFontStyle {
   );
   static final textStyle16InterW600 = GoogleFonts.inter(
     color: Colors.white,
-    fontSize: 16.sp, 
+    fontSize: 16.sp,
     fontWeight: FontWeight.w600,
   );
 

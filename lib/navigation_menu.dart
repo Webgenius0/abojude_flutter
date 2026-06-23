@@ -133,18 +133,13 @@
 //   }
 // }
 
-
-
+import 'package:abojude_flutter/helpers/all_routes.dart';
+import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:flutter/material.dart';
 
 import 'features/home/presentation/explore_screen.dart';
 import 'features/home/presentation/home_screen.dart';
 import 'features/message_screeen/message_screeen.dart';
-
-
-
-
-
 
 class NavigationMenu extends StatefulWidget {
   const NavigationMenu({super.key});
@@ -200,8 +195,16 @@ class _NavigationMenuState extends State<NavigationMenu> {
             // Center FAB — same line, no float
             _buildCenterFAB(),
 
-            _buildNavItem(index: 2, icon: Icons.chat_bubble_outline_rounded, label: 'Message'),
-            _buildNavItem(index: 3, icon: Icons.person_outline_rounded, label: 'Profile'),
+            _buildNavItem(
+              index: 2,
+              icon: Icons.chat_bubble_outline_rounded,
+              label: 'Message',
+            ),
+            _buildNavItem(
+              index: 3,
+              icon: Icons.person_outline_rounded,
+              label: 'Profile',
+            ),
           ],
         ),
       ),
@@ -210,7 +213,9 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
   Widget _buildCenterFAB() {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        NavigationService.navigateToReplacement(Routes.createListingScreen);
+      },
       child: Container(
         width: 56,
         height: 56,

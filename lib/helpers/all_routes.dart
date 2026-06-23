@@ -6,6 +6,15 @@ import 'package:abojude_flutter/features/auth/register/presentation/register_scr
 import 'package:abojude_flutter/features/auth/register/presentation/register_verify_screen.dart';
 import 'package:abojude_flutter/features/auth/register/presentation/select_location_screen.dart';
 import 'package:abojude_flutter/features/auth/set_new_password/presentation/set_new_password.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/presentation/create_listing_screen.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/buy_sell_listing_model.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/presentation/buy_sell_step1_photos_screen.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/presentation/buy_sell_step2_details_screen.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/presentation/buy_sell_step3_location_screen.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/presentation/buy_sell_step4_contact_screen.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/presentation/buy_sell_step5_review_screen.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/presentation/buy_sell_details_screen.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/presentation/buy_sell_success_screen.dart';
 import 'package:abojude_flutter/features/home/presentation/home_screen.dart';
 import 'package:abojude_flutter/welcome_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,7 +42,14 @@ final class Routes {
   static const String forgetPasswordVerifyOtpScreen =
       '/forgetPasswordVerifyOtpScreen';
   static const String setNewPassword = '/setNewPassword';
-
+  static const String createListingScreen = '/createListingScreen';
+  static const String buySellStep1Photos = '/buySellStep1Photos';
+  static const String buySellStep2Details = '/buySellStep2Details';
+  static const String buySellStep3Location = '/buySellStep3Location';
+  static const String buySellStep4Contact = '/buySellStep4Contact';
+  static const String buySellStep5Review = '/buySellStep5Review';
+  static const String buySellDetails = '/buySellDetails';
+  static const String buySellSuccess = '/buySellSuccess';
 }
 
 final class RouteGenerator {
@@ -80,7 +96,9 @@ final class RouteGenerator {
                 widget: const RegisterVerifyScreen(),
                 settings: settings,
               )
-            : CupertinoPageRoute(builder: (context) => const RegisterVerifyScreen());
+            : CupertinoPageRoute(
+                builder: (context) => const RegisterVerifyScreen(),
+              );
 
       case Routes.selectLocationScreen:
         return Platform.isAndroid
@@ -88,7 +106,9 @@ final class RouteGenerator {
                 widget: const SelectLocationScreen(),
                 settings: settings,
               )
-            : CupertinoPageRoute(builder: (context) => const SelectLocationScreen());
+            : CupertinoPageRoute(
+                builder: (context) => const SelectLocationScreen(),
+              );
 
       case Routes.forgetPasswordScreen:
         return Platform.isAndroid
@@ -96,7 +116,9 @@ final class RouteGenerator {
                 widget: const ForgetPasswordScreen(),
                 settings: settings,
               )
-            : CupertinoPageRoute(builder: (context) => const ForgetPasswordScreen());
+            : CupertinoPageRoute(
+                builder: (context) => const ForgetPasswordScreen(),
+              );
 
       case Routes.forgetPasswordVerifyOtpScreen:
         return Platform.isAndroid
@@ -104,7 +126,9 @@ final class RouteGenerator {
                 widget: const ForgetPasswordVerifyOtpScreen(),
                 settings: settings,
               )
-            : CupertinoPageRoute(builder: (context) => const ForgetPasswordVerifyOtpScreen());
+            : CupertinoPageRoute(
+                builder: (context) => const ForgetPasswordVerifyOtpScreen(),
+              );
 
       case Routes.setNewPassword:
         return Platform.isAndroid
@@ -114,15 +138,91 @@ final class RouteGenerator {
               )
             : CupertinoPageRoute(builder: (context) => const SetNewPassword());
 
-      // case Routes.newDrimeEnterScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const NewDrimeEnterScreen(),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(
-      //           builder: (context) => const NewDrimeEnterScreen(),
-      //         );
+      case Routes.createListingScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const CreateListingScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const CreateListingScreen(),
+              );
+
+      case Routes.buySellStep1Photos:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const BuySellStep1PhotosScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const BuySellStep1PhotosScreen(),
+              );
+
+      case Routes.buySellStep2Details:
+        final args = settings.arguments as BuySellListingModel;
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: BuySellStep2DetailsScreen(model: args),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => BuySellStep2DetailsScreen(model: args),
+              );
+
+      case Routes.buySellStep3Location:
+        final args = settings.arguments as BuySellListingModel;
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: BuySellStep3LocationScreen(model: args),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => BuySellStep3LocationScreen(model: args),
+              );
+
+      case Routes.buySellStep4Contact:
+        final args = settings.arguments as BuySellListingModel;
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: BuySellStep4ContactScreen(model: args),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => BuySellStep4ContactScreen(model: args),
+              );
+
+      case Routes.buySellStep5Review:
+        final args = settings.arguments as BuySellListingModel;
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: BuySellStep5ReviewScreen(model: args),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => BuySellStep5ReviewScreen(model: args),
+              );
+
+      case Routes.buySellDetails:
+        final args = settings.arguments as BuySellListingModel;
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: BuySellDetailsScreen(model: args),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => BuySellDetailsScreen(model: args),
+              );
+
+      case Routes.buySellSuccess:
+        final args = settings.arguments as BuySellListingModel;
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: BuySellSuccessScreen(model: args),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => BuySellSuccessScreen(model: args),
+              );
 
       // case Routes.interpretationScren:
       //   return Platform.isAndroid
@@ -141,8 +241,6 @@ final class RouteGenerator {
       //           settings: settings,
       //         )
       //       : CupertinoPageRoute(builder: (context) => const NavigationMenu());
-
-
 
       default:
         return null;
