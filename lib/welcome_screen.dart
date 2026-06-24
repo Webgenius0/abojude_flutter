@@ -125,7 +125,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
                 // --------------- Feature Rows ---------------
                 _buildFeatureRow(
-                  imagePath: AppIcons.buy_sell,
+                  imagePath: AppIcons.buySell,
                   text: 'Buy & Sell near you',
                 ),
                 _buildFeatureRow(

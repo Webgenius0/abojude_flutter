@@ -27,8 +27,9 @@ class AppIcons {
   static const String shopNew = '$iconsRoute/shopNew.svg';
   static const String favorite = '$iconsRoute/favorite.svg';
   static const String bag = '$iconsRoute/bag.svg';
-   static const String buy_sell = '$iconsRoute/buy_sell.svg';
+  static const String buySell = '$iconsRoute/buy_sell.svg'; 
   static const String job = '$iconsRoute/job.svg';
   static const String business = '$iconsRoute/business.svg';
   static const String service = '$iconsRoute/service.svg';
+  static const String newBag = '$iconsRoute/newBag.svg';
 }

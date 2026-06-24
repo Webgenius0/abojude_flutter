@@ -1,12 +1,16 @@
 import 'package:abojude_flutter/features/home/presentation/product_details_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:abojude_flutter/features/explore_deatils_screen/buy_&_sell_screen.dart';
+import 'package:abojude_flutter/features/explore_deatils_screen/business_screen.dart';
+import 'package:abojude_flutter/features/explore_deatils_screen/job_screen.dart';
+import 'package:abojude_flutter/features/explore_deatils_screen/services_screen.dart';
 
 import '../widget/filter_screeen.dart';
 
-
 // ─── Data Models ────────────────────────────────────────────────────────────
 
-enum ListingCategory { all, buyAndSell, jobs, businessDirectory }
+enum ListingCategory { all, buyAndSell, business, jobs, services }
 
 class Listing {
   final String id;
@@ -43,7 +47,7 @@ final List<Listing> _allListings = [
     location: 'Toronto, Manitoba',
     timeAgo: '5 day ago',
     imageUrl:
-    'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400',
+        'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400',
     isFeatured: false,
   ),
   Listing(
@@ -52,8 +56,7 @@ final List<Listing> _allListings = [
     category: 'Business',
     location: 'Toronto, Manitoba',
     timeAgo: '5 day ago',
-    imageUrl:
-    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
+    imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
     isFeatured: false,
   ),
   Listing(
@@ -63,7 +66,7 @@ final List<Listing> _allListings = [
     location: 'Toronto, Manitoba',
     timeAgo: '3 minutes ago',
     imageUrl:
-    'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400',
+        'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400',
     isFeatured: false,
   ),
   Listing(
@@ -73,7 +76,7 @@ final List<Listing> _allListings = [
     location: 'Toronto, Manitoba',
     timeAgo: '21 hours ago',
     imageUrl:
-    'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400',
+        'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400',
     isFeatured: true,
   ),
   Listing(
@@ -83,7 +86,7 @@ final List<Listing> _allListings = [
     location: 'Vancouver, BC',
     timeAgo: '4 day ago',
     imageUrl:
-    'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400',
+        'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400',
     isFeatured: true,
   ),
   Listing(
@@ -94,7 +97,7 @@ final List<Listing> _allListings = [
     location: 'Calgary, Alberta',
     timeAgo: '1 hour ago',
     imageUrl:
-    'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400',
+        'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400',
     isFeatured: false,
   ),
   Listing(
@@ -104,7 +107,7 @@ final List<Listing> _allListings = [
     location: 'Toronto, Ontario',
     timeAgo: '2 hours ago',
     imageUrl:
-    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400',
+        'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400',
     isFeatured: true,
   ),
   Listing(
@@ -114,8 +117,7 @@ final List<Listing> _allListings = [
     category: 'Buy & Sell',
     location: 'Ottawa, Ontario',
     timeAgo: '3 days ago',
-    imageUrl:
-    'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400',
+    imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400',
     isFeatured: false,
   ),
 ];
@@ -157,19 +159,22 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   void _applyFilters() {
     _listings = _allListings.where((listing) {
-      final matchesSearch = _searchQuery.isEmpty ||
+      final matchesSearch =
+          _searchQuery.isEmpty ||
           listing.title.toLowerCase().contains(_searchQuery) ||
           listing.category.toLowerCase().contains(_searchQuery) ||
           listing.location.toLowerCase().contains(_searchQuery);
 
-      final matchesCategory = _selectedCategory == ListingCategory.all ||
+      final matchesCategory =
+          _selectedCategory == ListingCategory.all ||
           (_selectedCategory == ListingCategory.buyAndSell &&
               listing.category == 'Buy & Sell') ||
           (_selectedCategory == ListingCategory.jobs &&
               listing.category == 'Jobs') ||
-          (_selectedCategory == ListingCategory.businessDirectory &&
-              (listing.category == 'Business' ||
-                  listing.category == 'Services'));
+          (_selectedCategory == ListingCategory.business &&
+              listing.category == 'Business') ||
+          (_selectedCategory == ListingCategory.services &&
+              listing.category == 'Services');
 
       return matchesSearch && matchesCategory;
     }).toList();
@@ -195,6 +200,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       }
     });
   }
+
   FilterOptions _activeFilters = FilterOptions();
   @override
   Widget build(BuildContext context) {
@@ -246,10 +252,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 style: const TextStyle(fontSize: 14),
                 decoration: InputDecoration(
                   hintText: 'What are you looking for?',
-                  hintStyle: TextStyle(
-                    color: Colors.grey[500],
-                    fontSize: 14,
-                  ),
+                  hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
                   prefixIcon: Icon(
                     Icons.search,
                     color: Colors.grey[500],
@@ -257,12 +260,15 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   ),
                   suffixIcon: _searchQuery.isNotEmpty
                       ? IconButton(
-                    icon:
-                    Icon(Icons.clear, color: Colors.grey[500], size: 18),
-                    onPressed: () {
-                      _searchController.clear();
-                    },
-                  )
+                          icon: Icon(
+                            Icons.clear,
+                            color: Colors.grey[500],
+                            size: 18,
+                          ),
+                          onPressed: () {
+                            _searchController.clear();
+                          },
+                        )
                       : null,
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(vertical: 13),
@@ -303,8 +309,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
     final categories = [
       (ListingCategory.all, 'All'),
       (ListingCategory.buyAndSell, 'Buy & Sell'),
+      (ListingCategory.business, 'Business'),
       (ListingCategory.jobs, 'Jobs'),
-      (ListingCategory.businessDirectory, 'Business Directory'),
+      (ListingCategory.services, 'Services'),
     ];
 
     return SingleChildScrollView(
@@ -316,14 +323,19 @@ class _ExploreScreenState extends State<ExploreScreen> {
           return Padding(
             padding: const EdgeInsets.only(right: 8),
             child: GestureDetector(
-              onTap: () => _selectCategory(cat.$1),
+              onTap: () {
+                _selectCategory(cat.$1); // Only keep category selection
+              },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
-                  color:
-                  isSelected ? const Color(0xFF1A56DB) : Colors.transparent,
+                  color: isSelected
+                      ? const Color(0xFF1A56DB)
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: isSelected
@@ -352,10 +364,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
       child: Text(
         '${_listings.length} listing found',
-        style: const TextStyle(
-          fontSize: 13,
-          color: Color(0xFF6B7280),
-        ),
+        style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
       ),
     );
   }
@@ -422,10 +431,7 @@ class _ListingCard extends StatelessWidget {
   final Listing listing;
   final VoidCallback onFavoriteToggle;
 
-  const _ListingCard({
-    required this.listing,
-    required this.onFavoriteToggle,
-  });
+  const _ListingCard({required this.listing, required this.onFavoriteToggle});
 
   @override
   Widget build(BuildContext context) {
@@ -443,10 +449,7 @@ class _ListingCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildImage(),
-          _buildDetails(),
-        ],
+        children: [_buildImage(), _buildDetails()],
       ),
     );
   }
@@ -464,8 +467,11 @@ class _ListingCard extends StatelessWidget {
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) => Container(
                 color: const Color(0xFFE5E7EB),
-                child: const Icon(Icons.image_not_supported,
-                    color: Colors.grey, size: 36),
+                child: const Icon(
+                  Icons.image_not_supported,
+                  color: Colors.grey,
+                  size: 36,
+                ),
               ),
               loadingBuilder: (context, child, progress) {
                 if (progress == null) return child;

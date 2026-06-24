@@ -4,5 +4,5 @@ class AppImages {
 
   static const String logo = '$imageRoute/logo.png';
   static const String logo_transparent = '$imageRoute/logo_transparent.png';
- 
+  static const String jobsIcon = '$imageRoute/jobsIcon.png';
 }

@@ -56,7 +56,7 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
               SizedBox(height: 28.h),
               // Option Cards
               CreateListingOptionCard(
-                iconPath: AppIcons.bag,
+                iconPath: AppIcons.buySell,
                 title: "Buy & Sell",
                 subtitle: "List items for sale or trade",
                 onTap: () {
