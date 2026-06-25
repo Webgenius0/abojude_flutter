@@ -174,6 +174,10 @@
 //   }
 // }
 
+import 'package:abojude_flutter/features/profile/presentation/guest_user_profile.dart';
+import 'package:abojude_flutter/helpers/all_routes.dart';
+import 'package:abojude_flutter/helpers/navigation_service.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -201,7 +205,8 @@ class _NavigationMenuState extends State<NavigationMenu> {
     const HomeScreen(),
     ExploreScreen(),
     MessagesScreenList(),
-    const ProfileScreen(),
+    // const ProfileScreen(),
+    GuestUserProfile(),
   ];
 
   // Show exit confirmation dialog
@@ -292,7 +297,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
   Widget _buildCenterFAB() {
     return GestureDetector(
       onTap: () {
-        // TODO: Add your action here (Create Post, etc.)
+        NavigationService.navigateTo(Routes.createListingScreen);
       },
       child: Container(
         width: 56,

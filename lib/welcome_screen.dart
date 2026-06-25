@@ -1,3 +1,4 @@
+import 'package:abojude_flutter/assets_helper/app_icons.dart';
 import 'package:abojude_flutter/common_widgets/custom_button.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
@@ -124,19 +125,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
                 // --------------- Feature Rows ---------------
                 _buildFeatureRow(
-                  imagePath: AppImages.buy_sell,
+                  imagePath: AppIcons.buySell,
                   text: 'Buy & Sell near you',
                 ),
                 _buildFeatureRow(
-                  imagePath: AppImages.job,
+                  imagePath: AppIcons.job,
                   text: 'Find your next job',
                 ),
                 _buildFeatureRow(
-                  imagePath: AppImages.business,
+                  imagePath: AppIcons.business,
                   text: 'Discover local businesses',
                 ),
                 _buildFeatureRow(
-                  imagePath: AppImages.service,
+                  imagePath: AppIcons.service,
                   text: 'Connect with services',
                 ),
 
