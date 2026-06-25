@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-// ─── Filter Model ─────────────────────────────────────────────────────────────
-
 class FilterOptions {
   String category;
   String? province;
@@ -43,8 +41,7 @@ class FilterOptions {
   }
 }
 
-// ─── Show Filter Bottom Sheet (call this from your screen) ───────────────────
-
+// Show Filter Bottom Sheet
 void showFilterBottomSheet(
     BuildContext context, {
       required FilterOptions currentFilters,
@@ -60,8 +57,6 @@ void showFilterBottomSheet(
     ),
   );
 }
-
-// ─── Filter Bottom Sheet Widget ───────────────────────────────────────────────
 
 class FilterBottomSheet extends StatefulWidget {
   final FilterOptions currentFilters;
@@ -155,12 +150,14 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   void _applyFilters() {
     final min = double.tryParse(_minPriceController.text);
     final max = double.tryParse(_maxPriceController.text);
+
     final applied = _filters.copyWith(
       minPrice: min,
       maxPrice: max,
       clearMinPrice: _minPriceController.text.isEmpty,
       clearMaxPrice: _maxPriceController.text.isEmpty,
     );
+
     widget.onApply(applied);
     Navigator.of(context).pop();
   }
@@ -197,7 +194,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   const Divider(height: 28),
                   _buildSortBySection(),
                   const SizedBox(height: 24),
-                  _buildApplyButton(),
+                  SafeArea(child: _buildApplyButton()),
                   const SizedBox(height: 8),
                 ],
               ),
@@ -256,8 +253,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     );
   }
 
-  // ── Category ───────────────────────────────────────────────────────────────
-
   Widget _buildCategorySection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,9 +273,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   color: selected ? const Color(0xFF1A3A6B) : Colors.white,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: selected
-                        ? const Color(0xFF1A3A6B)
-                        : const Color(0xFFD1D5DB),
+                    color: selected ? const Color(0xFF1A3A6B) : const Color(0xFFD1D5DB),
                   ),
                 ),
                 child: Text(
@@ -298,8 +291,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       ],
     );
   }
-
-  // ── Province ───────────────────────────────────────────────────────────────
 
   Widget _buildProvinceSection() {
     return Column(
@@ -323,12 +314,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     );
   }
 
-  // ── City ───────────────────────────────────────────────────────────────────
-
   Widget _buildCitySection() {
-    final cities = _filters.province != null
-        ? (_citiesByProvince[_filters.province] ?? [])
-        : <String>[];
+    final cities = _filters.province != null ? (_citiesByProvince[_filters.province] ?? []) : <String>[];
     final enabled = _filters.province != null;
 
     return Column(
@@ -350,6 +337,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     );
   }
 
+  // ==================== FIXED DROPDOWN ====================
   Widget _buildDropdown({
     required String? value,
     required String hint,
@@ -371,6 +359,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           child: DropdownButton<String>(
             value: value,
             isExpanded: true,
+            dropdownColor: Colors.white,        // ← Fixed black background
+            menuMaxHeight: 300,
             icon: const Icon(Icons.keyboard_arrow_down,
                 color: Color(0xFF9CA3AF), size: 20),
             hint: Row(
@@ -403,8 +393,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       ),
     );
   }
-
-  // ── Price Range ────────────────────────────────────────────────────────────
 
   Widget _buildPriceRangeSection() {
     return Column(
@@ -453,14 +441,11 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           hintText: hint,
           hintStyle: const TextStyle(fontSize: 14, color: Color(0xFF9CA3AF)),
           border: InputBorder.none,
-          contentPadding:
-          const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         ),
       ),
     );
   }
-
-  // ── Sort By ────────────────────────────────────────────────────────────────
 
   Widget _buildSortBySection() {
     return Column(
@@ -477,15 +462,12 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               onTap: () => setState(() => _filters = _filters.copyWith(sortBy: opt)),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 180),
-                padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 decoration: BoxDecoration(
                   color: selected ? const Color(0xFF1A3A6B) : Colors.white,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: selected
-                        ? const Color(0xFF1A3A6B)
-                        : const Color(0xFFD1D5DB),
+                    color: selected ? const Color(0xFF1A3A6B) : const Color(0xFFD1D5DB),
                   ),
                 ),
                 child: Text(
@@ -503,8 +485,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       ],
     );
   }
-
-  // ── Apply Button ───────────────────────────────────────────────────────────
 
   Widget _buildApplyButton() {
     return SizedBox(
@@ -530,8 +510,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       ),
     );
   }
-
-  // ── Helpers ────────────────────────────────────────────────────────────────
 
   Widget _sectionLabel(String text) {
     return Text(

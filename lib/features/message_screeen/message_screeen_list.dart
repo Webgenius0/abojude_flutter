@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-
+import 'package:get/get.dart';
+import 'message_screen.dart';
 
 // 1. Data Model
 class ChatMessage {
@@ -24,14 +24,14 @@ class ChatMessage {
 }
 
 // 2. Main Screen Widget
-class MessagesScreen extends StatefulWidget {
-  const MessagesScreen({Key? key}) : super(key: key);
+class MessagesScreenList extends StatefulWidget {
+  const MessagesScreenList({Key? key}) : super(key: key);
 
   @override
-  State<MessagesScreen> createState() => _MessagesScreenState();
+  State<MessagesScreenList> createState() => _MessagesScreenListState();
 }
 
-class _MessagesScreenState extends State<MessagesScreen> {
+class _MessagesScreenListState extends State<MessagesScreenList> {
   // Mock Data mimicking the image exactly
   final List<ChatMessage> _allMessages = [
     ChatMessage(
@@ -94,9 +94,11 @@ class _MessagesScreenState extends State<MessagesScreen> {
         _filteredMessages = List.from(_allMessages);
       } else {
         _filteredMessages = _allMessages
-            .where((chat) =>
-        chat.name.toLowerCase().contains(query.toLowerCase()) ||
-            chat.lastMessage.toLowerCase().contains(query.toLowerCase()))
+            .where(
+              (chat) =>
+                  chat.name.toLowerCase().contains(query.toLowerCase()) ||
+                  chat.lastMessage.toLowerCase().contains(query.toLowerCase()),
+            )
             .toList();
       }
     });
@@ -143,7 +145,10 @@ class _MessagesScreenState extends State<MessagesScreen> {
             if (totalUnread > 0) ...[
               const SizedBox(width: 10),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF0F3D7A),
                   borderRadius: BorderRadius.circular(12),
@@ -157,7 +162,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                   ),
                 ),
               ),
-            ]
+            ],
           ],
         ),
       ),
@@ -165,14 +170,21 @@ class _MessagesScreenState extends State<MessagesScreen> {
         children: [
           // 3. Search Bar Section
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
             child: TextField(
               controller: _searchController,
               onChanged: _filterSearch,
               decoration: InputDecoration(
                 hintText: 'Search conversations...',
                 hintStyle: TextStyle(color: Colors.grey[400], fontSize: 15),
-                prefixIcon: Icon(Icons.search, color: Colors.grey[400], size: 22),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey[400],
+                  size: 22,
+                ),
                 filled: true,
                 fillColor: const Color(0xFFF8F9FA),
                 contentPadding: const EdgeInsets.symmetric(vertical: 0),
@@ -197,38 +209,44 @@ class _MessagesScreenState extends State<MessagesScreen> {
           Expanded(
             child: _filteredMessages.isEmpty
                 ? Center(
-              child: Text(
-                'No conversations found',
-                style: TextStyle(color: Colors.grey[400]),
-              ),
-            )
+                    child: Text(
+                      'No conversations found',
+                      style: TextStyle(color: Colors.grey[400]),
+                    ),
+                  )
                 : ListView.separated(
-              itemCount: _filteredMessages.length,
-              separatorBuilder: (context, index) => const Divider(
-                height: 1,
-                indent: 80,
-                color: Color(0xFFF1F3F5),
-              ),
-              itemBuilder: (context, index) {
-                final chat = _filteredMessages[index];
+                    itemCount: _filteredMessages.length,
+                    separatorBuilder: (context, index) => const Divider(
+                      height: 1,
+                      indent: 80,
+                      color: Color(0xFFF1F3F5),
+                    ),
+                    itemBuilder: (context, index) {
+                      final chat = _filteredMessages[index];
 
-                // 5. Swipe-to-Delete Dismissible Layout
-                return Dismissible(
-                  key: Key(chat.id),
-                  direction: DismissDirection.endToStart, // Swipe right to left
-                  background: Container(
-                    color: Colors.red[600],
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: const Icon(Icons.delete, color: Colors.white),
+                      // 5. Swipe-to-Delete Dismissible Layout
+                      return Dismissible(
+                        key: Key(chat.id),
+                        direction:
+                            DismissDirection.endToStart, // Swipe right to left
+                        background: Container(
+                          color: Colors.red[600],
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: const Icon(Icons.delete, color: Colors.white),
+                        ),
+                        onDismissed: (direction) {
+                          _deleteMessage(index);
+                        },
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.to(() => MessageScreen(chat: chat));
+                          },
+                          child: _buildChatTile(chat),
+                        ),
+                      );
+                    },
                   ),
-                  onDismissed: (direction) {
-                    _deleteMessage(index);
-                  },
-                  child: _buildChatTile(chat),
-                );
-              },
-            ),
           ),
         ],
       ),
@@ -294,8 +312,12 @@ class _MessagesScreenState extends State<MessagesScreen> {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 14,
-                    color: chat.unreadCount > 0 ? Colors.black87 : Colors.grey[500],
-                    fontWeight: chat.unreadCount > 0 ? FontWeight.w500 : FontWeight.normal,
+                    color: chat.unreadCount > 0
+                        ? Colors.black87
+                        : Colors.grey[500],
+                    fontWeight: chat.unreadCount > 0
+                        ? FontWeight.w500
+                        : FontWeight.normal,
                   ),
                 ),
               ],
@@ -309,10 +331,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
             children: [
               Text(
                 chat.time,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[400],
-                ),
+                style: TextStyle(fontSize: 12, color: Colors.grey[400]),
               ),
               const SizedBox(height: 6),
               if (chat.unreadCount > 0)
@@ -332,7 +351,9 @@ class _MessagesScreenState extends State<MessagesScreen> {
                   ),
                 )
               else
-                const SizedBox(height: 20), // Keeps structural symmetry unchanged
+                const SizedBox(
+                  height: 20,
+                ), // Keeps structural symmetry unchanged
             ],
           ),
         ],

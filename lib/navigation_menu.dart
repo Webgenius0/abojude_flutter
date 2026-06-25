@@ -1,9 +1,187 @@
+// <<<<<<< HEAD
 
+// import 'package:flutter/material.dart';
+// import 'features/home/presentation/explore_screen.dart';
+// import 'features/home/presentation/home_screen.dart';
+// import 'features/message_screeen/message_screeen.dart';
+// =======
+// import 'package:flutter/material.dart';
+// import 'package:flutter/cupertino.dart';
+// import 'package:flutter/services.dart';
+
+// import 'features/home/presentation/explore_screen.dart';
+// import 'features/home/presentation/home_screen.dart';
+// import 'features/message_screeen/message_screeen_list.dart';
+// import 'features/profile/presentation/profile_screen.dart';
+// >>>>>>> 3ba13335e77021ad460eccada1c8d62e48edd14c
+
+// class NavigationMenu extends StatefulWidget {
+//   const NavigationMenu({super.key});
+
+//   @override
+//   State<NavigationMenu> createState() => _NavigationMenuState();
+// }
+
+// class _NavigationMenuState extends State<NavigationMenu> {
+//   int _selectedIndex = 0;
+
+//   static const Color _activeColor = Color(0xFF1B2D6B);
+//   static const Color _inactiveColor = Color(0xFF9E9E9E);
+//   static const Color _fabColor = Color(0xFF1B2D6B);
+
+//   final List<Widget> _pages = [
+//     const HomeScreen(),
+//     ExploreScreen(),
+//     MessagesScreenList(),
+//     const ProfileScreen(),
+//   ];
+
+//   // Show exit confirmation dialog
+//   Future<bool> _onWillPop() async {
+//     final shouldExit = await showDialog<bool>(
+//       context: context,
+//       builder: (context) => CupertinoAlertDialog(
+//         title: const Text('Exit App?'),
+//         content: const Text('Are you sure you want to exit the app?'),
+//         actions: [
+//           CupertinoDialogAction(
+//             child: const Text('Cancel'),
+//             onPressed: () => Navigator.of(context).pop(false),
+//           ),
+//           CupertinoDialogAction(
+//             isDestructiveAction: true,
+//             child: const Text('Exit'),
+//             onPressed: () => Navigator.of(context).pop(true),
+//           ),
+//         ],
+//       ),
+//     );
+
+//     if (shouldExit == true) {
+//       SystemNavigator.pop();
+//     }
+//     return shouldExit ?? false;
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return WillPopScope(
+//       onWillPop: _onWillPop,
+//       child: Scaffold(
+//         backgroundColor: Colors.white,
+//         body: _pages[_selectedIndex],
+//         bottomNavigationBar: _buildCustomBottomBar(),
+//       ),
+//     );
+//   }
+
+//   Widget _buildCustomBottomBar() {
+//     return SafeArea(
+//       child: Container(
+//         height: 70,
+//         decoration: const BoxDecoration(
+//           color: Colors.white,
+//           boxShadow: [
+//             BoxShadow(
+//               color: Color(0x1A000000),
+//               blurRadius: 12,
+//               offset: Offset(0, -2),
+//             ),
+//           ],
+//         ),
+//         child: Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceAround,
+//           crossAxisAlignment: CrossAxisAlignment.center,
+//           children: [
+//             _buildNavItem(
+//               index: 0,
+//               iconPath: 'assets/icons/home.png',
+//               label: 'Home',
+//             ),
+//             _buildNavItem(
+//               index: 1,
+//               iconPath: 'assets/icons/search-01.png', // change name as per your file
+//               label: 'Explore',
+//             ),
+//             _buildCenterFAB(),
+//             _buildNavItem(
+//               index: 2,
+//               iconPath: 'assets/icons/message-02.png',
+//               label: 'Message',
+//             ),
+//             _buildNavItem(
+//               index: 3,
+//               iconPath: 'assets/icons/user.png',
+//               label: 'Profile',
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _buildCenterFAB() {
+//     return GestureDetector(
+//       onTap: () {
+//         // TODO: Add your action here (Create Post, etc.)
+//       },
+//       child: Container(
+//         width: 56,
+//         height: 56,
+//         decoration: const BoxDecoration(
+//           color: _fabColor,
+//           shape: BoxShape.circle,
+//         ),
+//         child: const Icon(Icons.add, color: Colors.white, size: 30),
+//       ),
+//     );
+//   }
+
+//   Widget _buildNavItem({
+//     required int index,
+//     required String iconPath,
+//     required String label,
+//   }) {
+//     final bool isSelected = _selectedIndex == index;
+
+//     return GestureDetector(
+//       onTap: () => setState(() => _selectedIndex = index),
+//       behavior: HitTestBehavior.opaque,
+//       child: SizedBox(
+//         width: 60,
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Image.asset(
+//               iconPath,
+//               width: 24,
+//               height: 24,
+//               color: isSelected ? _activeColor : _inactiveColor, // tinting
+//             ),
+//             const SizedBox(height: 2),
+//             Text(
+//               label,
+//               style: TextStyle(
+//                 fontSize: 11,
+//                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+//                 color: isSelected ? _activeColor : _inactiveColor,
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+
 import 'features/home/presentation/explore_screen.dart';
 import 'features/home/presentation/home_screen.dart';
-import 'features/message_screeen/message_screeen.dart';
+import 'features/message_screeen/message_screeen_list.dart';
+import 'features/profile/presentation/profile_screen.dart';
 
 class NavigationMenu extends StatefulWidget {
   const NavigationMenu({super.key});
@@ -22,16 +200,46 @@ class _NavigationMenuState extends State<NavigationMenu> {
   final List<Widget> _pages = [
     const HomeScreen(),
     ExploreScreen(),
-    MessagesScreen(),
-    const Center(child: Text('Profile')),
+    MessagesScreenList(),
+    const ProfileScreen(),
   ];
+
+  // Show exit confirmation dialog
+  Future<bool> _onWillPop() async {
+    final shouldExit = await showDialog<bool>(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: const Text('Exit App?'),
+        content: const Text('Are you sure you want to exit the app?'),
+        actions: [
+          CupertinoDialogAction(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            child: const Text('Exit'),
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldExit == true) {
+      SystemNavigator.pop();
+    }
+    return shouldExit ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: _buildCustomBottomBar(),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: _pages[_selectedIndex],
+        bottomNavigationBar: _buildCustomBottomBar(),
+      ),
     );
   }
 
@@ -53,14 +261,28 @@ class _NavigationMenuState extends State<NavigationMenu> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _buildNavItem(index: 0, icon: Icons.home_rounded, label: 'Home'),
-            _buildNavItem(index: 1, icon: Icons.search, label: 'Explore'),
-
-            // Center FAB — same line, no float
+            _buildNavItem(
+              index: 0,
+              iconPath: 'assets/icons/home.png',
+              label: 'Home',
+            ),
+            _buildNavItem(
+              index: 1,
+              iconPath:
+                  'assets/icons/search-01.png', // change name as per your file
+              label: 'Explore',
+            ),
             _buildCenterFAB(),
-
-            _buildNavItem(index: 2, icon: Icons.chat_bubble_outline_rounded, label: 'Message'),
-            _buildNavItem(index: 3, icon: Icons.person_outline_rounded, label: 'Profile'),
+            _buildNavItem(
+              index: 2,
+              iconPath: 'assets/icons/message-02.png',
+              label: 'Message',
+            ),
+            _buildNavItem(
+              index: 3,
+              iconPath: 'assets/icons/user.png',
+              label: 'Profile',
+            ),
           ],
         ),
       ),
@@ -69,7 +291,9 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
   Widget _buildCenterFAB() {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        // TODO: Add your action here (Create Post, etc.)
+      },
       child: Container(
         width: 56,
         height: 56,
@@ -84,7 +308,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
   Widget _buildNavItem({
     required int index,
-    required IconData icon,
+    required String iconPath,
     required String label,
   }) {
     final bool isSelected = _selectedIndex == index;
@@ -97,10 +321,11 @@ class _NavigationMenuState extends State<NavigationMenu> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: isSelected ? _activeColor : _inactiveColor,
-              size: 24,
+            Image.asset(
+              iconPath,
+              width: 24,
+              height: 24,
+              color: isSelected ? _activeColor : _inactiveColor, // tinting
             ),
             const SizedBox(height: 2),
             Text(

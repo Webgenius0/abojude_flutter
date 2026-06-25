@@ -6,7 +6,9 @@ import 'package:abojude_flutter/features/auth/register/presentation/register_scr
 import 'package:abojude_flutter/features/auth/register/presentation/register_verify_screen.dart';
 import 'package:abojude_flutter/features/auth/register/presentation/select_location_screen.dart';
 import 'package:abojude_flutter/features/auth/set_new_password/presentation/set_new_password.dart';
+import 'package:abojude_flutter/features/home/presentation/continue_as_guest.dart';
 import 'package:abojude_flutter/features/home/presentation/home_screen.dart';
+import 'package:abojude_flutter/navigation_menu.dart';
 import 'package:abojude_flutter/welcome_screen.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -33,7 +35,8 @@ final class Routes {
   static const String forgetPasswordVerifyOtpScreen =
       '/forgetPasswordVerifyOtpScreen';
   static const String setNewPassword = '/setNewPassword';
-
+  static const String navigationMenu = '/navigationMenu';
+  static const String continueAsGuest = '/continueAsGuest';
 }
 
 final class RouteGenerator {
@@ -80,7 +83,17 @@ final class RouteGenerator {
                 widget: const RegisterVerifyScreen(),
                 settings: settings,
               )
-            : CupertinoPageRoute(builder: (context) => const RegisterVerifyScreen());
+            : CupertinoPageRoute(
+                builder: (context) => const RegisterVerifyScreen(),
+              );
+
+      case Routes.navigationMenu:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const NavigationMenu(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const NavigationMenu());
 
       case Routes.selectLocationScreen:
         return Platform.isAndroid
@@ -88,7 +101,9 @@ final class RouteGenerator {
                 widget: const SelectLocationScreen(),
                 settings: settings,
               )
-            : CupertinoPageRoute(builder: (context) => const SelectLocationScreen());
+            : CupertinoPageRoute(
+                builder: (context) => const SelectLocationScreen(),
+              );
 
       case Routes.forgetPasswordScreen:
         return Platform.isAndroid
@@ -96,7 +111,9 @@ final class RouteGenerator {
                 widget: const ForgetPasswordScreen(),
                 settings: settings,
               )
-            : CupertinoPageRoute(builder: (context) => const ForgetPasswordScreen());
+            : CupertinoPageRoute(
+                builder: (context) => const ForgetPasswordScreen(),
+              );
 
       case Routes.forgetPasswordVerifyOtpScreen:
         return Platform.isAndroid
@@ -104,7 +121,16 @@ final class RouteGenerator {
                 widget: const ForgetPasswordVerifyOtpScreen(),
                 settings: settings,
               )
-            : CupertinoPageRoute(builder: (context) => const ForgetPasswordVerifyOtpScreen());
+            : CupertinoPageRoute(
+                builder: (context) => const ForgetPasswordVerifyOtpScreen(),
+              );
+      case Routes.continueAsGuest:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const ContinueAsGuest(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const ContinueAsGuest());
 
       case Routes.setNewPassword:
         return Platform.isAndroid
@@ -141,8 +167,6 @@ final class RouteGenerator {
       //           settings: settings,
       //         )
       //       : CupertinoPageRoute(builder: (context) => const NavigationMenu());
-
-
 
       default:
         return null;

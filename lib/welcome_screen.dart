@@ -184,6 +184,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                   onTap: () {
                     // Guest Action
+                    NavigationService.navigateTo(Routes.selectLocationScreen);
                   },
                 ),
 

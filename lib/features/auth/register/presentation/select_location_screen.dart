@@ -498,7 +498,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                 'Location saved successfully!',
                               );
                               NavigationService.navigateToUntilReplacement(
-                                Routes.homeScreen,
+                                Routes.navigationMenu,
                               );
                             }
                           },
