@@ -1,3 +1,5 @@
+import 'package:abojude_flutter/helpers/all_routes.dart';
+import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -525,18 +527,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          Get.to(
-                                () => MessageScreen(
-                              chat: ChatMessage(
-                                id: 'sarah_ahmed',
-                                name: 'Sarah Ahmed',
-                                initials: 'SA',
-                                lastMessage: 'Hi, is the Samsung Galaxy S24 Ultra still available?',
-                                time: 'Just now',
-                                isOnline: true,
-                              ),
-                            ),
-                          );
+                          // Get.to(
+                          //       () => MessageScreen(
+                          //     chat: ChatMessage(
+                          //       id: 'sarah_ahmed',
+                          //       name: 'Sarah Ahmed',
+                          //       initials: 'SA',
+                          //       lastMessage: 'Hi, is the Samsung Galaxy S24 Ultra still available?',
+                          //       time: 'Just now',
+                          //       isOnline: true,
+                          //     ),
+                          //   ),
+                          // );
+                          NavigationService.navigateTo(Routes.continueAsGuest);
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 14),
@@ -576,7 +579,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                     const SizedBox(width: 12),
                     _buildBottomIconButton(
-                      'assets/icons/phone.png',           // ← Your image path
+                      'assets/icons/phone.png', // ← Your image path
                       Colors.green[50]!,
                       Colors.green,
                       onPressed: () async {
@@ -593,12 +596,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                     const SizedBox(width: 12),
                     _buildBottomIconButton(
-                      'assets/icons/whatsapp.png',     // ← Change to your actual image path
+                      'assets/icons/whatsapp.png', // ← Change to your actual image path
                       Colors.green.shade50,
                       Colors.green,
                       onPressed: () async {
                         try {
-                          final Uri url = Uri.parse('https://wa.me/14165551200');
+                          final Uri url = Uri.parse(
+                            'https://wa.me/14165551200',
+                          );
                           await launchUrl(
                             url,
                             mode: LaunchMode.externalApplication,
@@ -802,11 +807,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   // Circular Action Button Helper
   Widget _buildBottomIconButton(
-      String iconPath,           // Changed to image path
-      Color bgColor,
-      Color iconColor,           // Will be used as tint color for the image
-          { required VoidCallback onPressed }
-      ) {
+    String iconPath, // Changed to image path
+    Color bgColor,
+    Color iconColor, { // Will be used as tint color for the image
+    required VoidCallback onPressed,
+  }) {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
@@ -821,10 +826,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             iconPath,
             height: 24,
             width: 24,
-            color: iconColor,        // Tint the image
+            color: iconColor, // Tint the image
             fit: BoxFit.contain,
             errorBuilder: (context, error, stackTrace) => Icon(
-              Icons.phone,           // Fallback
+              Icons.phone, // Fallback
               color: iconColor,
               size: 24,
             ),

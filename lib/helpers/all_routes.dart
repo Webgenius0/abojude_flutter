@@ -6,6 +6,9 @@ import 'package:abojude_flutter/features/auth/register/presentation/register_scr
 import 'package:abojude_flutter/features/auth/register/presentation/register_verify_screen.dart';
 import 'package:abojude_flutter/features/auth/register/presentation/select_location_screen.dart';
 import 'package:abojude_flutter/features/auth/set_new_password/presentation/set_new_password.dart';
+
+import 'package:abojude_flutter/features/home/presentation/continue_as_guest.dart';
+
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/presentation/create_listing_screen.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/buy_sell_listing_model.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/presentation/buy_sell_step1_photos_screen.dart';
@@ -45,7 +48,9 @@ import 'package:abojude_flutter/features/create_listing/business_directory_creat
 import 'package:abojude_flutter/features/create_listing/business_directory_create/presentation/business_details_screen.dart';
 import 'package:abojude_flutter/features/create_listing/business_directory_create/presentation/business_success_screen.dart';
 
+
 import 'package:abojude_flutter/features/home/presentation/home_screen.dart';
+import 'package:abojude_flutter/navigation_menu.dart';
 import 'package:abojude_flutter/welcome_screen.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -72,6 +77,10 @@ final class Routes {
   static const String forgetPasswordVerifyOtpScreen =
       '/forgetPasswordVerifyOtpScreen';
   static const String setNewPassword = '/setNewPassword';
+
+  static const String navigationMenu = '/navigationMenu';
+  static const String continueAsGuest = '/continueAsGuest';
+
   static const String createListingScreen = '/createListingScreen';
   static const String buySellStep1Photos = '/buySellStep1Photos';
   static const String buySellStep2Details = '/buySellStep2Details';
@@ -106,6 +115,7 @@ final class Routes {
   static const String serviceStep5Review = '/serviceStep5Review';
   static const String serviceDetails = '/serviceDetails';
   static const String serviceSuccess = '/serviceSuccess';
+
 }
 
 final class RouteGenerator {
@@ -156,6 +166,15 @@ final class RouteGenerator {
                 builder: (context) => const RegisterVerifyScreen(),
               );
 
+
+      case Routes.navigationMenu:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const NavigationMenu(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const NavigationMenu());
+
       case Routes.selectLocationScreen:
         return Platform.isAndroid
             ? _FadedTransitionRoute(
@@ -186,6 +205,13 @@ final class RouteGenerator {
                 builder: (context) => const ForgetPasswordVerifyOtpScreen(),
               );
 
+      case Routes.continueAsGuest:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const ContinueAsGuest(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const ContinueAsGuest());
       case Routes.setNewPassword:
         return Platform.isAndroid
             ? _FadedTransitionRoute(
