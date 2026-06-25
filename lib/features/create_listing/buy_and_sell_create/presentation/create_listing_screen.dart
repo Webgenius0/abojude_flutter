@@ -25,7 +25,7 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
         leading: Navigator.canPop(context)
             ? IconButton(
                 icon: Icon(
-                  Icons.arrow_back_ios_new,
+                  Icons.arrow_back_ios_new, 
                   size: 20.w,
                   color: AppColor.c2E3227,
                 ),
@@ -35,7 +35,7 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics: BouncingScrollPhysics(),
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
