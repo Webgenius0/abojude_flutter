@@ -205,8 +205,8 @@ class _NavigationMenuState extends State<NavigationMenu> {
     const HomeScreen(),
     ExploreScreen(),
     MessagesScreenList(),
-    // const ProfileScreen(),
-    GuestUserProfile(),
+    const ProfileScreen(),
+    // GuestUserProfile(),
   ];
 
   // Show exit confirmation dialog
