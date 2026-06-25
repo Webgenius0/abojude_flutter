@@ -527,19 +527,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          // Get.to(
-                          //       () => MessageScreen(
-                          //     chat: ChatMessage(
-                          //       id: 'sarah_ahmed',
-                          //       name: 'Sarah Ahmed',
-                          //       initials: 'SA',
-                          //       lastMessage: 'Hi, is the Samsung Galaxy S24 Ultra still available?',
-                          //       time: 'Just now',
-                          //       isOnline: true,
-                          //     ),
-                          //   ),
-                          // );
-                          NavigationService.navigateTo(Routes.continueAsGuest);
+                          Get.to(
+                            () => MessageScreen(
+                              chat: ChatMessage(
+                                id: 'sarah_ahmed',
+                                name: 'Sarah Ahmed',
+                                initials: 'SA',
+                                lastMessage:
+                                    'Hi, is the Samsung Galaxy S24 Ultra still available?',
+                                time: 'Just now',
+                                isOnline: true,
+                              ),
+                            ),
+                          );
+                          // NavigationService.navigateTo(Routes.continueAsGuest);
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 14),
