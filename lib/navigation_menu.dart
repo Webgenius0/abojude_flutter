@@ -1,3 +1,5 @@
+import 'package:abojude_flutter/helpers/all_routes.dart';
+import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -92,7 +94,8 @@ class _NavigationMenuState extends State<NavigationMenu> {
             ),
             _buildNavItem(
               index: 1,
-              iconPath: 'assets/icons/search-01.png', // change name as per your file
+              iconPath:
+                  'assets/icons/search-01.png', // change name as per your file
               label: 'Explore',
             ),
             _buildCenterFAB(),
@@ -115,7 +118,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
   Widget _buildCenterFAB() {
     return GestureDetector(
       onTap: () {
-        // TODO: Add your action here (Create Post, etc.)
+        NavigationService.navigateTo(Routes.createListingScreen);
       },
       child: Container(
         width: 56,
