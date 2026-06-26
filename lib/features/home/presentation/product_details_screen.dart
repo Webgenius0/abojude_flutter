@@ -1,3 +1,5 @@
+import 'package:abojude_flutter/helpers/all_routes.dart';
+import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -546,6 +548,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                             ),
                           );
+                          // NavigationService.navigateTo(Routes.continueAsGuest);
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 14),

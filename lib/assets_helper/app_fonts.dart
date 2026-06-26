@@ -1,4 +1,3 @@
-
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,10 +22,26 @@ class TextFontStyle {
     letterSpacing: 0,
   );
 
-  static final textStyle12UrbanistW600 = GoogleFonts.urbanist(
-    color: Colors.black,
-    fontSize: 12.sp,
-    fontWeight: FontWeight.w500,
+  static final textStyle22IbmPlexSansW600 = GoogleFonts.ibmPlexSans(
+    color: AppColor.c2E3227,
+    fontSize: 22.sp,
+    fontWeight: FontWeight.w600,
+    height: 1.5.h,
+    letterSpacing: 0,
+  );
+
+  static final textStyle16IbmPlexSansW600 = GoogleFonts.ibmPlexSans(
+    color: AppColor.c2E3227,
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w600,
+    height: 1.5.h,
+    letterSpacing: 0,
+  );
+
+  static final textStyle14IbmPlexSansW400 = GoogleFonts.ibmPlexSans(
+    color: AppColor.c797A7C,
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w400,
     height: 1.5.h,
     letterSpacing: 0,
   );
@@ -56,7 +71,7 @@ class TextFontStyle {
   );
   static final textStyle16InterW600 = GoogleFonts.inter(
     color: Colors.white,
-    fontSize: 16.sp, 
+    fontSize: 16.sp,
     fontWeight: FontWeight.w600,
   );
 
@@ -82,4 +97,98 @@ class TextFontStyle {
   //     fontSize: 12.sp,
   //     height: 1.50,
   //     fontWeight: FontWeight.w300);
+
+  static final textStyle12IbmPlexSansW600Navy = GoogleFonts.ibmPlexSans(
+    color: const Color(0xFF1D3B71),
+    fontSize: 12.sp,
+    fontWeight: FontWeight.w600,
+    height: 1.5.h,
+    letterSpacing: 0,
+  );
+
+  static final textStyle20IbmPlexSansW600 = GoogleFonts.ibmPlexSans(
+    color: AppColor.c2E3227,
+    fontSize: 20.sp,
+    fontWeight: FontWeight.w600,
+    height: 1.5.h,
+    letterSpacing: 0,
+  );
+
+  static final textStyle13IbmPlexSansW400Grey = GoogleFonts.ibmPlexSans(
+    color: const Color(0xFF797A7C),
+    fontSize: 13.sp,
+    fontWeight: FontWeight.w400,
+    height: 1.5.h,
+    letterSpacing: 0,
+  );
+
+  static final textStyle14IbmPlexSansW400LightGrey = GoogleFonts.ibmPlexSans(
+    color: const Color(0xFF6B7280),
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w400,
+    height: 1.5.h,
+    letterSpacing: 0,
+  );
+
+  static final textStyle15IbmPlexSansW600 = GoogleFonts.ibmPlexSans(
+    color: AppColor.c2E3227,
+    fontSize: 15.sp,
+    fontWeight: FontWeight.w600,
+    height: 1.5.h,
+    letterSpacing: 0,
+  );
+
+  static final textStyle14IbmPlexSansW600 = GoogleFonts.ibmPlexSans(
+    color: AppColor.c2E3227,
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w600,
+    height: 1.5.h,
+    letterSpacing: 0,
+  );
+
+  static final textStyle14IbmPlexSansW600Dark = GoogleFonts.ibmPlexSans(
+    color: AppColor.c2E3227,
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w600,
+    height: 1.5.h,
+    letterSpacing: 0,
+  );
+
+  static final textStyle15InterW600White = GoogleFonts.inter(
+    color: Colors.white,
+    fontSize: 15.sp,
+    fontWeight: FontWeight.w600,
+  );
+
+  static final textStyle12IbmPlexSansW400Grey = GoogleFonts.ibmPlexSans(
+    color: const Color(0xFF9CA3AF),
+    fontSize: 12.sp,
+    fontWeight: FontWeight.w400,
+    height: 1.5.h,
+    letterSpacing: 0,
+  );
+
+  static final textStyle13IbmPlexSansW500DarkGrey = GoogleFonts.ibmPlexSans(
+    color: const Color(0xFF4B5563),
+    fontSize: 13.sp,
+    fontWeight: FontWeight.w500,
+    height: 1.5.h,
+    letterSpacing: 0,
+  );
+
+  static final textStyle13IbmPlexSansW600Green = GoogleFonts.ibmPlexSans(
+    color: const Color(0xFF1B8E5A),
+    fontSize: 13.sp,
+    fontWeight: FontWeight.w600,
+    height: 1.5.h,
+    letterSpacing: 0,
+  );
+
+  static final textStyle13IbmPlexSansW600LightGrey = GoogleFonts.ibmPlexSans(
+    color: const Color(0xFF9CA3AF),
+    fontSize: 13.sp,
+    fontWeight: FontWeight.w600,
+    height: 1.5.h,
+    letterSpacing: 0,
+  );
 }
