@@ -45,7 +45,8 @@ class _JobScreenState extends State<JobScreen> {
       salary: '\$4,500/month',
       location: 'Toronto, MB',
       timeAgo: '3 minutes ago',
-      imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400',
+      imageUrl:
+          'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400',
       isFeatured: true,
     ),
     JobItem(
@@ -55,7 +56,8 @@ class _JobScreenState extends State<JobScreen> {
       salary: '\$90k - \$120k/year',
       location: 'Remote',
       timeAgo: '2 hours ago',
-      imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400',
+      imageUrl:
+          'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400',
       isFeatured: true,
     ),
     JobItem(
@@ -65,7 +67,8 @@ class _JobScreenState extends State<JobScreen> {
       salary: '\$18 - \$22/hour',
       location: 'Vancouver, BC',
       timeAgo: '1 day ago',
-      imageUrl: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400',
+      imageUrl:
+          'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400',
     ),
     JobItem(
       id: 'j4',
@@ -74,7 +77,8 @@ class _JobScreenState extends State<JobScreen> {
       salary: '\$20/hour',
       location: 'Calgary, AB',
       timeAgo: '4 hours ago',
-      imageUrl: 'https://images.unsplash.com/photo-1549923746-c502d488b3ea?w=400',
+      imageUrl:
+          'https://images.unsplash.com/photo-1549923746-c502d488b3ea?w=400',
     ),
     JobItem(
       id: 'j5',
@@ -83,7 +87,8 @@ class _JobScreenState extends State<JobScreen> {
       salary: '\$3,800/month',
       location: 'Montreal, QC',
       timeAgo: '3 days ago',
-      imageUrl: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=400',
+      imageUrl:
+          'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=400',
     ),
     JobItem(
       id: 'j6',
@@ -92,7 +97,8 @@ class _JobScreenState extends State<JobScreen> {
       salary: '\$16/hour',
       location: 'Halifax, NS',
       timeAgo: '5 days ago',
-      imageUrl: 'https://images.unsplash.com/photo-1560750588-73207b1ef5b8?w=400',
+      imageUrl:
+          'https://images.unsplash.com/photo-1560750588-73207b1ef5b8?w=400',
     ),
   ];
 
@@ -129,9 +135,12 @@ class _JobScreenState extends State<JobScreen> {
       if (index != -1) {
         _allItems[index].isFavorited = !_allItems[index].isFavorited;
         // Sync with filtered list
-        final filteredIndex = _filteredItems.indexWhere((item) => item.id == id);
+        final filteredIndex = _filteredItems.indexWhere(
+          (item) => item.id == id,
+        );
         if (filteredIndex != -1) {
-          _filteredItems[filteredIndex].isFavorited = _allItems[index].isFavorited;
+          _filteredItems[filteredIndex].isFavorited =
+              _allItems[index].isFavorited;
         }
       }
     });
@@ -145,12 +154,20 @@ class _JobScreenState extends State<JobScreen> {
         backgroundColor: Colors.white,
         elevation: 0.5,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black87, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black87,
+            size: 20,
+          ),
           onPressed: () => Get.back(),
         ),
         title: const Text(
           'Jobs Board',
-          style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.black87,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
       ),
@@ -215,7 +232,11 @@ class _JobScreenState extends State<JobScreen> {
             const SizedBox(height: 12),
             Text(
               'No jobs found',
-              style: TextStyle(fontSize: 16, color: Colors.grey[500], fontWeight: FontWeight.w500),
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[500],
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ],
         ),
@@ -249,10 +270,7 @@ class _JobScreenState extends State<JobScreen> {
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildCardImage(item),
-                _buildCardDetails(item),
-              ],
+              children: [_buildCardImage(item), _buildCardDetails(item)],
             ),
           ),
         );
@@ -273,13 +291,19 @@ class _JobScreenState extends State<JobScreen> {
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) => Container(
                 color: const Color(0xFFE5E7EB),
-                child: const Icon(Icons.image_not_supported, color: Colors.grey, size: 36),
+                child: const Icon(
+                  Icons.image_not_supported,
+                  color: Colors.grey,
+                  size: 36,
+                ),
               ),
               loadingBuilder: (context, child, progress) {
                 if (progress == null) return child;
                 return Container(
                   color: const Color(0xFFE5E7EB),
-                  child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                  child: const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
                 );
               },
             ),
@@ -296,7 +320,11 @@ class _JobScreenState extends State<JobScreen> {
             ),
             child: Text(
               item.timeAgo,
-              style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w500),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ),
@@ -317,7 +345,11 @@ class _JobScreenState extends State<JobScreen> {
                   SizedBox(width: 3),
                   Text(
                     'Featured',
-                    style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
               ),
@@ -334,7 +366,12 @@ class _JobScreenState extends State<JobScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4)],
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4,
+                  ),
+                ],
               ),
               child: Icon(
                 item.isFavorited ? Icons.favorite : Icons.favorite_border,
@@ -380,12 +417,19 @@ class _JobScreenState extends State<JobScreen> {
             const SizedBox(height: 4),
             Row(
               children: [
-                const Icon(Icons.location_on_outlined, size: 12, color: Color(0xFF9CA3AF)),
+                const Icon(
+                  Icons.location_on_outlined,
+                  size: 12,
+                  color: Color(0xFF9CA3AF),
+                ),
                 const SizedBox(width: 3),
                 Expanded(
                   child: Text(
                     item.location,
-                    style: const TextStyle(fontSize: 11, color: Color(0xFF6B7280)),
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFF6B7280),
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),

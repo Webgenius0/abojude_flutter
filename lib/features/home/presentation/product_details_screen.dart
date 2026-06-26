@@ -104,10 +104,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           IconButton(
             icon: const Icon(Icons.flag_outlined, color: Colors.black54),
             onPressed: () {
-              Get.to(() => const ReportScreen(
-                targetName: 'Samsung Galaxy S24 Ultra - Excellent Condition',
-                isReportUser: false,
-              ));
+              Get.to(
+                () => const ReportScreen(
+                  targetName: 'Samsung Galaxy S24 Ultra - Excellent Condition',
+                  isReportUser: false,
+                ),
+              );
             },
           ),
         ],
@@ -532,12 +534,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       child: GestureDetector(
                         onTap: () {
                           Get.to(
-                                () => MessageScreen(
+                            () => MessageScreen(
                               chat: ChatMessage(
                                 id: 'sarah_ahmed',
                                 name: 'Sarah Ahmed',
                                 initials: 'SA',
-                                lastMessage: 'Hi, is the Samsung Galaxy S24 Ultra still available?',
+                                lastMessage:
+                                    'Hi, is the Samsung Galaxy S24 Ultra still available?',
                                 time: 'Just now',
                                 isOnline: true,
                               ),
@@ -582,7 +585,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                     const SizedBox(width: 12),
                     _buildBottomIconButton(
-                      'assets/icons/phone.png',           // ← Your image path
+                      'assets/icons/phone.png', // ← Your image path
                       Colors.green[50]!,
                       Colors.green,
                       onPressed: () async {
@@ -599,12 +602,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                     const SizedBox(width: 12),
                     _buildBottomIconButton(
-                      'assets/icons/whatsapp.png',     // ← Change to your actual image path
+                      'assets/icons/whatsapp.png', // ← Change to your actual image path
                       Colors.green.shade50,
                       Colors.green,
                       onPressed: () async {
                         try {
-                          final Uri url = Uri.parse('https://wa.me/14165551200');
+                          final Uri url = Uri.parse(
+                            'https://wa.me/14165551200',
+                          );
                           await launchUrl(
                             url,
                             mode: LaunchMode.externalApplication,
@@ -808,11 +813,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   // Circular Action Button Helper
   Widget _buildBottomIconButton(
-      String iconPath,           // Changed to image path
-      Color bgColor,
-      Color iconColor,           // Will be used as tint color for the image
-          { required VoidCallback onPressed }
-      ) {
+    String iconPath, // Changed to image path
+    Color bgColor,
+    Color iconColor, { // Will be used as tint color for the image
+    required VoidCallback onPressed,
+  }) {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
@@ -827,10 +832,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             iconPath,
             height: 24,
             width: 24,
-            color: iconColor,        // Tint the image
+            color: iconColor, // Tint the image
             fit: BoxFit.contain,
             errorBuilder: (context, error, stackTrace) => Icon(
-              Icons.phone,           // Fallback
+              Icons.phone, // Fallback
               color: iconColor,
               size: 24,
             ),

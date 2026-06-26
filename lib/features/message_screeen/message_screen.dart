@@ -30,10 +30,7 @@ class ProductRelates {
   final String title;
   final String imageUrl;
 
-  ProductRelates({
-    required this.title,
-    required this.imageUrl,
-  });
+  ProductRelates({required this.title, required this.imageUrl});
 }
 
 // 2. Chat Details Screen Widget
@@ -51,7 +48,7 @@ class _MessageScreenState extends State<MessageScreen> {
   final TextEditingController _textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final ImagePicker _picker = ImagePicker();
-  
+
   // Holds the list of selected image files before sending
   final List<XFile> _selectedImages = [];
 
@@ -67,17 +64,20 @@ class _MessageScreenState extends State<MessageScreen> {
       DetailsMessage(
         id: 'mock_1',
         sender: widget.chat.name,
-        text: "Hi, I'm interested in the Samsung S24 Ultra, is the still available?",
+        text:
+            "Hi, I'm interested in the Samsung S24 Ultra, is the still available?",
         time: 'Oct 15, 9:42 AM',
         relatesToProduct: ProductRelates(
           title: "Samsung Galaxy S24 Ultra Excelle...",
-          imageUrl: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&auto=format&fit=crop&q=80",
+          imageUrl:
+              "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&auto=format&fit=crop&q=80",
         ),
       ),
       DetailsMessage(
         id: 'mock_2',
         sender: "You",
-        text: "Hello! Yes it's still available. Feel free to ask any questions.",
+        text:
+            "Hello! Yes it's still available. Feel free to ask any questions.",
         time: 'Oct 15, 9:35 AM',
       ),
       DetailsMessage(
@@ -147,7 +147,10 @@ class _MessageScreenState extends State<MessageScreen> {
                     color: const Color(0xFF0F3D7A).withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.photo_library, color: Color(0xFF0F3D7A)),
+                  child: const Icon(
+                    Icons.photo_library,
+                    color: Color(0xFF0F3D7A),
+                  ),
                 ),
                 title: const Text('Choose from Gallery'),
                 subtitle: const Text('Select multiple photos'),
@@ -180,7 +183,9 @@ class _MessageScreenState extends State<MessageScreen> {
                 onTap: () async {
                   Navigator.pop(context);
                   try {
-                    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+                    final XFile? image = await _picker.pickImage(
+                      source: ImageSource.camera,
+                    );
                     if (image != null) {
                       setState(() {
                         _selectedImages.add(image);
@@ -222,9 +227,11 @@ class _MessageScreenState extends State<MessageScreen> {
     if (text.isEmpty && _selectedImages.isEmpty) return;
 
     final String currentTime = DateFormat('h:mm a').format(DateTime.now());
-    
+
     // Copy the selected images paths
-    final List<String> imagePaths = _selectedImages.map((file) => file.path).toList();
+    final List<String> imagePaths = _selectedImages
+        .map((file) => file.path)
+        .toList();
 
     setState(() {
       _messages.add(
@@ -282,7 +289,10 @@ class _MessageScreenState extends State<MessageScreen> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
-                    border: Border.all(color: const Color(0xFFF1F3F5), width: 1.5),
+                    border: Border.all(
+                      color: const Color(0xFFF1F3F5),
+                      width: 1.5,
+                    ),
                   ),
                   child: const Icon(
                     Icons.chevron_left_rounded,
@@ -378,20 +388,31 @@ class _MessageScreenState extends State<MessageScreen> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xFFF1F3F5), width: 1.5),
+                      border: Border.all(
+                        color: const Color(0xFFF1F3F5),
+                        width: 1.5,
+                      ),
                     ),
                     child: PopupMenuButton<String>(
-                      icon: const Icon(Icons.more_vert_rounded, color: Colors.black87, size: 20),
+                      icon: const Icon(
+                        Icons.more_vert_rounded,
+                        color: Colors.black87,
+                        size: 20,
+                      ),
                       padding: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       color: Colors.white,
                       surfaceTintColor: Colors.white,
                       onSelected: (value) {
                         if (value == 'report') {
-                          Get.to(() => ReportScreen(
-                            targetName: widget.chat.name,
-                            isReportUser: true,
-                          ));
+                          Get.to(
+                            () => ReportScreen(
+                              targetName: widget.chat.name,
+                              isReportUser: true,
+                            ),
+                          );
                         } else if (value == 'block') {
                           _showBlockUserDialog(context);
                         }
@@ -401,7 +422,11 @@ class _MessageScreenState extends State<MessageScreen> {
                           value: 'report',
                           child: Row(
                             children: [
-                              const Icon(Icons.report_gmailerrorred_outlined, color: Colors.redAccent, size: 20),
+                              const Icon(
+                                Icons.report_gmailerrorred_outlined,
+                                color: Colors.redAccent,
+                                size: 20,
+                              ),
                               const SizedBox(width: 10),
                               Text(
                                 'Report User',
@@ -418,7 +443,11 @@ class _MessageScreenState extends State<MessageScreen> {
                           value: 'block',
                           child: Row(
                             children: [
-                              const Icon(Icons.block_flipped, color: Colors.black54, size: 20),
+                              const Icon(
+                                Icons.block_flipped,
+                                color: Colors.black54,
+                                size: 20,
+                              ),
                               const SizedBox(width: 10),
                               Text(
                                 'Block User',
@@ -447,7 +476,10 @@ class _MessageScreenState extends State<MessageScreen> {
             Expanded(
               child: ListView.builder(
                 controller: _scrollController,
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 16.0,
+                ),
                 itemCount: _messages.length,
                 itemBuilder: (context, index) {
                   final message = _messages[index];
@@ -474,7 +506,9 @@ class _MessageScreenState extends State<MessageScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
       child: Column(
-        crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: isMe
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
         children: [
           // Sender Name
           Padding(
@@ -491,13 +525,20 @@ class _MessageScreenState extends State<MessageScreen> {
 
           // Bubble Content
           Row(
-            mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment: isMe
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
             children: [
               Flexible(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 12.0,
+                  ),
                   decoration: BoxDecoration(
-                    color: isMe ? const Color(0xFF1B2D6B) : const Color(0xFFF1F3F5),
+                    color: isMe
+                        ? const Color(0xFF1B2D6B)
+                        : const Color(0xFFF1F3F5),
                     borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(16.0),
                       topRight: const Radius.circular(16.0),
@@ -542,7 +583,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                 color: Colors.black.withOpacity(0.03),
                                 blurRadius: 6,
                                 offset: const Offset(0, 2),
-                              )
+                              ),
                             ],
                           ),
                           child: Row(
@@ -586,7 +627,8 @@ class _MessageScreenState extends State<MessageScreen> {
 
                       // Images layout grid/collage
                       if (message.images.isNotEmpty) ...[
-                        if (message.text.isNotEmpty || message.relatesToProduct != null)
+                        if (message.text.isNotEmpty ||
+                            message.relatesToProduct != null)
                           const SizedBox(height: 12),
                         _buildImagesGrid(message.images),
                       ],
@@ -602,10 +644,7 @@ class _MessageScreenState extends State<MessageScreen> {
             padding: const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
             child: Text(
               message.time,
-              style: TextStyle(
-                fontSize: 11,
-                color: Colors.grey[400],
-              ),
+              style: TextStyle(fontSize: 11, color: Colors.grey[400]),
             ),
           ),
         ],
@@ -756,9 +795,7 @@ class _MessageScreenState extends State<MessageScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(
-          top: BorderSide(color: Colors.grey[200]!, width: 1),
-        ),
+        border: Border(top: BorderSide(color: Colors.grey[200]!, width: 1)),
       ),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -813,9 +850,7 @@ class _MessageScreenState extends State<MessageScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(
-          top: BorderSide(color: Colors.grey[100]!, width: 1.5),
-        ),
+        border: Border(top: BorderSide(color: Colors.grey[100]!, width: 1.5)),
       ),
       child: Row(
         children: [
@@ -901,7 +936,9 @@ class _MessageScreenState extends State<MessageScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           contentPadding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -945,7 +982,9 @@ class _MessageScreenState extends State<MessageScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFDC2626),
                   minimumSize: const Size(double.infinity, 44),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   elevation: 0,
                 ),
                 onPressed: () {
@@ -967,7 +1006,9 @@ class _MessageScreenState extends State<MessageScreen> {
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Color(0xFFE5E7EB)),
                   minimumSize: const Size(double.infinity, 44),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(
@@ -991,7 +1032,10 @@ class _MessageScreenState extends State<MessageScreen> {
       SnackBar(
         content: Text(
           '${widget.chat.name} has been blocked successfully.',
-          style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.w600),
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         backgroundColor: Colors.red[600],
         behavior: SnackBarBehavior.floating,

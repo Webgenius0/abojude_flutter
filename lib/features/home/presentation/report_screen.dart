@@ -27,31 +27,38 @@ class _ReportScreenState extends State<ReportScreen> {
   final List<Map<String, String>> _listingOptions = [
     {
       'title': 'Spam or Misleading Listing',
-      'description': 'This listing appears to be repetitive, misleading, irrelevant, or created primarily to attract attention without providing legitimate value.',
+      'description':
+          'This listing appears to be repetitive, misleading, irrelevant, or created primarily to attract attention without providing legitimate value.',
     },
     {
       'title': 'Fraud or Scam',
-      'description': 'This listing may be attempting to deceive users, request money dishonestly, or promote fraudulent products, services, or opportunities.',
+      'description':
+          'This listing may be attempting to deceive users, request money dishonestly, or promote fraudulent products, services, or opportunities.',
     },
     {
       'title': 'Wrong Category',
-      'description': 'The listing is posted in an incorrect category, making it harder to find or violating category guidelines.',
+      'description':
+          'The listing is posted in an incorrect category, making it harder to find or violating category guidelines.',
     },
     {
       'title': 'Inappropriate or Offensive Content',
-      'description': 'This listing contains offensive language, adult content, hate speech, violent material, or other content that violates community standards.',
+      'description':
+          'This listing contains offensive language, adult content, hate speech, violent material, or other content that violates community standards.',
     },
     {
       'title': 'Prohibited or Illegal Item',
-      'description': 'The listing promotes restricted, prohibited, counterfeit, or illegal products, services, or activities.',
+      'description':
+          'The listing promotes restricted, prohibited, counterfeit, or illegal products, services, or activities.',
     },
     {
       'title': 'Duplicate Listing',
-      'description': 'The same listing has been posted multiple times, creating unnecessary duplication within the platform.',
+      'description':
+          'The same listing has been posted multiple times, creating unnecessary duplication within the platform.',
     },
     {
       'title': 'Other',
-      'description': 'Please provide any additional information that may help us understand and review this report more effectively.',
+      'description':
+          'Please provide any additional information that may help us understand and review this report more effectively.',
     },
   ];
 
@@ -59,23 +66,28 @@ class _ReportScreenState extends State<ReportScreen> {
   final List<Map<String, String>> _userOptions = [
     {
       'title': 'Spam or Misleading Behavior',
-      'description': 'This user appears to be repetitive, misleading, or sending unsolicited/promotional messages without legitimate intent.',
+      'description':
+          'This user appears to be repetitive, misleading, or sending unsolicited/promotional messages without legitimate intent.',
     },
     {
       'title': 'Fraud or Scam',
-      'description': 'This user may be attempting to deceive other users, request money dishonestly, or promote fraudulent activities.',
+      'description':
+          'This user may be attempting to deceive other users, request money dishonestly, or promote fraudulent activities.',
     },
     {
       'title': 'Inappropriate or Offensive Behavior',
-      'description': 'This user sends messages containing offensive language, harassment, hate speech, or other content violating community standards.',
+      'description':
+          'This user sends messages containing offensive language, harassment, hate speech, or other content violating community standards.',
     },
     {
       'title': 'Prohibited or Illegal Activities',
-      'description': 'This user promotes restricted, prohibited, counterfeit, or illegal products, services, or activities.',
+      'description':
+          'This user promotes restricted, prohibited, counterfeit, or illegal products, services, or activities.',
     },
     {
       'title': 'Other',
-      'description': 'Please provide any additional information that may help us understand and review this report more effectively.',
+      'description':
+          'Please provide any additional information that may help us understand and review this report more effectively.',
     },
   ];
 
@@ -122,7 +134,10 @@ class _ReportScreenState extends State<ReportScreen> {
         SnackBar(
           content: Text(
             'Report submitted successfully. Thank you!',
-            style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: Colors.white),
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
           ),
           backgroundColor: Colors.green[600],
           behavior: SnackBarBehavior.floating,
@@ -136,7 +151,9 @@ class _ReportScreenState extends State<ReportScreen> {
   @override
   Widget build(BuildContext context) {
     final options = widget.isReportUser ? _userOptions : _listingOptions;
-    final titleText = widget.isReportUser ? 'Report this user' : 'Report this listing';
+    final titleText = widget.isReportUser
+        ? 'Report this user'
+        : 'Report this listing';
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -172,7 +189,10 @@ class _ReportScreenState extends State<ReportScreen> {
               // Scrollable content area
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 10.h,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -219,7 +239,8 @@ class _ReportScreenState extends State<ReportScreen> {
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(vertical: 12.h),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       // Custom styled radio circle to match mockup exactly
                                       Container(
@@ -265,7 +286,8 @@ class _ReportScreenState extends State<ReportScreen> {
                                           right: 8.w,
                                         ),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               description,
@@ -282,51 +304,79 @@ class _ReportScreenState extends State<ReportScreen> {
                                                 style: GoogleFonts.inter(
                                                   fontSize: 13.sp,
                                                   fontWeight: FontWeight.w600,
-                                                  color: const Color(0xFF374151),
+                                                  color: const Color(
+                                                    0xFF374151,
+                                                  ),
                                                 ),
                                               ),
                                               SizedBox(height: 8.h),
                                               TextFormField(
-                                                controller: _otherTextController,
+                                                controller:
+                                                    _otherTextController,
                                                 maxLines: 4,
                                                 style: GoogleFonts.inter(
                                                   fontSize: 13.sp,
                                                   color: Colors.black87,
                                                 ),
                                                 decoration: InputDecoration(
-                                                  hintText: 'Enter details here...',
+                                                  hintText:
+                                                      'Enter details here...',
                                                   hintStyle: GoogleFonts.inter(
                                                     fontSize: 13.sp,
-                                                    color: const Color(0xFF9CA3AF),
+                                                    color: const Color(
+                                                      0xFF9CA3AF,
+                                                    ),
                                                   ),
-                                                  contentPadding: EdgeInsets.symmetric(
-                                                    horizontal: 14.w,
-                                                    vertical: 12.h,
-                                                  ),
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                        horizontal: 14.w,
+                                                        vertical: 12.h,
+                                                      ),
                                                   border: OutlineInputBorder(
-                                                    borderRadius: BorderRadius.circular(10.r),
-                                                    borderSide: const BorderSide(
-                                                      color: Color(0xFFE5E7EB),
-                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10.r,
+                                                        ),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                          color: Color(
+                                                            0xFFE5E7EB,
+                                                          ),
+                                                        ),
                                                   ),
-                                                  enabledBorder: OutlineInputBorder(
-                                                    borderRadius: BorderRadius.circular(10.r),
-                                                    borderSide: const BorderSide(
-                                                      color: Color(0xFFE5E7EB),
-                                                    ),
-                                                  ),
-                                                  focusedBorder: OutlineInputBorder(
-                                                    borderRadius: BorderRadius.circular(10.r),
-                                                    borderSide: const BorderSide(
-                                                      color: Color(0xFF0F3D7A),
-                                                    ),
-                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              10.r,
+                                                            ),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                              color: Color(
+                                                                0xFFE5E7EB,
+                                                              ),
+                                                            ),
+                                                      ),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              10.r,
+                                                            ),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                              color: Color(
+                                                                0xFF0F3D7A,
+                                                              ),
+                                                            ),
+                                                      ),
                                                   errorStyle: GoogleFonts.inter(
                                                     fontSize: 11.sp,
                                                   ),
                                                 ),
                                                 validator: (value) {
-                                                  if (value == null || value.trim().isEmpty) {
+                                                  if (value == null ||
+                                                      value.trim().isEmpty) {
                                                     return 'Please enter some details';
                                                   }
                                                   return null;
@@ -338,7 +388,10 @@ class _ReportScreenState extends State<ReportScreen> {
                                       )
                                     : const SizedBox.shrink(),
                               ),
-                              const Divider(height: 1, color: Color(0xFFF1F3F5)),
+                              const Divider(
+                                height: 1,
+                                color: Color(0xFFF1F3F5),
+                              ),
                             ],
                           );
                         },
@@ -371,7 +424,9 @@ class _ReportScreenState extends State<ReportScreen> {
                               height: 20.r,
                               child: const CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
                               ),
                             )
                           : Text(

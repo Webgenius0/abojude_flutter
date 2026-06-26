@@ -1,3 +1,5 @@
+import 'package:abojude_flutter/features/privacy_policy_screen/privacy_policy_screen.dart';
+import 'package:abojude_flutter/features/terms_of_service_screen/trams_and_services_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -63,9 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Container(
                     width: double.infinity,
                     height: 130.h,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF0F3D7A),
-                    ),
+                    decoration: const BoxDecoration(color: Color(0xFF0F3D7A)),
                     child: Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -198,7 +198,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   icon: Icons.language_rounded,
                   title: 'Language',
                   trailing: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 4.h,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFF0F3D7A).withOpacity(0.06),
                       borderRadius: BorderRadius.circular(12.r),
@@ -264,13 +267,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildTile(
                   icon: Icons.shield_outlined,
                   title: 'Privacy Policy',
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(PrivacyPolicyScreen());
+                  },
                 ),
                 _buildDivider(),
                 _buildTile(
                   icon: Icons.description_outlined,
                   title: 'Terms of Service',
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(TermsOfServiceScreen());
+                  },
                 ),
               ]),
 
@@ -292,9 +299,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Container(
       width: 36.w,
       height: 36.h,
-      decoration: const BoxDecoration(
-        color: Colors.transparent,
-      ),
+      decoration: const BoxDecoration(color: Colors.transparent),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -317,7 +322,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Container(
               width: 4.r,
               height: 4.r,
-              decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
             ),
           ),
           Positioned(
@@ -326,7 +334,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Container(
               width: 4.r,
               height: 4.r,
-              decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
             ),
           ),
         ],
@@ -363,9 +374,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-      child: Column(
-        children: children,
-      ),
+      child: Column(children: children),
     );
   }
 
@@ -412,10 +421,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
 
             // Optional Trailing element (Language badge, etc.)
-            if (trailing != null) ...[
-              trailing,
-              SizedBox(width: 8.w),
-            ],
+            if (trailing != null) ...[trailing, SizedBox(width: 8.w)],
 
             // Chevron Right
             Icon(
@@ -478,9 +484,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-
-
-// Logout confirmation pop-up
+  // Logout confirmation pop-up
   void _showLogoutDialog(BuildContext context) {
     showCupertinoDialog(
       context: context,
@@ -496,10 +500,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           content: Text(
             'Are you sure you want to log out of Wasel Canada?',
-            style: GoogleFonts.inter(
-              fontSize: 14.sp,
-              color: Colors.grey[600],
-            ),
+            style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey[600]),
           ),
           actions: [
             // Cancel Button
@@ -524,7 +525,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 appData.remove(kKeyAccessToken);
 
                 // Redirect user to the welcome screen
-                NavigationService.navigateToUntilReplacement(Routes.welcomeScreen);
+                NavigationService.navigateToUntilReplacement(
+                  Routes.welcomeScreen,
+                );
               },
               child: Text(
                 'Log Out',
@@ -564,7 +567,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
           contentPadding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 20.h),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -596,7 +601,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFDC2626),
                   minimumSize: Size(double.infinity, 44.h),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
                   elevation: 0,
                 ),
                 onPressed: () {
@@ -618,7 +625,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Color(0xFFE5E7EB)),
                   minimumSize: Size(double.infinity, 44.h),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
                 ),
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(
@@ -651,7 +660,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           builder: (context, setDialogState) {
             return AlertDialog(
               backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.r),
+              ),
               contentPadding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 20.h),
               content: SingleChildScrollView(
                 child: Form(
@@ -698,27 +709,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       TextFormField(
                         controller: passwordController,
                         obscureText: obscureText,
-                        style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.black87),
+                        style: GoogleFonts.inter(
+                          fontSize: 13.sp,
+                          color: Colors.black87,
+                        ),
                         decoration: InputDecoration(
                           hintText: 'Enter your password',
-                          hintStyle: GoogleFonts.inter(fontSize: 13.sp, color: const Color(0xFF9CA3AF)),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                          hintStyle: GoogleFonts.inter(
+                            fontSize: 13.sp,
+                            color: const Color(0xFF9CA3AF),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 14.w,
+                            vertical: 12.h,
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.r),
-                            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+                            borderSide: const BorderSide(
+                              color: Color(0xFFE5E7EB),
+                            ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.r),
-                            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+                            borderSide: const BorderSide(
+                              color: Color(0xFFE5E7EB),
+                            ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.r),
-                            borderSide: const BorderSide(color: Color(0xFF0F3D7A)),
+                            borderSide: const BorderSide(
+                              color: Color(0xFF0F3D7A),
+                            ),
                           ),
                           errorStyle: GoogleFonts.inter(fontSize: 11.sp),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                              obscureText
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
                               color: const Color(0xFF6B7280),
                               size: 18.sp,
                             ),
@@ -740,7 +768,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       // Custom warning text box
                       Container(
                         width: double.infinity,
-                        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 12.h,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFFF5F5),
                           border: Border.all(color: const Color(0xFFFEE2E2)),
@@ -763,7 +794,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFDC2626),
                           minimumSize: Size(double.infinity, 44.h),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
                           elevation: 0,
                         ),
                         onPressed: () async {
@@ -787,11 +820,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: Color(0xFFE5E7EB)),
                           minimumSize: Size(double.infinity, 44.h),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
-                          _showDeleteAccountDialog(context); // go back to warning dialog
+                          _showDeleteAccountDialog(
+                            context,
+                          ); // go back to warning dialog
                         },
                         child: Text(
                           'Back',
@@ -819,7 +856,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       SnackBar(
         content: Text(
           'Account deleted successfully.',
-          style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.w600),
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         backgroundColor: Colors.green[600],
         behavior: SnackBarBehavior.floating,

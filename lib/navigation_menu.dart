@@ -92,7 +92,8 @@ class _NavigationMenuState extends State<NavigationMenu> {
             ),
             _buildNavItem(
               index: 1,
-              iconPath: 'assets/icons/search-01.png', // change name as per your file
+              iconPath:
+                  'assets/icons/search-01.png', // change name as per your file
               label: 'Explore',
             ),
             _buildCenterFAB(),
