@@ -7,6 +7,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:abojude_flutter/features/message_screeen/message_screen.dart';
+import 'report_screen.dart';
 import 'package:abojude_flutter/features/message_screeen/message_screeen_list.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
@@ -104,7 +105,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.flag_outlined, color: Colors.black54),
-            onPressed: () {},
+            onPressed: () {
+              Get.to(
+                () => const ReportScreen(
+                  targetName: 'Samsung Galaxy S24 Ultra - Excellent Condition',
+                  isReportUser: false,
+                ),
+              );
+            },
           ),
         ],
       ),

@@ -146,70 +146,17 @@ class AboutWaselCanadaScreen extends StatelessWidget {
   Widget _buildLogoBanner() {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 24.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEAF5EF), // light mint green background matching Image 4
-        borderRadius: BorderRadius.circular(16.r),
+
+      padding: EdgeInsets.symmetric(
+        vertical: 84.h,
+        horizontal: 30.w,
       ),
-      child: Column(
-        children: [
-          // Logo symbol (Stylized W shape in green with red maple leaf)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Stylized Green Wave logo "W"
-                  Icon(
-                    Icons.waves_rounded,
-                    color: const Color(0xFF2B8A3E),
-                    size: 56.sp,
-                  ),
-                  // Red maple leaf or star representing Canada inside logo
-                  Positioned(
-                    bottom: 12.h,
-                    child: Container(
-                      width: 14.r,
-                      height: 14.r,
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Icon(Icons.star, color: Colors.white, size: 8.sp),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
-
-          // Arabic Brand text
-          Text(
-            'واصل كندا',
-            style: GoogleFonts.cairo(
-              fontSize: 22.sp,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFF0C3C78),
-              height: 1.1,
-            ),
-          ),
-          SizedBox(height: 4.h),
-
-          // English Brand text
-          Text(
-            'WASEL CANADA',
-            style: GoogleFonts.inter(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF2B8A3E),
-              letterSpacing: 1.0,
-            ),
-          ),
-        ],
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16.r),
+        image: const DecorationImage(
+          image: AssetImage('assets/images/app_canada_image.png'),
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

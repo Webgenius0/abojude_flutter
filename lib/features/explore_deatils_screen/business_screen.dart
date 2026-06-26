@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:abojude_flutter/features/home/presentation/report_screen.dart';
 
 class BusinessScreen extends StatefulWidget {
   const BusinessScreen({super.key});
@@ -56,12 +57,20 @@ class _BusinessScreenState extends State<BusinessScreen> {
         backgroundColor: Colors.white,
         elevation: 0.5,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black54, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black54,
+            size: 20,
+          ),
           onPressed: () => Get.back(),
         ),
         title: const Text(
           'Listing Details',
-          style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: [
           IconButton(
@@ -73,16 +82,29 @@ class _BusinessScreenState extends State<BusinessScreen> {
             onPressed: () => setState(() => _isFavorited = !_isFavorited),
           ),
           IconButton(
-            icon: const Icon(Icons.share_outlined, color: Colors.black54, size: 20),
+            icon: const Icon(
+              Icons.share_outlined,
+              color: Colors.black54,
+              size: 20,
+            ),
             onPressed: () {
-              Share.share('Check out Halal Butcher Shop - Vancouver: https://alnour.ca');
+              Share.share(
+                'Check out Halal Butcher Shop - Vancouver: https://alnour.ca',
+              );
             },
           ),
           IconButton(
-            icon: const Icon(Icons.outlined_flag, color: Colors.black54, size: 20),
+            icon: const Icon(
+              Icons.outlined_flag,
+              color: Colors.black54,
+              size: 20,
+            ),
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Listing reported successfully.')),
+              Get.to(
+                () => const ReportScreen(
+                  targetName: 'Halal Butcher Shop - Vancouver',
+                  isReportUser: false,
+                ),
               );
             },
           ),
@@ -146,7 +168,11 @@ class _BusinessScreenState extends State<BusinessScreen> {
                 SizedBox(width: 4),
                 Text(
                   'Featured Listing',
-                  style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -196,7 +222,10 @@ class _BusinessScreenState extends State<BusinessScreen> {
             children: [
               // Food & Grocery Badge
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFEBD5),
                   borderRadius: BorderRadius.circular(6),
@@ -212,7 +241,10 @@ class _BusinessScreenState extends State<BusinessScreen> {
               ),
               // Business Directory Category
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFEFF6FF),
                   borderRadius: BorderRadius.circular(6),
@@ -240,7 +272,11 @@ class _BusinessScreenState extends State<BusinessScreen> {
           const SizedBox(height: 8),
           Row(
             children: [
-              const Icon(Icons.location_on_outlined, size: 14, color: Colors.grey),
+              const Icon(
+                Icons.location_on_outlined,
+                size: 14,
+                color: Colors.grey,
+              ),
               const SizedBox(width: 4),
               Text(
                 'Toronto, Manitoba',
@@ -268,12 +304,20 @@ class _BusinessScreenState extends State<BusinessScreen> {
         children: [
           Text(
             'About',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
           ),
           SizedBox(height: 6),
           Text(
             'Premium halal butcher shop serving the Toronto community since 2015. Fresh daily cuts of beef, lamb, and poultry. Certified halal. Custom cuts available. Home delivery available for orders over \$50.',
-            style: TextStyle(fontSize: 13, color: Color(0xFF4B5563), height: 1.4),
+            style: TextStyle(
+              fontSize: 13,
+              color: Color(0xFF4B5563),
+              height: 1.4,
+            ),
           ),
         ],
       ),
@@ -293,10 +337,16 @@ class _BusinessScreenState extends State<BusinessScreen> {
               children: [
                 const Text(
                   'Business Hours',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
                 ),
                 Icon(
-                  _hoursExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  _hoursExpanded
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down,
                   color: Colors.black54,
                   size: 20,
                 ),
@@ -316,24 +366,63 @@ class _BusinessScreenState extends State<BusinessScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Monday – Friday', style: TextStyle(fontSize: 13, color: Color(0xFF4B5563))),
-                      Text('9:00 AM – 6:00 PM', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF10B981))),
+                      Text(
+                        'Monday – Friday',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFF4B5563),
+                        ),
+                      ),
+                      Text(
+                        '9:00 AM – 6:00 PM',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF10B981),
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Saturday', style: TextStyle(fontSize: 13, color: Color(0xFF4B5563))),
-                      Text('10:00 AM – 4:00 PM', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF10B981))),
+                      Text(
+                        'Saturday',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFF4B5563),
+                        ),
+                      ),
+                      Text(
+                        '10:00 AM – 4:00 PM',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF10B981),
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Sunday', style: TextStyle(fontSize: 13, color: Color(0xFF4B5563))),
-                      Text('Closed', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF6B7280))),
+                      Text(
+                        'Sunday',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFF4B5563),
+                        ),
+                      ),
+                      Text(
+                        'Closed',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF6B7280),
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -352,7 +441,11 @@ class _BusinessScreenState extends State<BusinessScreen> {
         children: [
           const Text(
             'Seller',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
           ),
           const SizedBox(height: 8),
           Container(
@@ -366,7 +459,14 @@ class _BusinessScreenState extends State<BusinessScreen> {
                 CircleAvatar(
                   radius: 20,
                   backgroundColor: const Color(0xFF1B2D6B),
-                  child: const Text('SA', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    'SA',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 12),
                 const Expanded(
@@ -375,17 +475,27 @@ class _BusinessScreenState extends State<BusinessScreen> {
                     children: [
                       Text(
                         'Sarah Ahmed',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
                       ),
                       SizedBox(height: 2),
                       Text(
                         'Toronto, Ontario',
-                        style: TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF6B7280),
+                        ),
                       ),
                       SizedBox(height: 2),
                       Text(
                         'Member since 2023',
-                        style: TextStyle(fontSize: 11, color: Color(0xFF9CA3AF)),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Color(0xFF9CA3AF),
+                        ),
                       ),
                     ],
                   ),
@@ -406,51 +516,75 @@ class _BusinessScreenState extends State<BusinessScreen> {
         children: [
           const Text(
             'Contact Information',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
           ),
           const SizedBox(height: 8),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFFE5E7EB)),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              children: [
-                _buildContactTile(
-                  icon: Icons.phone_outlined,
-                  title: 'Phone',
-                  value: '+1-416-555-1234',
-                  onTap: () => _launchPhone('+1-416-555-1234'),
-                ),
-                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
-                _buildContactTile(
-                  icon: Icons.chat_bubble_outline,
-                  title: "What's app number",
-                  value: '+1-416-555-1234',
-                  onTap: () => _launchWhatsApp('+1-416-555-1234'),
-                ),
-                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
-                _buildContactTile(
-                  icon: Icons.email_outlined,
-                  title: 'Email',
-                  value: 'alnour@example.com',
-                  onTap: () => _launchEmail('alnour@example.com'),
-                ),
-                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
-                _buildContactTile(
-                  icon: Icons.language,
-                  title: 'Website',
-                  value: 'https://alnour.ca',
-                  onTap: () => _launchUrl('https://alnour.ca'),
-                ),
-                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
-                _buildContactTile(
-                  icon: Icons.location_on_outlined,
-                  title: 'Address',
-                  value: 'Scarborough, Ontario',
-                  onTap: () => _launchUrl('https://maps.google.com/?q=Scarborough,Ontario'),
-                ),
-              ],
+          SafeArea(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: const Color(0xFFE5E7EB)),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: [
+                  _buildContactTile(
+                    icon: Icons.phone_outlined,
+                    title: 'Phone',
+                    value: '+1-416-555-1234',
+                    onTap: () => _launchPhone('+1-416-555-1234'),
+                  ),
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Color(0xFFE5E7EB),
+                  ),
+                  _buildContactTile(
+                    icon: Icons.chat_bubble_outline,
+                    title: "What's app number",
+                    value: '+1-416-555-1234',
+                    onTap: () => _launchWhatsApp('+1-416-555-1234'),
+                  ),
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Color(0xFFE5E7EB),
+                  ),
+                  _buildContactTile(
+                    icon: Icons.email_outlined,
+                    title: 'Email',
+                    value: 'alnour@example.com',
+                    onTap: () => _launchEmail('alnour@example.com'),
+                  ),
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Color(0xFFE5E7EB),
+                  ),
+                  _buildContactTile(
+                    icon: Icons.language,
+                    title: 'Website',
+                    value: 'https://alnour.ca',
+                    onTap: () => _launchUrl('https://alnour.ca'),
+                  ),
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Color(0xFFE5E7EB),
+                  ),
+                  _buildContactTile(
+                    icon: Icons.location_on_outlined,
+                    title: 'Address',
+                    value: 'Scarborough, Ontario',
+                    onTap: () => _launchUrl(
+                      'https://maps.google.com/?q=Scarborough,Ontario',
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -483,9 +617,22 @@ class _BusinessScreenState extends State<BusinessScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF))),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFF9CA3AF),
+                    ),
+                  ),
                   const SizedBox(height: 2),
-                  Text(value, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+                  Text(
+                    value,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -511,7 +658,11 @@ class _BusinessScreenState extends State<BusinessScreen> {
         children: [
           const Text(
             'Photos Gallery',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
           ),
           const SizedBox(height: 10),
           SizedBox(
@@ -546,7 +697,11 @@ class _BusinessScreenState extends State<BusinessScreen> {
         children: [
           const Text(
             'Related Listings',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
           ),
           const SizedBox(height: 12),
           SizedBox(
@@ -586,7 +741,9 @@ class _BusinessScreenState extends State<BusinessScreen> {
           Stack(
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(12),
+                ),
                 child: Image.network(
                   'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=200',
                   height: 100,
@@ -604,7 +761,11 @@ class _BusinessScreenState extends State<BusinessScreen> {
                     color: Colors.white,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.favorite_border, size: 14, color: Colors.grey),
+                  child: const Icon(
+                    Icons.favorite_border,
+                    size: 14,
+                    color: Colors.grey,
+                  ),
                 ),
               ),
             ],
@@ -617,13 +778,20 @@ class _BusinessScreenState extends State<BusinessScreen> {
                 children: [
                   const Text(
                     'Shop Vancouver',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFF3F4F6),
                       borderRadius: BorderRadius.circular(4),
@@ -636,7 +804,11 @@ class _BusinessScreenState extends State<BusinessScreen> {
                   const Spacer(),
                   const Row(
                     children: [
-                      Icon(Icons.location_on_outlined, size: 10, color: Colors.grey),
+                      Icon(
+                        Icons.location_on_outlined,
+                        size: 10,
+                        color: Colors.grey,
+                      ),
                       SizedBox(width: 2),
                       Expanded(
                         child: Text(
@@ -661,32 +833,40 @@ class _BusinessScreenState extends State<BusinessScreen> {
       bottom: 0,
       left: 0,
       right: 0,
-      child: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF1B2D6B),
-            minimumSize: const Size(double.infinity, 48),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            elevation: 0,
-          ),
-          onPressed: () {
-            // Tapping this should direct to Chat
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Routing to Chat...')),
-            );
-          },
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.chat_bubble_outline, color: Colors.white, size: 18),
-              SizedBox(width: 8),
-              Text(
-                'Send Message',
-                style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
+      child: SafeArea(
+        child: Container(
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1B2D6B),
+              minimumSize: const Size(double.infinity, 48),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
-            ],
+              elevation: 0,
+            ),
+            onPressed: () {
+              // Tapping this should direct to Chat
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Routing to Chat...')));
+            },
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.chat_bubble_outline, color: Colors.white, size: 18),
+                SizedBox(width: 8),
+                Text(
+                  'Send Message',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

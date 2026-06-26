@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart'; // Added for CupertinoSwitch
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -234,8 +235,8 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
             ),
           ),
 
-          // Master Switch
-          Switch(
+          // Master Cupertino Switch
+          CupertinoSwitch(
             value: _masterEnable,
             onChanged: _onMasterToggle,
             activeColor: const Color(0xFF0F3D7A),
@@ -293,8 +294,8 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
             ),
           ),
 
-          // Individual Switch
-          Switch(
+          // Individual Cupertino Switch
+          CupertinoSwitch(
             value: value,
             onChanged: (newValue) => _onSubToggle(type, newValue),
             activeColor: const Color(0xFF0F3D7A),

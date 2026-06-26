@@ -1,10 +1,7 @@
+import 'package:abojude_flutter/features/explore_deatils_screen/business_screen.dart';
 import 'package:abojude_flutter/features/home/presentation/product_details_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:abojude_flutter/features/explore_deatils_screen/buy_&_sell_screen.dart';
-import 'package:abojude_flutter/features/explore_deatils_screen/business_screen.dart';
-import 'package:abojude_flutter/features/explore_deatils_screen/job_screen.dart';
-import 'package:abojude_flutter/features/explore_deatils_screen/services_screen.dart';
+
 
 import '../widget/filter_screeen.dart';
 
@@ -410,7 +407,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const ProductDetailsScreen(),
+                builder: (context) =>   BusinessScreen(),
                 // If your screen needs data, pass it like this:
                 // builder: (context) => ProductDetailsScreen(listing: _listings[index]),
               ),
