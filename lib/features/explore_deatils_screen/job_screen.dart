@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:abojude_flutter/features/home/presentation/product_details_screen.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:abojude_flutter/features/home/presentation/report_screen.dart';
+import 'package:abojude_flutter/features/message_screeen/message_screen.dart';
+import '../message_screeen/message_screeen_list.dart';
 
 class JobScreen extends StatefulWidget {
   const JobScreen({super.key});
@@ -9,141 +14,65 @@ class JobScreen extends StatefulWidget {
   State<JobScreen> createState() => _JobScreenState();
 }
 
-class JobItem {
-  final String id;
-  final String title;
-  final String category;
-  final String salary;
-  final String location;
-  final String timeAgo;
-  final String imageUrl;
-  final bool isFeatured;
-  bool isFavorited;
-
-  JobItem({
-    required this.id,
-    required this.title,
-    required this.category,
-    required this.salary,
-    required this.location,
-    required this.timeAgo,
-    required this.imageUrl,
-    this.isFeatured = false,
-    this.isFavorited = false,
-  });
-}
-
 class _JobScreenState extends State<JobScreen> {
-  final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
+  bool _isFavorited = false;
+  int _currentImageIndex = 0;
 
-  final List<JobItem> _allItems = [
-    JobItem(
-      id: 'j1',
-      title: 'Restaurant Manager Needed',
-      category: 'Management',
-      salary: '\$4,500/month',
-      location: 'Toronto, MB',
-      timeAgo: '3 minutes ago',
-      imageUrl:
-          'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400',
-      isFeatured: true,
-    ),
-    JobItem(
-      id: 'j2',
-      title: 'Senior Flutter Developer',
-      category: 'Software Engineering',
-      salary: '\$90k - \$120k/year',
-      location: 'Remote',
-      timeAgo: '2 hours ago',
-      imageUrl:
-          'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400',
-      isFeatured: true,
-    ),
-    JobItem(
-      id: 'j3',
-      title: 'Kitchen Helper / Prep Cook',
-      category: 'Hospitality',
-      salary: '\$18 - \$22/hour',
-      location: 'Vancouver, BC',
-      timeAgo: '1 day ago',
-      imageUrl:
-          'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400',
-    ),
-    JobItem(
-      id: 'j4',
-      title: 'Customer Service Specialist',
-      category: 'Support',
-      salary: '\$20/hour',
-      location: 'Calgary, AB',
-      timeAgo: '4 hours ago',
-      imageUrl:
-          'https://images.unsplash.com/photo-1549923746-c502d488b3ea?w=400',
-    ),
-    JobItem(
-      id: 'j5',
-      title: 'Graphic Designer',
-      category: 'Creative Design',
-      salary: '\$3,800/month',
-      location: 'Montreal, QC',
-      timeAgo: '3 days ago',
-      imageUrl:
-          'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=400',
-    ),
-    JobItem(
-      id: 'j6',
-      title: 'Retail Sales Associate',
-      category: 'Sales',
-      salary: '\$16/hour',
-      location: 'Halifax, NS',
-      timeAgo: '5 days ago',
-      imageUrl:
-          'https://images.unsplash.com/photo-1560750588-73207b1ef5b8?w=400',
-    ),
+  final List<String> _coverImages = [
+    'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800',
+    'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800',
+    'https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=800',
   ];
 
-  List<JobItem> _filteredItems = [];
+  final List<Map<String, dynamic>> _relatedListings = [
+    {
+      'title': 'Shop Vancouver',
+      'category': 'Business',
+      'location': 'Toronto, Manitoba',
+      'imageUrl': 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=200',
+      'isFavorited': false,
+    },
+    {
+      'title': 'Shop Vancouver',
+      'category': 'Business',
+      'location': 'Toronto, Manitoba',
+      'imageUrl': 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=200',
+      'isFavorited': false,
+    },
+  ];
 
-  @override
-  void initState() {
-    super.initState();
-    _filteredItems = List.from(_allItems);
-    _searchController.addListener(_onSearchChanged);
+  // Contact launching helpers
+  Future<void> _launchPhone(String phone) async {
+    final Uri uri = Uri(scheme: 'tel', path: phone);
+    try {
+      await launchUrl(uri);
+    } catch (_) {}
   }
 
-  @override
-  void dispose() {
-    _searchController.removeListener(_onSearchChanged);
-    _searchController.dispose();
-    super.dispose();
+  Future<void> _launchWhatsApp(String phone) async {
+    final cleanPhone = phone.replaceAll(RegExp(r'[^\d]'), '');
+    final Uri uri = Uri.parse("https://wa.me/$cleanPhone");
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {}
   }
 
-  void _onSearchChanged() {
-    setState(() {
-      _searchQuery = _searchController.text.toLowerCase();
-      _filteredItems = _allItems.where((item) {
-        return item.title.toLowerCase().contains(_searchQuery) ||
-            item.category.toLowerCase().contains(_searchQuery) ||
-            item.location.toLowerCase().contains(_searchQuery);
-      }).toList();
-    });
+  Future<void> _launchEmail(String email) async {
+    final Uri uri = Uri(
+      scheme: 'mailto',
+      path: email,
+      queryParameters: {'subject': 'Inquiry from Wasel Canada'},
+    );
+    try {
+      await launchUrl(uri);
+    } catch (_) {}
   }
 
-  void _toggleFavorite(String id) {
-    setState(() {
-      final index = _allItems.indexWhere((item) => item.id == id);
-      if (index != -1) {
-        _allItems[index].isFavorited = !_allItems[index].isFavorited;
-        // Sync with filtered list
-        final filteredIndex = _filteredItems.indexWhere(
-          (item) => item.id == id,
-        );
-        if (filteredIndex != -1) {
-          _filteredItems[filteredIndex].isFavorited =
-              _allItems[index].isFavorited;
-        }
-      }
-    });
+  Future<void> _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {}
   }
 
   @override
@@ -154,288 +83,744 @@ class _JobScreenState extends State<JobScreen> {
         backgroundColor: Colors.white,
         elevation: 0.5,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.black87,
-            size: 20,
+            color: Colors.black54,
+            size: 20.sp,
           ),
           onPressed: () => Get.back(),
         ),
-        title: const Text(
-          'Jobs Board',
+        title: Text(
+          'Listing Details',
           style: TextStyle(
-            color: Colors.black87,
-            fontSize: 18,
+            color: Colors.black,
+            fontSize: 16.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(
+              _isFavorited ? Icons.favorite : Icons.favorite_border,
+              color: _isFavorited ? Colors.red : Colors.black54,
+              size: 20.sp,
+            ),
+            onPressed: () => setState(() => _isFavorited = !_isFavorited),
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.share_outlined,
+              color: Colors.black54,
+              size: 20,
+            ),
+            onPressed: () {
+              Share.share(
+                'Check out Senior Flutter Developer position: https://example.com',
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.outlined_flag,
+              color: Colors.black54,
+              size: 20,
+            ),
+            onPressed: () {
+              Get.to(
+                () => const ReportScreen(
+                  targetName: 'Senior Flutter Developer position',
+                  isReportUser: false,
+                ),
+              );
+            },
+          ),
+        ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
         children: [
-          _buildSearchBar(),
-          _buildResultsHeader(),
-          Expanded(child: _buildGrid()),
+          SingleChildScrollView(
+            padding: EdgeInsets.only(bottom: 90.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildCoverImage(),
+                _buildHeaderDetails(),
+                _buildDescription(),
+                _buildJobSpecifications(),
+                _buildSellerCard(),
+                _buildContactInfo(),
+                _buildRelatedListings(),
+              ],
+            ),
+          ),
+          _buildBottomActionBar(),
         ],
       ),
     );
   }
 
-  Widget _buildSearchBar() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-      child: Container(
-        height: 48,
-        decoration: BoxDecoration(
-          color: const Color(0xFFF3F4F6),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: TextField(
-          controller: _searchController,
-          style: const TextStyle(fontSize: 14),
-          decoration: InputDecoration(
-            hintText: 'Search Jobs...',
-            hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
-            prefixIcon: Icon(Icons.search, color: Colors.grey[500], size: 20),
-            suffixIcon: _searchQuery.isNotEmpty
-                ? IconButton(
-                    icon: Icon(Icons.clear, color: Colors.grey[500], size: 18),
-                    onPressed: () => _searchController.clear(),
-                  )
-                : null,
-            border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(vertical: 14),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildResultsHeader() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Text(
-        '${_filteredItems.length} jobs found',
-        style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
-      ),
-    );
-  }
-
-  Widget _buildGrid() {
-    if (_filteredItems.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.search_off, size: 60, color: Colors.grey[300]),
-            const SizedBox(height: 12),
-            Text(
-              'No jobs found',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[500],
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return GridView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        childAspectRatio: 0.72,
-      ),
-      itemCount: _filteredItems.length,
-      itemBuilder: (context, index) {
-        final item = _filteredItems[index];
-        return GestureDetector(
-          onTap: () => Get.to(() => const ProductDetailsScreen()),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [_buildCardImage(item), _buildCardDetails(item)],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildCardImage(JobItem item) {
+  Widget _buildCoverImage() {
     return Stack(
+      alignment: Alignment.bottomCenter,
       children: [
-        ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-          child: SizedBox(
-            height: 130,
-            width: double.infinity,
-            child: Image.network(
-              item.imageUrl,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                color: const Color(0xFFE5E7EB),
-                child: const Icon(
-                  Icons.image_not_supported,
-                  color: Colors.grey,
-                  size: 36,
+        SizedBox(
+          height: 220.h,
+          width: double.infinity,
+          child: PageView.builder(
+            itemCount: _coverImages.length,
+            onPageChanged: (index) {
+              setState(() {
+                _currentImageIndex = index;
+              });
+            },
+            itemBuilder: (context, index) {
+              return Image.network(
+                _coverImages[index],
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Container(color: Colors.grey[200]);
+                },
+              );
+            },
+          ),
+        ),
+        // Indicators
+        Positioned(
+          bottom: 12.h,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(_coverImages.length, (index) {
+              return Container(
+                width: 8.w,
+                height: 8.h,
+                margin: EdgeInsets.symmetric(horizontal: 4.w),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _currentImageIndex == index
+                      ? Colors.white
+                      : Colors.white.withOpacity(0.5),
                 ),
-              ),
-              loadingBuilder: (context, child, progress) {
-                if (progress == null) return child;
-                return Container(
-                  color: const Color(0xFFE5E7EB),
-                  child: const Center(
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 8,
-          left: 8,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.55),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Text(
-              item.timeAgo,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 10,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ),
-        if (item.isFeatured)
-          Positioned(
-            top: 8,
-            left: 8,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF59E0B),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.star, color: Colors.white, size: 10),
-                  SizedBox(width: 3),
-                  Text(
-                    'Featured',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        Positioned(
-          top: 8,
-          right: 8,
-          child: GestureDetector(
-            onTap: () => _toggleFavorite(item.id),
-            child: Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 4,
-                  ),
-                ],
-              ),
-              child: Icon(
-                item.isFavorited ? Icons.favorite : Icons.favorite_border,
-                size: 16,
-                color: item.isFavorited ? Colors.red : const Color(0xFF6B7280),
-              ),
-            ),
+              );
+            }),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildCardDetails(JobItem item) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              item.salary,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1B2D6B),
+  Widget _buildHeaderDetails() {
+    return Padding(
+      padding: EdgeInsets.all(16.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // "Jobs" badge
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFEF3C7), // light amber background
+              borderRadius: BorderRadius.circular(6.r),
+            ),
+            child: Text(
+              'Jobs',
+              style: TextStyle(
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFFD97706), // amber text
               ),
             ),
-            const SizedBox(height: 2),
-            Expanded(
-              child: Text(
-                item.title,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF111827),
-                  height: 1.3,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
+          ),
+          SizedBox(height: 12.h),
+          Text(
+            'Senior Flutter Developer',
+            style: TextStyle(
+              fontSize: 20.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
             ),
-            const SizedBox(height: 4),
-            Row(
+          ),
+          SizedBox(height: 8.h),
+          Row(
+            children: [
+              Icon(
+                Icons.location_on_outlined,
+                size: 14.sp,
+                color: Colors.grey[600],
+              ),
+              SizedBox(width: 4.w),
+              Text(
+                'Toronto, Manitoba',
+                style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
+              ),
+              SizedBox(width: 16.w),
+              Icon(
+                Icons.access_time,
+                size: 14.sp,
+                color: Colors.grey[600],
+              ),
+              SizedBox(width: 4.w),
+              Text(
+                '12 hours ago',
+                style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
+              ),
+            ],
+          ),
+          SizedBox(height: 12.h),
+          // Salary Indicator Badge
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+            decoration: BoxDecoration(
+              color: const Color(0xFFECFDF5), // light green
+              border: Border.all(color: const Color(0xFFA7F3D0)),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.location_on_outlined,
-                  size: 12,
-                  color: Color(0xFF9CA3AF),
+                Icon(
+                  Icons.payments_outlined,
+                  size: 16.sp,
+                  color: const Color(0xFF059669),
                 ),
-                const SizedBox(width: 3),
-                Expanded(
-                  child: Text(
-                    item.location,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: Color(0xFF6B7280),
-                    ),
-                    overflow: TextOverflow.ellipsis,
+                SizedBox(width: 6.w),
+                Text(
+                  '\$90,000 - \$120,000 / year',
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF059669),
                   ),
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDescription() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Description',
+            style: TextStyle(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          SizedBox(height: 6.h),
+          Text(
+            'We are looking for a Senior Flutter Developer to join our team in building premium, high-performance mobile applications. The ideal candidate has experience with state management (GetX/Bloc), custom animations, responsive UI layouts, and REST API integration. Collaborative environment, competitive salary, and flexible hours.',
+            style: TextStyle(
+              fontSize: 13.sp,
+              color: const Color(0xFF4B5563),
+              height: 1.4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildJobSpecifications() {
+    final specs = ['Full-Time', 'Remote / Hybrid', '3+ Years Exp', 'Flutter & Dart'];
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Job Specifications',
+            style: TextStyle(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 8.h,
+            children: specs.map((spec) => _buildSpecTag(spec)).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSpecTag(String spec) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEFF6FF), // light blue background
+        border: Border.all(color: const Color(0xFFDBEAFE)),
+        borderRadius: BorderRadius.circular(20.r),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.check_circle_outline,
+            size: 14.sp,
+            color: const Color(0xFF2563EB),
+          ),
+          SizedBox(width: 6.w),
+          Text(
+            spec,
+            style: TextStyle(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF1E40AF),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSellerCard() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Recruiter',
+            style: TextStyle(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Container(
+            padding: EdgeInsets.all(12.w),
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFFE5E7EB)),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 20.r,
+                  backgroundColor: const Color(0xFF1B2D6B),
+                  child: Text(
+                    'SA',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Sarah Ahmed',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        'Toronto, Ontario',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: const Color(0xFF6B7280),
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        'Member since 2023',
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          color: const Color(0xFF9CA3AF),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContactInfo() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Contact Information',
+            style: TextStyle(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFFE5E7EB)),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Column(
+              children: [
+                _buildContactTile(
+                  icon: Icons.call_outlined,
+                  iconColor: const Color(0xFF059669),
+                  bgColor: const Color(0xFFECFDF5),
+                  title: 'Phone',
+                  value: '+1-416-555-1234',
+                  onTap: () => _launchPhone('+1-416-555-1234'),
+                ),
+                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                _buildContactTile(
+                  icon: Icons.chat_bubble_outline_outlined,
+                  iconColor: const Color(0xFF10B981),
+                  bgColor: const Color(0xFFECFDF5),
+                  title: "What's app number",
+                  value: '+1-416-555-1234',
+                  onTap: () => _launchWhatsApp('+1-416-555-1234'),
+                ),
+                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                _buildContactTile(
+                  icon: Icons.mail_outline,
+                  iconColor: const Color(0xFF2563EB),
+                  bgColor: const Color(0xFFEFF6FF),
+                  title: 'Email',
+                  value: 'recruiting@example.com',
+                  onTap: () => _launchEmail('recruiting@example.com'),
+                ),
+                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                _buildContactTile(
+                  icon: Icons.location_on_outlined,
+                  iconColor: const Color(0xFFEA580C),
+                  bgColor: const Color(0xFFFFF7ED),
+                  title: 'Address',
+                  value: 'Downtown Toronto, Ontario',
+                  onTap: () => _launchUrl('https://maps.google.com/?q=DowntownToronto,Ontario'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContactTile({
+    required IconData icon,
+    required Color iconColor,
+    required Color bgColor,
+    required String title,
+    required String value,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                color: bgColor,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, size: 18.sp, color: iconColor),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      color: const Color(0xFF9CA3AF),
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRelatedListings() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Related Listings',
+            style: TextStyle(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          SizedBox(
+            height: 220.h,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: _relatedListings.length,
+              separatorBuilder: (context, index) => SizedBox(width: 12.w),
+              itemBuilder: (context, index) {
+                final item = _relatedListings[index];
+                return _buildRelatedCard(
+                  title: item['title'],
+                  category: item['category'],
+                  location: item['location'],
+                  imageUrl: item['imageUrl'],
+                  isFavorited: item['isFavorited'],
+                  onFavoriteToggle: () {
+                    setState(() {
+                      item['isFavorited'] = !item['isFavorited'];
+                    });
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRelatedCard({
+    required String title,
+    required String category,
+    required String location,
+    required String imageUrl,
+    required bool isFavorited,
+    required VoidCallback onFavoriteToggle,
+  }) {
+    return SafeArea(
+      child: Container(
+        width: 158.w,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(color: const Color(0xFFE5E7EB)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(12.r),
+                  ),
+                  child: Image.network(
+                    imageUrl,
+                    height: 100.h,
+                    width: 158.w,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Positioned(
+                  bottom: 6.h,
+                  left: 8.w,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.4),
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                    child: Text(
+                      '4 days ago',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 8.sp,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 8.h,
+                  right: 8.w,
+                  child: GestureDetector(
+                    onTap: onFavoriteToggle,
+                    child: Container(
+                      width: 26.w,
+                      height: 26.h,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        isFavorited ? Icons.favorite : Icons.favorite_border,
+                        size: 14.sp,
+                        color: isFavorited ? Colors.red : Colors.grey,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(8.0.r),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 6.h),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 2.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF3F4F6),
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                      child: Text(
+                        category,
+                        style: TextStyle(fontSize: 9.sp, color: const Color(0xFF4B5563)),
+                      ),
+                    ),
+                    SizedBox(height: 6.h),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                          size: 10.sp,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(width: 4.w),
+                        Expanded(
+                          child: Text(
+                            location,
+                            style: TextStyle(fontSize: 9.sp, color: Colors.grey),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomActionBar() {
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: SafeArea(
+        child: Container(
+          color: Colors.white,
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1B2D6B),
+              minimumSize: Size(double.infinity, 48.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              elevation: 0,
+            ),
+            onPressed: () {
+              Get.to(
+                () => MessageScreen(
+                  chat: ChatMessage(
+                    id: 'sarah_ahmed',
+                    name: 'Sarah Ahmed',
+                    initials: 'SA',
+                    lastMessage:
+                        'Hi, is the Samsung Galaxy S24 Ultra still available?',
+                    time: 'Just now',
+                    isOnline: true,
+                  ),
+                ),
+              );
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/icons/message-02.png',
+                  height: 30.h,
+                  errorBuilder: (context, error, stackTrace) => Icon(
+                    Icons.chat_bubble_outline,
+                    color: Colors.white,
+                    size: 20.sp,
+                  ),
+                ),
+                SizedBox(width: 10.w),
+                Text(
+                  'Send Message',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

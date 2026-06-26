@@ -1,8 +1,12 @@
 import 'package:abojude_flutter/features/explore_deatils_screen/business_screen.dart';
 import 'package:abojude_flutter/features/home/presentation/product_details_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 
 
+import '../../explore_deatils_screen/job_screen.dart';
+import '../../explore_deatils_screen/services_screen.dart';
 import '../widget/filter_screeen.dart';
 
 // ─── Data Models ────────────────────────────────────────────────────────────
@@ -133,7 +137,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   List<Listing> _listings = List.from(_allListings);
-
+  static const Color navyBlue = Color(0xFF1B2D6B);
   @override
   void initState() {
     super.initState();
@@ -291,7 +295,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
               width: 46,
               height: 46,
               decoration: BoxDecoration(
-                color: const Color(0xFF1A56DB),
+                color:  navyBlue,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(Icons.tune, color: Colors.white, size: 20),
@@ -398,20 +402,33 @@ class _ExploreScreenState extends State<ExploreScreen> {
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
         childAspectRatio: 0.72,
-        // Removed the misplaced ProductDetailsScreen() from here
       ),
       itemCount: _listings.length,
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>   BusinessScreen(),
-                // If your screen needs data, pass it like this:
-                // builder: (context) => ProductDetailsScreen(listing: _listings[index]),
-              ),
-            );
+            final category = _listings[index].category;
+
+            switch (category) {
+              case 'Buy & Sell':
+                Get.to(() => const ProductDetailsScreen());
+                break;
+
+              case 'Business':
+                Get.to(() => const BusinessScreen());
+                break;
+
+              case 'Jobs':
+                Get.to(() => const JobScreen());
+                break;
+
+              case 'Services':
+                Get.to(() => const ServicesScreen());
+                break;
+
+              default:
+                Get.to(() => const BusinessScreen());
+            }
           },
           child: _ListingCard(
             listing: _listings[index],

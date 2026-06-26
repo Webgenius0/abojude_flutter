@@ -8,6 +8,7 @@ import 'package:abojude_flutter/features/explore_deatils_screen/job_screen.dart'
 import 'package:abojude_flutter/features/explore_deatils_screen/services_screen.dart';
 import 'package:abojude_flutter/features/home/presentation/product_details_screen.dart';
 
+import '../widget/filter_screeen.dart';
 import 'notificatosn_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -243,14 +244,104 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
+  late List<Map<String, dynamic>> _filteredFeaturedItems;
+  late List<Map<String, dynamic>> _filteredRecentItems;
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredFeaturedItems = List.from(_featuredItems);
+    _filteredRecentItems = List.from(_recentItems);
+  }
+
+  void _applyFilters() {
+    setState(() {
+      _filteredFeaturedItems = _featuredItems.where((item) {
+        final category = item['category'] as String? ?? '';
+        final matchesCategory = _activeFilters.category == 'All' ||
+            (category.toLowerCase() == _activeFilters.category.toLowerCase()) ||
+            (_activeFilters.category == 'Business Directory' && category == 'Business');
+
+        final location = (item['location'] as String? ?? '').toLowerCase();
+        final matchesProvince = _activeFilters.province == null ||
+            location.contains(_activeFilters.province!.toLowerCase());
+        final matchesCity = _activeFilters.city == null ||
+            location.contains(_activeFilters.city!.toLowerCase());
+
+        // Price filter if item has price
+        bool matchesPrice = true;
+        if (item['hasPrice'] as bool? ?? false) {
+          final priceStr = (item['price'] as String? ?? '').replaceAll(RegExp(r'[^\d.]'), '');
+          final price = double.tryParse(priceStr);
+          if (price != null) {
+            if (_activeFilters.minPrice != null && price < _activeFilters.minPrice!) {
+              matchesPrice = false;
+            }
+            if (_activeFilters.maxPrice != null && price > _activeFilters.maxPrice!) {
+              matchesPrice = false;
+            }
+          }
+        }
+
+        return matchesCategory && matchesProvince && matchesCity && matchesPrice;
+      }).toList();
+
+      _filteredRecentItems = _recentItems.where((item) {
+        final category = item['category'] as String? ?? '';
+        final matchesCategory = _activeFilters.category == 'All' ||
+            (category.toLowerCase() == _activeFilters.category.toLowerCase()) ||
+            (_activeFilters.category == 'Business Directory' && category == 'Business');
+
+        final location = (item['location'] as String? ?? '').toLowerCase();
+        final matchesProvince = _activeFilters.province == null ||
+            location.contains(_activeFilters.province!.toLowerCase());
+        final matchesCity = _activeFilters.city == null ||
+            location.contains(_activeFilters.city!.toLowerCase());
+
+        // Price filter if item has price
+        bool matchesPrice = true;
+        if (item['hasPrice'] as bool? ?? false) {
+          final priceStr = (item['price'] as String? ?? '').replaceAll(RegExp(r'[^\d.]'), '');
+          final price = double.tryParse(priceStr);
+          if (price != null) {
+            if (_activeFilters.minPrice != null && price < _activeFilters.minPrice!) {
+              matchesPrice = false;
+            }
+            if (_activeFilters.maxPrice != null && price > _activeFilters.maxPrice!) {
+              matchesPrice = false;
+            }
+          }
+        }
+
+        return matchesCategory && matchesProvince && matchesCity && matchesPrice;
+      }).toList();
+
+      // Sort logic based on sortBy
+      if (_activeFilters.sortBy == 'Price: Low to High') {
+        _filteredFeaturedItems.sort((a, b) => _comparePrice(a, b));
+        _filteredRecentItems.sort((a, b) => _comparePrice(a, b));
+      } else if (_activeFilters.sortBy == 'Price: High to Low') {
+        _filteredFeaturedItems.sort((a, b) => _comparePrice(b, a));
+        _filteredRecentItems.sort((a, b) => _comparePrice(b, a));
+      }
+    });
+  }
+
+  int _comparePrice(Map<String, dynamic> a, Map<String, dynamic> b) {
+    final priceAStr = (a['price'] as String? ?? '').replaceAll(RegExp(r'[^\d.]'), '');
+    final priceBStr = (b['price'] as String? ?? '').replaceAll(RegExp(r'[^\d.]'), '');
+    final priceA = double.tryParse(priceAStr) ?? 0.0;
+    final priceB = double.tryParse(priceBStr) ?? 0.0;
+    return priceA.compareTo(priceB);
+  }
   final List<Map<String, dynamic>> _categoryList = [
     {
-      'iconPath': 'assets/icons/buySell.png',
+      'iconPath': 'assets/images/jobImage.png',
       'label': 'Buy & Sell',
       'subtitle': 'Your Local Marketplace',
     },
     {
-      'iconPath': 'assets/icons/jobsIcon.png',
+      'iconPath': 'assets/images/jobImage.png',
       'label': 'Jobs',
       'subtitle': 'Find your next career opportunity',
     },
@@ -265,7 +356,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'subtitle': 'Professional services near you',
     },
   ];
-
+  FilterOptions _activeFilters = FilterOptions();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -404,43 +495,72 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             children: [
               Expanded(
-                child: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.06),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
+                child:
+                  GestureDetector(
+                    onTap: () {
+                      showFilterBottomSheet(
+                        context,
+                        currentFilters: _activeFilters,
+                        onApply: (filters) {
+                          setState(() {
+                            _activeFilters = filters;
+                            _applyFilters(); // your existing filter method
+                          });
+                        },
+                      );
+                    },
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.06),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: const TextField(
+                      decoration: InputDecoration(
+                        hintText: 'What are you looking for?',
+                        hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.grey,
+                          size: 22,
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(vertical: 15),
                       ),
-                    ],
-                  ),
-                  child: const TextField(
-                    decoration: InputDecoration(
-                      hintText: 'What are you looking for?',
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.grey,
-                        size: 22,
-                      ),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(vertical: 15),
                     ),
                   ),
                 ),
               ),
               const SizedBox(width: 10),
-              Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: navyBlue,
-                  borderRadius: BorderRadius.circular(12),
+              GestureDetector(
+                onTap: () {
+                  showFilterBottomSheet(
+                    context,
+                    currentFilters: _activeFilters,
+                    onApply: (filters) {
+                      setState(() {
+                        _activeFilters = filters;
+                        _applyFilters();
+                      });
+                    },
+                  );
+                },
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: navyBlue,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.tune, color: Colors.white, size: 22),
                 ),
-                child: const Icon(Icons.tune, color: Colors.white, size: 22),
               ),
             ],
           ),
@@ -496,127 +616,128 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildBannerItem(Map<String, dynamic> banner) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
+      margin:   EdgeInsets.symmetric(vertical: 4.h),
       decoration: BoxDecoration(
-        color: banner['bgColor'] as Color,
-        borderRadius: BorderRadius.circular(16),
+        // color: banner['bgColor'] as Color,
+        image: DecorationImage(image: AssetImage('assets/images/bannerImage.png'),fit: BoxFit.cover),
+        borderRadius: BorderRadius.circular(16.r),
       ),
-      child: Stack(
-        children: [
-          Positioned(
-            right: -20,
-            top: -20,
-            child: Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          Positioned(
-            right: 20,
-            bottom: -30,
-            child: Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: lightGreen.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: lightGreen.withOpacity(0.5)),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.verified, color: lightGreen, size: 12),
-                      const SizedBox(width: 4),
-                      Text(
-                        banner['tag'] as String,
-                        style: const TextStyle(
-                          color: lightGreen,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  banner['title'] as String,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                Text(
-                  banner['highlight'] as String,
-                  style: const TextStyle(
-                    color: lightGreen,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  banner['subtitle'] as String,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.75),
-                    fontSize: 10,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(
-                    4,
-                    (i) => Column(
-                      children: [
-                        Icon(
-                          (banner['statIcons'] as List<IconData>)[i],
-                          color: Colors.white,
-                          size: 16,
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          (banner['stats'] as List<String>)[i],
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.85),
-                            fontSize: 8,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      // child: Stack(
+      //   children: [
+      //     Positioned(
+      //       right: -20,
+      //       top: -20,
+      //       child: Container(
+      //         width: 120,
+      //         height: 120,
+      //         decoration: BoxDecoration(
+      //           color: Colors.white.withOpacity(0.05),
+      //           shape: BoxShape.circle,
+      //         ),
+      //       ),
+      //     ),
+      //     Positioned(
+      //       right: 20,
+      //       bottom: -30,
+      //       child: Container(
+      //         width: 80,
+      //         height: 80,
+      //         decoration: BoxDecoration(
+      //           color: Colors.white.withOpacity(0.05),
+      //           shape: BoxShape.circle,
+      //         ),
+      //       ),
+      //     ),
+      //     Padding(
+      //       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      //       child: Column(
+      //         crossAxisAlignment: CrossAxisAlignment.start,
+      //         children: [
+      //           Container(
+      //             padding: const EdgeInsets.symmetric(
+      //               horizontal: 10,
+      //               vertical: 4,
+      //             ),
+      //             decoration: BoxDecoration(
+      //               color: lightGreen.withOpacity(0.2),
+      //               borderRadius: BorderRadius.circular(20),
+      //               border: Border.all(color: lightGreen.withOpacity(0.5)),
+      //             ),
+      //             child: Row(
+      //               mainAxisSize: MainAxisSize.min,
+      //               children: [
+      //                 const Icon(Icons.verified, color: lightGreen, size: 12),
+      //                 const SizedBox(width: 4),
+      //                 Text(
+      //                   banner['tag'] as String,
+      //                   style: const TextStyle(
+      //                     color: lightGreen,
+      //                     fontSize: 10,
+      //                     fontWeight: FontWeight.w600,
+      //                     letterSpacing: 0.5,
+      //                   ),
+      //                 ),
+      //               ],
+      //             ),
+      //           ),
+      //           const SizedBox(height: 8),
+      //           Text(
+      //             banner['title'] as String,
+      //             style: const TextStyle(
+      //               color: Colors.white,
+      //               fontSize: 18,
+      //               fontWeight: FontWeight.w800,
+      //             ),
+      //           ),
+      //           Text(
+      //             banner['highlight'] as String,
+      //             style: const TextStyle(
+      //               color: lightGreen,
+      //               fontSize: 18,
+      //               fontWeight: FontWeight.w800,
+      //             ),
+      //           ),
+      //           const SizedBox(height: 4),
+      //           Text(
+      //             banner['subtitle'] as String,
+      //             style: TextStyle(
+      //               color: Colors.white.withOpacity(0.75),
+      //               fontSize: 10,
+      //             ),
+      //             maxLines: 2,
+      //             overflow: TextOverflow.ellipsis,
+      //           ),
+      //           const SizedBox(height: 10),
+      //           Row(
+      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //             children: List.generate(
+      //               4,
+      //               (i) => Column(
+      //                 children: [
+      //                   Icon(
+      //                     (banner['statIcons'] as List<IconData>)[i],
+      //                     color: Colors.white,
+      //                     size: 16,
+      //                   ),
+      //                   const SizedBox(height: 2),
+      //                   Text(
+      //                     (banner['stats'] as List<String>)[i],
+      //                     textAlign: TextAlign.center,
+      //                     style: TextStyle(
+      //                       color: Colors.white.withOpacity(0.85),
+      //                       fontSize: 8,
+      //                       fontWeight: FontWeight.w500,
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 
@@ -663,8 +784,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // ─── Featured Listings ────────────────────────────────────
   Widget _buildFeaturedListings() {
     final int count = _showAllFeatured
-        ? _featuredItems.length
-        : (_featuredItems.length > 3 ? 3 : _featuredItems.length);
+        ? _filteredFeaturedItems.length
+        : (_filteredFeaturedItems.length > 3 ? 3 : _filteredFeaturedItems.length);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -685,7 +806,7 @@ class _HomeScreenState extends State<HomeScreen> {
             itemCount: count,
             separatorBuilder: (_, __) => const SizedBox(width: 12),
             itemBuilder: (context, index) =>
-                _buildListingCard(_featuredItems[index]),
+                _buildListingCard(_filteredFeaturedItems[index]),
           ),
         ),
       ],
@@ -1022,8 +1143,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // ─── Recent Listings ──────────────────────────────────────
   Widget _buildRecentListings() {
     final int count = _showAllRecent
-        ? _recentItems.length
-        : (_recentItems.length > 3 ? 3 : _recentItems.length);
+        ? _filteredRecentItems.length
+        : (_filteredRecentItems.length > 3 ? 3 : _filteredRecentItems.length);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1048,7 +1169,7 @@ class _HomeScreenState extends State<HomeScreen> {
             childAspectRatio: 0.75,
           ),
           itemBuilder: (context, index) =>
-              _buildListingCard(_recentItems[index]),
+              _buildListingCard(_filteredRecentItems[index]),
         ),
       ],
     );

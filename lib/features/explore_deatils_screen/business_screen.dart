@@ -1,8 +1,12 @@
+import 'package:abojude_flutter/features/message_screeen/message_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:abojude_flutter/features/home/presentation/report_screen.dart';
+
+import '../message_screeen/message_screeen_list.dart';
 
 class BusinessScreen extends StatefulWidget {
   const BusinessScreen({super.key});
@@ -14,6 +18,24 @@ class BusinessScreen extends StatefulWidget {
 class _BusinessScreenState extends State<BusinessScreen> {
   bool _isFavorited = false;
   bool _hoursExpanded = true;
+
+  // Mock data for related listings
+  final List<Map<String, dynamic>> _relatedListings = [
+    {
+      'title': 'Halal Meat Shop',
+      'category': 'Business',
+      'location': 'Toronto, Manitoba',
+      'imageUrl': 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=200',
+      'isFavorited': false,
+    },
+    {
+      'title': 'Shop Vancouver',
+      'category': 'Business',
+      'location': 'Toronto, Manitoba',
+      'imageUrl': 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=200',
+      'isFavorited': false,
+    },
+  ];
 
   // Contact launching helpers
   Future<void> _launchPhone(String phone) async {
@@ -706,13 +728,25 @@ class _BusinessScreenState extends State<BusinessScreen> {
           const SizedBox(height: 12),
           SizedBox(
             height: 220,
-            child: ListView(
+            child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              children: [
-                _buildRelatedCard(),
-                const SizedBox(width: 12),
-                _buildRelatedCard(),
-              ],
+              itemCount: _relatedListings.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              itemBuilder: (context, index) {
+                final item = _relatedListings[index];
+                return _buildRelatedCard(
+                  title: item['title'],
+                  category: item['category'],
+                  location: item['location'],
+                  imageUrl: item['imageUrl'],
+                  isFavorited: item['isFavorited'],
+                  onFavoriteToggle: () {
+                    setState(() {
+                      item['isFavorited'] = !item['isFavorited'];
+                    });
+                  },
+                );
+              },
             ),
           ),
         ],
@@ -720,110 +754,128 @@ class _BusinessScreenState extends State<BusinessScreen> {
     );
   }
 
-  Widget _buildRelatedCard() {
-    return Container(
-      width: 158,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(12),
-                ),
-                child: Image.network(
-                  'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=200',
-                  height: 100,
-                  width: 158,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Container(
-                  width: 26,
-                  height: 26,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
+  Widget _buildRelatedCard({
+    required String title,
+    required String category,
+    required String location,
+    required String imageUrl,
+    required bool isFavorited,
+    required VoidCallback onFavoriteToggle,
+  }) {
+    return SafeArea(
+      child: Container(
+        width: 158.w,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(color: const Color(0xFFE5E7EB)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(12),
                   ),
-                  child: const Icon(
-                    Icons.favorite_border,
-                    size: 14,
-                    color: Colors.grey,
+                  child: Image.network(
+                    imageUrl,
+                    height: 100,
+                    width: 158,
+                    fit: BoxFit.cover,
                   ),
                 ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Shop Vancouver',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF3F4F6),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Text(
-                      'Business',
-                      style: TextStyle(fontSize: 9, color: Color(0xFF4B5563)),
-                    ),
-                  ),
-                  const Spacer(),
-                  const Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                        size: 10,
-                        color: Colors.grey,
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: GestureDetector(
+                    onTap: onFavoriteToggle,
+                    child: Container(
+                      width: 26,
+                      height: 26,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 2,
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 2),
-                      Expanded(
-                        child: Text(
-                          'Toronto, Manitoba',
-                          style: TextStyle(fontSize: 9, color: Colors.grey),
-                          overflow: TextOverflow.ellipsis,
+                      child: Icon(
+                        isFavorited ? Icons.favorite : Icons.favorite_border,
+                        size: 14,
+                        color: isFavorited ? Colors.red : Colors.grey,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(8.0.sp),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 6.h),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 2.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF3F4F6),
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                      child: Text(
+                        category,
+                        style: TextStyle(fontSize: 9.sp, color: const Color(0xFF4B5563)),
+                      ),
+                    ),
+                    SizedBox(height: 6.h),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                          size: 10.sp,
+                          color: Colors.grey,
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        SizedBox(height: 6.h),
+                        Expanded(
+                          child: Text(
+                            location,
+                            style: const TextStyle(fontSize: 9, color: Colors.grey),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -836,32 +888,41 @@ class _BusinessScreenState extends State<BusinessScreen> {
       child: SafeArea(
         child: Container(
           color: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          padding:   EdgeInsets.symmetric(horizontal: 16.h, vertical: 16.w),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF1B2D6B),
               minimumSize: const Size(double.infinity, 48),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(16.r),
               ),
               elevation: 0,
             ),
             onPressed: () {
-              // Tapping this should direct to Chat
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('Routing to Chat...')));
+              Get.to(
+                    () => MessageScreen(
+                  chat: ChatMessage(
+                    id: 'sarah_ahmed',
+                    name: 'Sarah Ahmed',
+                    initials: 'SA',
+                    lastMessage:
+                    'Hi, is the Samsung Galaxy S24 Ultra still available?',
+                    time: 'Just now',
+                    isOnline: true,
+                  ),
+                ),
+              );
             },
-            child: const Row(
+            child:   Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.chat_bubble_outline, color: Colors.white, size: 18),
-                SizedBox(width: 8),
+               Image.asset('assets/icons/message-02.png',height: 30.h,),
+                SizedBox(width: 10.w),
                 Text(
                   'Send Message',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
