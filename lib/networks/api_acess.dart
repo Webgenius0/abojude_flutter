@@ -3,6 +3,8 @@ import 'package:abojude_flutter/features/auth/register/data/rx_register/rx.dart'
 import 'package:abojude_flutter/features/auth/register/model/register_model.dart';
 import 'package:abojude_flutter/features/auth/register/data/rx_register_verify_otp/rx.dart';
 import 'package:abojude_flutter/features/auth/register/model/register_verify_otp_model.dart';
+import 'package:abojude_flutter/features/auth/login/data/rx.dart';
+import 'package:abojude_flutter/features/auth/login/model/login_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 
@@ -16,6 +18,12 @@ RegisterRx registerRxObj = RegisterRx(
 RegisterVerifyOtpRx registerVerifyOtpRxObj = RegisterVerifyOtpRx(
   empty: RegisterVerifyOtpModel(),
   dataFetcher: BehaviorSubject<RegisterVerifyOtpModel>(),
+);
+
+// // ------------- Login Api Access -----------------//
+LoginRx loginRxObj = LoginRx(
+  empty: LoginModel(),
+  dataFetcher: BehaviorSubject<LoginModel>(),
 );
 
 
