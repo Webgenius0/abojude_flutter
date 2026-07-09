@@ -5,6 +5,8 @@ import 'package:abojude_flutter/features/auth/register/data/rx_register_verify_o
 import 'package:abojude_flutter/features/auth/register/model/register_verify_otp_model.dart';
 import 'package:abojude_flutter/features/auth/login/data/rx.dart';
 import 'package:abojude_flutter/features/auth/login/model/login_model.dart';
+import 'package:abojude_flutter/features/auth/forget_password/data/rx.dart';
+import 'package:abojude_flutter/features/auth/forget_password/model/forget_password_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 
@@ -24,6 +26,12 @@ RegisterVerifyOtpRx registerVerifyOtpRxObj = RegisterVerifyOtpRx(
 LoginRx loginRxObj = LoginRx(
   empty: LoginModel(),
   dataFetcher: BehaviorSubject<LoginModel>(),
+);
+
+// //___________________ Forget Password Api Access ______________________//
+ForgetPasswordRx forgetPasswordRxObj = ForgetPasswordRx(
+  empty: ForgetPasswordModel(),
+  dataFetcher: BehaviorSubject<ForgetPasswordModel>(),
 );
 
 

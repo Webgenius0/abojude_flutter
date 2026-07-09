@@ -1,5 +1,6 @@
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -114,33 +115,54 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   SizedBox(height: 28.h),
 
                   // --------------- Continue Button ---------------
-                  GestureDetector(
-                    onTap: () {
-                      if (_formKey.currentState!.validate()) {
-                        NavigationService.navigateTo(
-                          Routes.forgetPasswordVerifyOtpScreen,
-                          arguments: _emailController.text.trim(),
-                        );
-                      }
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: 52.h,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF03045E),
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Continue',
-                          style: GoogleFonts.inter(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                  ValueListenableBuilder<bool>(
+                    valueListenable: forgetPasswordRxObj.isLoading,
+                    builder: (context, isLoading, child) {
+                      return GestureDetector(
+                        onTap: isLoading
+                            ? null
+                            : () async {
+                                if (_formKey.currentState!.validate()) {
+                                  final success = await forgetPasswordRxObj.forgetPasswordRx(
+                                    email: _emailController.text.trim(),
+                                  );
+                                  if (success) {
+                                    NavigationService.navigateTo(
+                                      Routes.forgetPasswordVerifyOtpScreen,
+                                      arguments: _emailController.text.trim(),
+                                    );
+                                  }
+                                }
+                              },
+                        child: Container(
+                          width: double.infinity,
+                          height: 52.h,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF03045E),
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          child: Center(
+                            child: isLoading
+                                ? SizedBox(
+                                    width: 24.w,
+                                    height: 24.w,
+                                    child: const CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : Text(
+                                    'Continue',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                   SizedBox(height: 20.h),
                 ],
