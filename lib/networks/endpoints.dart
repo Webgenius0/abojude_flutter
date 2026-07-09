@@ -26,13 +26,13 @@ final class Endpoints {
   static String verifyEmail() => "/v1/verify/otp";
   // // -------------------Register Verify email end-------------------
 
+  // // -------------------Login start-------------------
+  static String login() => "/v1/login";
+  // // -------------------Login end-------------------
+
   // // -------------------Resend OTP start-------------------
   // static String resendOtp() => "/api/resend-otp";
   // // -------------------Resend OTP end-------------------
-
-  // // -------------------Login start-------------------
-  // static String login() => "/api/login";
-  // // -------------------Login end-------------------
 
 
   // // -------------------Logout start-------------------
