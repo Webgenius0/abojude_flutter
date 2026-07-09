@@ -1,6 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:developer';
-import 'package:abojude_flutter/features/auth/register/model/register_model.dart';
+import 'package:abojude_flutter/features/auth/register/model/register_verify_otp_model.dart';
 import 'package:abojude_flutter/helpers/toast.dart';
 import 'package:abojude_flutter/networks/rx_base.dart';
 import 'package:flutter/foundation.dart';
@@ -8,29 +8,27 @@ import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
 import 'api.dart';
 
-final class RegisterRx extends RxResponseInt<RegisterModel> {
-  final api = RegisterApi.instance;
+final class RegisterVerifyOtpRx extends RxResponseInt<RegisterVerifyOtpModel> {
+  final api = RegisterVerifyOtpApi.instance;
 
-  RegisterRx({required super.empty, required super.dataFetcher});
+  RegisterVerifyOtpRx({required super.empty, required super.dataFetcher});
 
   /// Exposed so the UI can listen to loading state via ValueListenableBuilder.
   final ValueNotifier<bool> isLoading = ValueNotifier(false);
 
   ValueStream get getFileData => dataFetcher.stream;
 
-  Future<bool> registerRx({
-    String ? name,
+  Future<bool> registerVerifyOtpRx({
     required String email,
-    required String password,
-    required String passwordConfirmation,
+    required String otp,
+    String type = "signup",
   }) async {
     isLoading.value = true;
     try {
-      final data = await api.registerApi(
-        name: name,
+      final data = await api.registerVerifyOtpApi(
         email: email,
-        password: password,
-        passwordConfirmation: passwordConfirmation,
+        otp: otp,
+        type: type,
       );
 
       handleSuccessWithReturn(data);
@@ -48,7 +46,6 @@ final class RegisterRx extends RxResponseInt<RegisterModel> {
     if (error is DioException) {
       final responseData = error.response?.data;
       if (responseData is Map<String, dynamic>) {
-        // 1. Check for specific field validation errors in the 'errors' object
         if (responseData.containsKey('errors')) {
           final errorMap = responseData['errors'];
           if (errorMap is Map && errorMap.isNotEmpty) {
@@ -62,7 +59,6 @@ final class RegisterRx extends RxResponseInt<RegisterModel> {
           }
         }
 
-        // 2. Fallback to the top-level server message
         final message = responseData['message'];
         if (message != null && message.toString().isNotEmpty) {
           ToastUtil.showShortToast(message.toString());

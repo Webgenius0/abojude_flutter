@@ -1,6 +1,7 @@
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/toast.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -168,50 +169,73 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                 SizedBox(height: 36.h),
 
                 // --------------- Verify Email Button ---------------
-                GestureDetector(
-                  onTap: () {
-                    final otp =
-                        _otp1Controller.text +
-                        _otp2Controller.text +
-                        _otp3Controller.text +
-                        _otp4Controller.text;
-                    if (otp.length < 4) {
-                      setState(() {
-                        _hasError = true;
-                      });
-                      ToastUtil.showShortToast(
-                        'Please enter the complete 4-digit OTP code',
-                      );
-                    } else {
-                      setState(() {
-                        _hasError = false;
-                      });
-                      ToastUtil.showShortToast(
-                        'Email verification successful!',
-                      );
-                      NavigationService.navigateToUntilReplacement(
-                        Routes.selectLocationScreen,
-                      );
-                    }
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    height: 52.h,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF03045E),
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Verify Email',
-                        style: GoogleFonts.inter(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                ValueListenableBuilder<bool>(
+                  valueListenable: registerVerifyOtpRxObj.isLoading,
+                  builder: (context, isLoading, child) {
+                    return GestureDetector(
+                      onTap: isLoading
+                          ? null
+                          : () async {
+                              final otp = _otp1Controller.text +
+                                  _otp2Controller.text +
+                                  _otp3Controller.text +
+                                  _otp4Controller.text;
+                              if (otp.length < 4) {
+                                setState(() {
+                                  _hasError = true;
+                                });
+                                ToastUtil.showShortToast(
+                                  'Please enter the complete 4-digit OTP code',
+                                );
+                              } else {
+                                setState(() {
+                                  _hasError = false;
+                                });
+                                final success = await registerVerifyOtpRxObj.registerVerifyOtpRx(
+                                  email: emailAddress,
+                                  otp: otp,
+                                  type: 'signup',
+                                );
+                                if (success) {
+                                  NavigationService.navigateToUntilReplacement(
+                                    Routes.selectLocationScreen,
+                                  );
+                                } else {
+                                  setState(() {
+                                    _hasError = true;
+                                  });
+                                }
+                              }
+                            },
+                      child: Container(
+                        width: double.infinity,
+                        height: 52.h,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF03045E),
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Center(
+                          child: isLoading
+                              ? SizedBox(
+                                  width: 24.w,
+                                  height: 24.w,
+                                  child: const CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Text(
+                                  'Verify Email',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
 
                 SizedBox(height: 32.h),
@@ -277,18 +301,18 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
         decoration: InputDecoration(
           counterText: '',
           filled: true,
-          fillColor:
-              isNotEmpty ? const Color(0xFFEEF2F6) : const Color(0xFFF9FAFB),
+          fillColor: isNotEmpty
+              ? const Color(0xFFEEF2F6)
+              : const Color(0xFFF9FAFB),
           contentPadding: EdgeInsets.zero,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
             borderSide: BorderSide(
-              color:
-                  _hasError
-                      ? Colors.red
-                      : (isNotEmpty
-                          ? const Color(0xFF03045E)
-                          : const Color(0xFFE5E7EB)),
+              color: _hasError
+                  ? Colors.red
+                  : (isNotEmpty
+                        ? const Color(0xFF03045E)
+                        : const Color(0xFFE5E7EB)),
               width: isNotEmpty ? 1.2 : 1.0,
             ),
           ),

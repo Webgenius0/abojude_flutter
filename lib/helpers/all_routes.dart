@@ -157,13 +157,14 @@ final class RouteGenerator {
             : CupertinoPageRoute(builder: (context) => const RegisterScreen());
 
       case Routes.registerVerifyScreen:
+        final email = settings.arguments as String?;
         return Platform.isAndroid
             ? _FadedTransitionRoute(
-                widget: const RegisterVerifyScreen(),
+                widget: RegisterVerifyScreen(email: email),
                 settings: settings,
               )
             : CupertinoPageRoute(
-                builder: (context) => const RegisterVerifyScreen(),
+                builder: (context) => RegisterVerifyScreen(email: email),
               );
 
 
