@@ -42,6 +42,10 @@ final class Endpoints {
   static String guestUser() => "/v1/guest";
   // -------------------Guest User end-------------------
 
+  // -------------------Resend Otp start-------------------
+  static String resendOtp() => "/v1/resend-otp";
+  // -------------------Resend Otp end-------------------
+
   // // -------------------Forget Password verify otp start-------------------
   // static String forgetPasswordVerifyOtp() => "/v1/verify/otp";
   // // -------------------Forget Password verify otp end-------------------

@@ -183,7 +183,7 @@ class _ForgetPasswordVerifyOtpScreenState
                                           otp: otp,
                                         );
                                 if (success) {
-                                  NavigationService.navigateToUntilReplacement(
+                                  NavigationService.navigateTo(
                                     Routes.setNewPassword,
                                     arguments: {
                                       "email": widget.email,
@@ -242,18 +242,35 @@ class _ForgetPasswordVerifyOtpScreenState
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        // Action for resending code
+                    ValueListenableBuilder<bool>(
+                      valueListenable: resendOtpRxObj.isLoading,
+                      builder: (context, isLoading, child) {
+                        return isLoading
+                            ? SizedBox(
+                                width: 14.w,
+                                height: 14.w,
+                                child: const CircularProgressIndicator(
+                                  color: Color(0xFF1B8E5A),
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: () async {
+                                  await resendOtpRxObj.resendOtpRx(
+                                    email: widget.email,
+                                    type: 'forgot-password',
+                                  );
+                                },
+                                child: Text(
+                                  'Resend',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 14.sp,
+                                    color: const Color(0xFF1B8E5A),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              );
                       },
-                      child: Text(
-                        'Resend',
-                        style: GoogleFonts.inter(
-                          fontSize: 14.sp,
-                          color: const Color(0xFF1B8E5A),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                     ),
                   ],
                 ),
