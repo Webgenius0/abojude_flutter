@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:abojude_flutter/features/explore_deatils_screen/buy_&_sell_screen.dart';
-import 'package:abojude_flutter/features/explore_deatils_screen/business_screen.dart';
-import 'package:abojude_flutter/features/explore_deatils_screen/job_screen.dart';
-import 'package:abojude_flutter/features/explore_deatils_screen/services_screen.dart';
-import 'package:abojude_flutter/features/home/presentation/product_details_screen.dart';
-
-import '../widget/filter_screeen.dart';
+import '../widgets/filter_screeen.dart';
+import '../widgets/categories_section.dart';
+import '../widgets/featured_listings_section.dart';
+import '../widgets/recent_listings_section.dart';
 import 'notificatosn_screen.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,12 +21,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final CarouselSliderController _carouselController =
       CarouselSliderController();
 
-  bool _showAllFeatured = false;
-  bool _showAllRecent = false;
-
   static const Color navyBlue = Color(0xFF1B2D6B);
   static const Color lightGreen = Color(0xFF4CAF50);
-  static const Color accentYellow = Color(0xFFFFC107);
   static const Color bgGrey = Color(0xFFF5F5F5);
 
   final List<Map<String, dynamic>> _banners = [
@@ -252,68 +246,94 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _filteredFeaturedItems = List.from(_featuredItems);
     _filteredRecentItems = List.from(_recentItems);
+    getCategoryListRxObj.getCategoryListRx();
+    getRecentPostListRxObj.getRecentPostListRx();
   }
 
   void _applyFilters() {
     setState(() {
       _filteredFeaturedItems = _featuredItems.where((item) {
         final category = item['category'] as String? ?? '';
-        final matchesCategory = _activeFilters.category == 'All' ||
+        final matchesCategory =
+            _activeFilters.category == 'All' ||
             (category.toLowerCase() == _activeFilters.category.toLowerCase()) ||
-            (_activeFilters.category == 'Business Directory' && category == 'Business');
+            (_activeFilters.category == 'Business Directory' &&
+                category == 'Business');
 
         final location = (item['location'] as String? ?? '').toLowerCase();
-        final matchesProvince = _activeFilters.province == null ||
+        final matchesProvince =
+            _activeFilters.province == null ||
             location.contains(_activeFilters.province!.toLowerCase());
-        final matchesCity = _activeFilters.city == null ||
+        final matchesCity =
+            _activeFilters.city == null ||
             location.contains(_activeFilters.city!.toLowerCase());
 
         // Price filter if item has price
         bool matchesPrice = true;
         if (item['hasPrice'] as bool? ?? false) {
-          final priceStr = (item['price'] as String? ?? '').replaceAll(RegExp(r'[^\d.]'), '');
+          final priceStr = (item['price'] as String? ?? '').replaceAll(
+            RegExp(r'[^\d.]'),
+            '',
+          );
           final price = double.tryParse(priceStr);
           if (price != null) {
-            if (_activeFilters.minPrice != null && price < _activeFilters.minPrice!) {
+            if (_activeFilters.minPrice != null &&
+                price < _activeFilters.minPrice!) {
               matchesPrice = false;
             }
-            if (_activeFilters.maxPrice != null && price > _activeFilters.maxPrice!) {
+            if (_activeFilters.maxPrice != null &&
+                price > _activeFilters.maxPrice!) {
               matchesPrice = false;
             }
           }
         }
 
-        return matchesCategory && matchesProvince && matchesCity && matchesPrice;
+        return matchesCategory &&
+            matchesProvince &&
+            matchesCity &&
+            matchesPrice;
       }).toList();
 
       _filteredRecentItems = _recentItems.where((item) {
         final category = item['category'] as String? ?? '';
-        final matchesCategory = _activeFilters.category == 'All' ||
+        final matchesCategory =
+            _activeFilters.category == 'All' ||
             (category.toLowerCase() == _activeFilters.category.toLowerCase()) ||
-            (_activeFilters.category == 'Business Directory' && category == 'Business');
+            (_activeFilters.category == 'Business Directory' &&
+                category == 'Business');
 
         final location = (item['location'] as String? ?? '').toLowerCase();
-        final matchesProvince = _activeFilters.province == null ||
+        final matchesProvince =
+            _activeFilters.province == null ||
             location.contains(_activeFilters.province!.toLowerCase());
-        final matchesCity = _activeFilters.city == null ||
+        final matchesCity =
+            _activeFilters.city == null ||
             location.contains(_activeFilters.city!.toLowerCase());
 
         // Price filter if item has price
         bool matchesPrice = true;
         if (item['hasPrice'] as bool? ?? false) {
-          final priceStr = (item['price'] as String? ?? '').replaceAll(RegExp(r'[^\d.]'), '');
+          final priceStr = (item['price'] as String? ?? '').replaceAll(
+            RegExp(r'[^\d.]'),
+            '',
+          );
           final price = double.tryParse(priceStr);
           if (price != null) {
-            if (_activeFilters.minPrice != null && price < _activeFilters.minPrice!) {
+            if (_activeFilters.minPrice != null &&
+                price < _activeFilters.minPrice!) {
               matchesPrice = false;
             }
-            if (_activeFilters.maxPrice != null && price > _activeFilters.maxPrice!) {
+            if (_activeFilters.maxPrice != null &&
+                price > _activeFilters.maxPrice!) {
               matchesPrice = false;
             }
           }
         }
 
-        return matchesCategory && matchesProvince && matchesCity && matchesPrice;
+        return matchesCategory &&
+            matchesProvince &&
+            matchesCity &&
+            matchesPrice;
       }).toList();
 
       // Sort logic based on sortBy
@@ -328,34 +348,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   int _comparePrice(Map<String, dynamic> a, Map<String, dynamic> b) {
-    final priceAStr = (a['price'] as String? ?? '').replaceAll(RegExp(r'[^\d.]'), '');
-    final priceBStr = (b['price'] as String? ?? '').replaceAll(RegExp(r'[^\d.]'), '');
+    final priceAStr = (a['price'] as String? ?? '').replaceAll(
+      RegExp(r'[^\d.]'),
+      '',
+    );
+    final priceBStr = (b['price'] as String? ?? '').replaceAll(
+      RegExp(r'[^\d.]'),
+      '',
+    );
     final priceA = double.tryParse(priceAStr) ?? 0.0;
     final priceB = double.tryParse(priceBStr) ?? 0.0;
     return priceA.compareTo(priceB);
   }
-  final List<Map<String, dynamic>> _categoryList = [
-    {
-      'iconPath': 'assets/images/jobImage.png',
-      'label': 'Buy & Sell',
-      'subtitle': 'Your Local Marketplace',
-    },
-    {
-      'iconPath': 'assets/images/jobImage.png',
-      'label': 'Jobs',
-      'subtitle': 'Find your next career opportunity',
-    },
-    {
-      'iconPath': 'assets/icons/buinesss.png',
-      'label': 'Business Directory',
-      'subtitle': 'Discover local businesses & service',
-    },
-    {
-      'iconPath': 'assets/icons/scurity.png',
-      'label': 'Services',
-      'subtitle': 'Professional services near you',
-    },
-  ];
+
   FilterOptions _activeFilters = FilterOptions();
   @override
   Widget build(BuildContext context) {
@@ -371,11 +376,20 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
               _buildBannerCarousel(),
               const SizedBox(height: 20),
-              _buildFeaturedListings(),
+              FeaturedListingsSection(
+                featuredItems: _filteredFeaturedItems,
+                onFavoriteToggle: (item) {
+                  setState(() {});
+                },
+              ),
               const SizedBox(height: 20),
-              _buildCategoriesList(),
+              const CategoriesSection(),
               const SizedBox(height: 20),
-              _buildRecentListings(),
+              RecentListingsSection(
+                onFavoriteToggle: (item) {
+                  setState(() {});
+                },
+              ),
               const SizedBox(height: 30),
             ],
           ),
@@ -396,12 +410,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: 36.w,
                 height: 36.h,
                 decoration: BoxDecoration(
-
-                  image: DecorationImage(image: AssetImage('assets/icons/Logos.png'),fit: BoxFit.contain),
+                  image: DecorationImage(
+                    image: AssetImage('assets/icons/Logos.png'),
+                    fit: BoxFit.contain,
+                  ),
                   borderRadius: BorderRadius.circular(8.r),
-
                 ),
-
               ),
               const SizedBox(width: 8),
               RichText(
@@ -495,20 +509,19 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             children: [
               Expanded(
-                child:
-                  GestureDetector(
-                    onTap: () {
-                      showFilterBottomSheet(
-                        context,
-                        currentFilters: _activeFilters,
-                        onApply: (filters) {
-                          setState(() {
-                            _activeFilters = filters;
-                            _applyFilters(); // your existing filter method
-                          });
-                        },
-                      );
-                    },
+                child: GestureDetector(
+                  onTap: () {
+                    showFilterBottomSheet(
+                      context,
+                      currentFilters: _activeFilters,
+                      onApply: (filters) {
+                        setState(() {
+                          _activeFilters = filters;
+                          _applyFilters(); // your existing filter method
+                        });
+                      },
+                    );
+                  },
                   child: Container(
                     height: 50,
                     decoration: BoxDecoration(
@@ -616,10 +629,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildBannerItem(Map<String, dynamic> banner) {
     return Container(
-      margin:   EdgeInsets.symmetric(vertical: 4.h),
+      margin: EdgeInsets.symmetric(vertical: 4.h),
       decoration: BoxDecoration(
         // color: banner['bgColor'] as Color,
-        image: DecorationImage(image: AssetImage('assets/images/bannerImage.png'),fit: BoxFit.cover),
+        image: DecorationImage(
+          image: AssetImage('assets/images/bannerImage.png'),
+          fit: BoxFit.cover,
+        ),
         borderRadius: BorderRadius.circular(16.r),
       ),
       // child: Stack(
@@ -738,440 +754,6 @@ class _HomeScreenState extends State<HomeScreen> {
       //     ),
       //   ],
       // ),
-    );
-  }
-
-  // ─── Section Title ────────────────────────────────────────
-  Widget _buildSectionTitle(
-    String title, {
-    VoidCallback? onTapSeeAll,
-    String seeAllText = 'See All',
-  }) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-      child: Row(
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: Colors.black87,
-            ),
-          ),
-          const Spacer(),
-          if (onTapSeeAll != null)
-            GestureDetector(
-              onTap: onTapSeeAll,
-              behavior: HitTestBehavior.opaque,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                child: Text(
-                  seeAllText,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: navyBlue,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  // ─── Featured Listings ────────────────────────────────────
-  Widget _buildFeaturedListings() {
-    final int count = _showAllFeatured
-        ? _filteredFeaturedItems.length
-        : (_filteredFeaturedItems.length > 3 ? 3 : _filteredFeaturedItems.length);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionTitle(
-          'Featured Listings',
-          seeAllText: _showAllFeatured ? 'See Less' : 'See All',
-          onTapSeeAll: () {
-            setState(() {
-              _showAllFeatured = !_showAllFeatured;
-            });
-          },
-        ),
-        SizedBox(
-          height: 230,
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            scrollDirection: Axis.horizontal,
-            itemCount: count,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (context, index) =>
-                _buildListingCard(_filteredFeaturedItems[index]),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildListingCard(Map<String, dynamic> item) {
-    return GestureDetector(
-      onTap: () {
-        final category = item['category'] as String? ?? '';
-        if (category == 'Buy & Sell') {
-          Get.to(() => const ProductDetailsScreen());
-        } else if (category == 'Business') {
-          Get.to(() => const BusinessScreen());
-        } else if (category == 'Jobs') {
-          Get.to(() => const JobScreen());
-        } else if (category == 'Services') {
-          Get.to(() => const ServicesScreen());
-        }
-      },
-      child: Container(
-        width: 165,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.06),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image area
-            Stack(
-              children: [
-                Container(
-                  height: 110,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(12),
-                    ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(12),
-                    ),
-                    child: item['imageUrl'] != null
-                        ? Image.network(
-                            item['imageUrl'] as String,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Center(
-                                child: Icon(
-                                  item['icon'] as IconData,
-                                  size: 48,
-                                  color: Colors.grey.shade400,
-                                ),
-                              );
-                            },
-                          )
-                        : Center(
-                            child: Icon(
-                              item['icon'] as IconData,
-                              size: 48,
-                              color: Colors.grey.shade400,
-                            ),
-                          ),
-                  ),
-                ),
-                if (item['isFeatured'] as bool)
-                  Positioned(
-                    top: 8,
-                    left: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: accentYellow,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.star, color: Colors.white, size: 10),
-                          SizedBox(width: 3),
-                          Text(
-                            'Featured',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                Positioned(
-                  bottom: 8,
-                  left: 8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 3,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black54,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      item['time'] as String,
-                      style: const TextStyle(color: Colors.white, fontSize: 9),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        item['isFavorite'] =
-                            !(item['isFavorite'] as bool? ?? false);
-                      });
-                    },
-                    child: Container(
-                      width: 28,
-                      height: 28,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        (item['isFavorite'] as bool? ?? false)
-                            ? Icons.favorite
-                            : Icons.favorite_border,
-                        size: 16,
-                        color: (item['isFavorite'] as bool? ?? false)
-                            ? Colors.red
-                            : Colors.grey,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            // Info
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (item['hasPrice'] as bool)
-                    Text(
-                      item['price'] as String,
-                      style: const TextStyle(
-                        color: navyBlue,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 14,
-                      ),
-                    ),
-                  Text(
-                    item['title'] as String,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 6),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 3,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      item['category'] as String,
-                      style: TextStyle(fontSize: 10, color: Colors.grey.shade700),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                        size: 12,
-                        color: Colors.grey.shade500,
-                      ),
-                      const SizedBox(width: 2),
-                      Expanded(
-                        child: Text(
-                          item['location'] as String,
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.grey.shade500,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ─── Categories List ──────────────────────────────────────
-  Widget _buildCategoriesList() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionTitle('Categories'),
-        ListView.separated(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: _categoryList.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 10),
-          itemBuilder: (context, index) {
-            final cat = _categoryList[index];
-
-            return GestureDetector(
-              onTap: () {
-                final label = cat['label'] as String;
-                if (label == 'Buy & Sell') {
-                  Get.to(() => const BuySellScreen());
-                } else if (label == 'Jobs') {
-                  Get.to(() => const JobScreen());
-                } else if (label == 'Business Directory') {
-                  Get.to(() => const BusinessScreen());
-                } else if (label == 'Services') {
-                  Get.to(() => const ServicesScreen());
-                }
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    // Icon Container
-                    Container(
-                      width: 42,
-                      height: 42,
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: navyBlue.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Image.asset(
-                        cat['iconPath'] as String,
-                        color: navyBlue,
-                        width: 35.w,
-                        height: 35.h,
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) => const Icon(
-                          Icons.shopping_bag_outlined,
-                          color: Colors.grey,
-                          size: 22,
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(width: 14),
-
-                    // Text Content
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            cat['label'] as String,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            cat['subtitle'] as String,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey.shade500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Right Arrow
-                    const Icon(
-                      Icons.chevron_right,
-                      color: Colors.grey,
-                      size: 20,
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  // ─── Recent Listings ──────────────────────────────────────
-  Widget _buildRecentListings() {
-    final int count = _showAllRecent
-        ? _filteredRecentItems.length
-        : (_filteredRecentItems.length > 3 ? 3 : _filteredRecentItems.length);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionTitle(
-          'Recent Listings',
-          seeAllText: _showAllRecent ? 'See Less' : 'See All',
-          onTapSeeAll: () {
-            setState(() {
-              _showAllRecent = !_showAllRecent;
-            });
-          },
-        ),
-        GridView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: count,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-            childAspectRatio: 0.75,
-          ),
-          itemBuilder: (context, index) =>
-              _buildListingCard(_filteredRecentItems[index]),
-        ),
-      ],
     );
   }
 }

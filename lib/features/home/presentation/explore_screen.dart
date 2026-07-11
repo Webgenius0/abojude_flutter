@@ -7,7 +7,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 
 import '../../explore_deatils_screen/job_screen.dart';
 import '../../explore_deatils_screen/services_screen.dart';
-import '../widget/filter_screeen.dart';
+import '../widgets/filter_screeen.dart';
 
 // ─── Data Models ────────────────────────────────────────────────────────────
 
