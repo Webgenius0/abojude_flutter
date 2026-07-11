@@ -11,6 +11,8 @@ import 'package:abojude_flutter/features/auth/forget_password/data/rx_forget_pas
 import 'package:abojude_flutter/features/auth/forget_password/model/forget_password_verify_otp_model.dart';
 import 'package:abojude_flutter/features/auth/guest_user/data/rx.dart';
 import 'package:abojude_flutter/features/auth/guest_user/model/guest_user_model.dart';
+import 'package:abojude_flutter/features/auth/register/data/rx_resend_otp/rx.dart';
+import 'package:abojude_flutter/features/auth/register/model/resend_otp_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 
@@ -48,6 +50,12 @@ ForgetPasswordVerifyOtpRx forgetPasswordVerifyOtpRxObj = ForgetPasswordVerifyOtp
 GuestUserRx guestUserRxObj = GuestUserRx(
   empty: GuestUserModel(),
   dataFetcher: BehaviorSubject<GuestUserModel>(),
+);
+
+// // ------------- Resend Otp Api Access -----------------//
+ResendOtpRx resendOtpRxObj = ResendOtpRx(
+  empty: ResendOtpModel(),
+  dataFetcher: BehaviorSubject<ResendOtpModel>(),
 );
 
 
@@ -186,11 +194,6 @@ GuestUserRx guestUserRxObj = GuestUserRx(
 // //   dataFetcher: BehaviorSubject<VerifyOtpForgetPasswordModel>(),
 // // );
 
-// // //_________________Resend Otp Api Access ______________________//
-// // ResendOtpRx resendOtpRxObj = ResendOtpRx(
-// //   empty: ResendOtpModel(),
-// //   dataFetcher: BehaviorSubject<ResendOtpModel>(),
-// // );
 
 // // RegisterPropertyInfoRx registerPropertyInfoRxObj = RegisterPropertyInfoRx(
 // //   empty: RegisterPropertyInfoModel(),
