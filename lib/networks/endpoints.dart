@@ -23,7 +23,7 @@ final class Endpoints {
   // -------------------Register end-------------------
 
   // -------------------Register Verify email start-----------------
-  static String verifyEmail() => "/v1/verify/otp";
+  static String registerVerifyOtp() => "/v1/verify/otp";
   // -------------------Register Verify email end-------------------
 
   // -------------------Login start-------------------
@@ -33,6 +33,14 @@ final class Endpoints {
   // -------------------Forget Password start-------------------
   static String forgetPassword() => "/v1/forgot-password";
   // -------------------Forget Password end-------------------
+
+  // -------------------Forget Password verify otp start-------------------
+  static String forgetPasswordVerifyOtp() => "/v1/verify/otp";
+  // -------------------Forget Password verify otp end-------------------
+
+  // -------------------Guest User start-------------------
+  static String guestUser() => "/v1/guest";
+  // -------------------Guest User end-------------------
 
   // // -------------------Forget Password verify otp start-------------------
   // static String forgetPasswordVerifyOtp() => "/v1/verify/otp";

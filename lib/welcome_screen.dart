@@ -2,6 +2,7 @@ import 'package:abojude_flutter/assets_helper/app_icons.dart';
 import 'package:abojude_flutter/common_widgets/custom_button.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -171,21 +172,32 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 SizedBox(height: 14.h),
 
-                CustomButton(
-                  text: 'Continue as Guest',
-                  backgroundColor: const Color(0xFFF3F4F6),
-                  icon: SvgPicture.asset(
-                    'assets/icons/guest.svg',
-                    width: 20.w,
-                    height: 20.w,
-                    colorFilter: const ColorFilter.mode(
-                      Color(0xFF1F2937),
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                  onTap: () {
-                    // Guest Action
-                    NavigationService.navigateTo(Routes.selectLocationScreen);
+                ValueListenableBuilder<bool>(
+                  valueListenable: guestUserRxObj.isLoading,
+                  builder: (context, isLoading, child) {
+                    return CustomButton(
+                      text: 'Continue as Guest',
+                      backgroundColor: const Color(0xFFF3F4F6),
+                      isLoading: isLoading,
+                      icon: SvgPicture.asset(
+                        'assets/icons/guest.svg',
+                        width: 20.w,
+                        height: 20.w,
+                        colorFilter: const ColorFilter.mode(
+                          Color(0xFF1F2937),
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      onTap: () async {
+                        // Guest Action
+                        final success = await guestUserRxObj.guestUserRx();
+                        if (success) {
+                          NavigationService.navigateTo(
+                            Routes.selectLocationScreen,
+                          );
+                        }
+                      },
+                    );
                   },
                 ),
 

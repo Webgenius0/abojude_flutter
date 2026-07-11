@@ -5,8 +5,12 @@ import 'package:abojude_flutter/features/auth/register/data/rx_register_verify_o
 import 'package:abojude_flutter/features/auth/register/model/register_verify_otp_model.dart';
 import 'package:abojude_flutter/features/auth/login/data/rx.dart';
 import 'package:abojude_flutter/features/auth/login/model/login_model.dart';
-import 'package:abojude_flutter/features/auth/forget_password/data/rx.dart';
+import 'package:abojude_flutter/features/auth/forget_password/data/rx_forget_password/rx.dart';
 import 'package:abojude_flutter/features/auth/forget_password/model/forget_password_model.dart';
+import 'package:abojude_flutter/features/auth/forget_password/data/rx_forget_password_verify_otp/rx.dart';
+import 'package:abojude_flutter/features/auth/forget_password/model/forget_password_verify_otp_model.dart';
+import 'package:abojude_flutter/features/auth/guest_user/data/rx.dart';
+import 'package:abojude_flutter/features/auth/guest_user/model/guest_user_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 
@@ -32,6 +36,18 @@ LoginRx loginRxObj = LoginRx(
 ForgetPasswordRx forgetPasswordRxObj = ForgetPasswordRx(
   empty: ForgetPasswordModel(),
   dataFetcher: BehaviorSubject<ForgetPasswordModel>(),
+);
+
+// // ------------- Forget Password Verify Otp Api Access -----------------//
+ForgetPasswordVerifyOtpRx forgetPasswordVerifyOtpRxObj = ForgetPasswordVerifyOtpRx(
+  empty: ForgetPasswordVerifyOtpModel(),
+  dataFetcher: BehaviorSubject<ForgetPasswordVerifyOtpModel>(),
+);
+
+// // ------------- Guest User Api Access -----------------//
+GuestUserRx guestUserRxObj = GuestUserRx(
+  empty: GuestUserModel(),
+  dataFetcher: BehaviorSubject<GuestUserModel>(),
 );
 
 
