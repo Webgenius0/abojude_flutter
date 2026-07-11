@@ -23,7 +23,7 @@ final class RegisterVerifyOtpApi {
         "type": type,
       };
 
-      Response response = await postHttp(Endpoints.verifyEmail(), data);
+      Response response = await postHttp(Endpoints.registerVerifyOtp(), data);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = RegisterVerifyOtpModel.fromRawJson(json.encode(response.data));

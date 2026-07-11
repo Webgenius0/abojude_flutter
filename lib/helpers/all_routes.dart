@@ -197,13 +197,14 @@ final class RouteGenerator {
               );
 
       case Routes.forgetPasswordVerifyOtpScreen:
+        final email = settings.arguments as String;
         return Platform.isAndroid
             ? _FadedTransitionRoute(
-                widget: const ForgetPasswordVerifyOtpScreen(),
+                widget: ForgetPasswordVerifyOtpScreen(email: email),
                 settings: settings,
               )
             : CupertinoPageRoute(
-                builder: (context) => const ForgetPasswordVerifyOtpScreen(),
+                builder: (context) => ForgetPasswordVerifyOtpScreen(email: email),
               );
 
       case Routes.continueAsGuest:
