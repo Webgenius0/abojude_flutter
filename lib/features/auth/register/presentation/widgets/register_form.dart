@@ -44,7 +44,7 @@ class _RegisterFormState extends State<RegisterForm> {
           // --------------- Input Fields ---------------
           RegisterInputField(
             label: 'Full Name',
-            hintText: 'John Smith',
+            hintText: 'Enter full name',
             prefixIconPath: 'assets/icons/user.svg',
             controller: _nameController,
             keyboardType: TextInputType.name,
@@ -58,7 +58,7 @@ class _RegisterFormState extends State<RegisterForm> {
 
           RegisterInputField(
             label: 'Email address',
-            hintText: 'your@email.com',
+            hintText: 'Enter email address',
             prefixIconPath: 'assets/icons/email.svg',
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
@@ -66,9 +66,7 @@ class _RegisterFormState extends State<RegisterForm> {
               if (value == null || value.trim().isEmpty) {
                 return 'Please enter your email address';
               }
-              final emailRegex = RegExp(
-                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-              );
+              final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
               if (!emailRegex.hasMatch(value.trim())) {
                 return 'Please enter a valid email address';
               }
@@ -153,7 +151,8 @@ class _RegisterFormState extends State<RegisterForm> {
                             name: _nameController.text,
                             email: _emailController.text,
                             password: _passwordController.text,
-                            passwordConfirmation: _confirmPasswordController.text,
+                            passwordConfirmation:
+                                _confirmPasswordController.text,
                           );
                           if (success) {
                             NavigationService.navigateTo(

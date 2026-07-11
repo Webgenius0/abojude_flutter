@@ -13,6 +13,10 @@ import 'package:abojude_flutter/features/auth/guest_user/data/rx.dart';
 import 'package:abojude_flutter/features/auth/guest_user/model/guest_user_model.dart';
 import 'package:abojude_flutter/features/auth/register/data/rx_resend_otp/rx.dart';
 import 'package:abojude_flutter/features/auth/register/model/resend_otp_model.dart';
+import 'package:abojude_flutter/features/home/data/rx_get_category_list/rx.dart';
+import 'package:abojude_flutter/features/home/model/get_category_list_model.dart';
+import 'package:abojude_flutter/features/home/data/rx_recent_post_list/rx.dart';
+import 'package:abojude_flutter/features/home/model/recent_post_list_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 
@@ -56,6 +60,18 @@ GuestUserRx guestUserRxObj = GuestUserRx(
 ResendOtpRx resendOtpRxObj = ResendOtpRx(
   empty: ResendOtpModel(),
   dataFetcher: BehaviorSubject<ResendOtpModel>(),
+);
+
+// // ------------- Get Category List Api Access -----------------//
+GetCategoryListRx getCategoryListRxObj = GetCategoryListRx(
+  empty: CategoryListModel(),
+  dataFetcher: BehaviorSubject<CategoryListModel>(),
+);
+
+// // ------------- Get Recent Post List Api Access -----------------//
+GetRecentPostListRx getRecentPostListRxObj = GetRecentPostListRx(
+  empty: RecentPostListModel(),
+  dataFetcher: BehaviorSubject<RecentPostListModel>(),
 );
 
 

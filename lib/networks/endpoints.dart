@@ -46,6 +46,15 @@ final class Endpoints {
   static String resendOtp() => "/v1/resend-otp";
   // -------------------Resend Otp end-------------------
 
+    // ------------------- GetCategoryList start-------------------
+  static String getCategoryList() => "/v1/categories";
+  // -------------------GetCategoryList end-------------------
+
+  // ------------------- GetRecentPostList start-------------------
+  static String getRecentPostList() => "/v1/posts/recent";
+  // -------------------GetRecentPostList end-------------------
+  
+
   // // -------------------Forget Password verify otp start-------------------
   // static String forgetPasswordVerifyOtp() => "/v1/verify/otp";
   // // -------------------Forget Password verify otp end-------------------
