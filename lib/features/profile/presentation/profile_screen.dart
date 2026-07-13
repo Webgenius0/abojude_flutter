@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:abojude_flutter/features/profile/model/get_profile_model.dart';
 import 'my_listings_screen.dart';
 import 'favorites_screen.dart';
 import 'edit_profile_screen.dart';
@@ -27,10 +29,60 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // Mock User Info
-  final String _name = "Hefzur Rahman";
-  final String _email = "hefzurrahman0930@gmail.com";
-  final String _initials = "HR";
+  @override
+  void initState() {
+    super.initState();
+    getProfileRxObj.getProfile();
+  }
+
+  String _getInitials(String name) {
+    if (name.trim().isEmpty) return '';
+    List<String> nameParts = name.trim().split(' ');
+    if (nameParts.length > 1) {
+      return (nameParts[0][0] + nameParts[1][0]).toUpperCase();
+    }
+    return nameParts[0][0].toUpperCase();
+  }
+
+  Widget _buildShimmerProfileHeader() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Column(
+        children: [
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 130.h,
+                color: Colors.white,
+              ),
+              Positioned(
+                bottom: -45.h,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    width: 96.r,
+                    height: 96.r,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 54.h),
+          Container(width: 150.w, height: 18.h, color: Colors.white),
+          SizedBox(height: 8.h),
+          Container(width: 200.w, height: 14.h, color: Colors.white),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,100 +107,133 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
 
-              // 2. Banner and Avatar Card Stack
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  // Blue Header Banner
-                  Container(
-                    width: double.infinity,
-                    height: 130.h,
-                    decoration: const BoxDecoration(color: Color(0xFF0F3D7A)),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+              // 2. Banner and Avatar Card Stack, and 3. User Name & Email Subheaders
+              StreamBuilder<GetProfileModel>(
+                stream: getProfileRxObj.getProfileData,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting &&
+                      !snapshot.hasData) {
+                    return _buildShimmerProfileHeader();
+                  }
+                  if (snapshot.hasError) {
+                    return _buildShimmerProfileHeader();
+                  }
+                  if (!snapshot.hasData || snapshot.data?.data == null) {
+                    return _buildShimmerProfileHeader();
+                  }
+
+                  final profile = snapshot.data!.data!;
+                  final name = profile.name ?? '';
+                  final email = profile.email ?? '';
+                  final avatar = profile.avatar ?? '';
+                  final initials = _getInitials(name);
+
+                  return Column(
+                    children: [
+                      Stack(
+                        clipBehavior: Clip.none,
                         children: [
-                          // Custom White Logo Icon (Stylized W shape representation)
-                          _buildLogoIcon(),
-                          SizedBox(width: 10.w),
-                          Text(
-                            'WASEL CANADA',
-                            style: GoogleFonts.inter(
-                              color: Colors.white,
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: 0.5,
+                          // Blue Header Banner
+                          Container(
+                            width: double.infinity,
+                            height: 130.h,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFF0F3D7A),
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // Custom White Logo Icon (Stylized W shape representation)
+                                  _buildLogoIcon(),
+                                  SizedBox(width: 10.w),
+                                  Text(
+                                    'WASEL CANADA',
+                                    style: GoogleFonts.inter(
+                                      color: Colors.white,
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // Overlapping Avatar Card
+                          Positioned(
+                            bottom: -45.h,
+                            left: 0,
+                            right: 0,
+                            child: Center(
+                              child: Container(
+                                padding: EdgeInsets.all(4.r),
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 10,
+                                      offset: Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: CircleAvatar(
+                                  radius: 46.r,
+                                  backgroundColor: const Color(0xFFE9ECEF),
+                                  backgroundImage: (avatar.isNotEmpty)
+                                      ? NetworkImage(avatar)
+                                      : null,
+                                  child: (avatar.isNotEmpty)
+                                      ? null
+                                      : Text(
+                                          initials,
+                                          style: GoogleFonts.inter(
+                                            color: const Color(0xFF0F3D7A),
+                                            fontSize: 26.sp,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: -0.5,
+                                          ),
+                                        ),
+                                ),
+                              ),
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  ),
 
-                  // Overlapping Avatar Card
-                  Positioned(
-                    bottom: -45.h,
-                    left: 0,
-                    right: 0,
-                    child: Center(
-                      child: Container(
-                        padding: EdgeInsets.all(4.r),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 10,
-                              offset: Offset(0, 4),
+                      // Spacer for the overlapping avatar
+                      SizedBox(height: 54.h),
+
+                      // 3. User Name & Email Subheaders
+                      Center(
+                        child: Column(
+                          children: [
+                            Text(
+                              name,
+                              style: GoogleFonts.inter(
+                                color: Colors.black87,
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              email,
+                              style: GoogleFonts.inter(
+                                color: Colors.grey[500],
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ],
                         ),
-                        child: CircleAvatar(
-                          radius: 46.r,
-                          backgroundColor: const Color(0xFFE9ECEF),
-                          child: Text(
-                            _initials,
-                            style: GoogleFonts.inter(
-                              color: const Color(0xFF0F3D7A),
-                              fontSize: 26.sp,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: -0.5,
-                            ),
-                          ),
-                        ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-
-              // Spacer for the overlapping avatar
-              SizedBox(height: 54.h),
-
-              // 3. User Name & Email Subheaders
-              Center(
-                child: Column(
-                  children: [
-                    Text(
-                      _name,
-                      style: GoogleFonts.inter(
-                        color: Colors.black87,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      _email,
-                      style: GoogleFonts.inter(
-                        color: Colors.grey[500],
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
+                    ],
+                  );
+                },
               ),
 
               SizedBox(height: 24.h),

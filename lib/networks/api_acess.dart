@@ -23,6 +23,8 @@ import 'package:abojude_flutter/features/profile/data/rx_change_password/rx.dart
 import 'package:abojude_flutter/features/profile/model/change_password_model.dart';
 import 'package:abojude_flutter/features/auth/set_new_password/data/rx_set_new_password/rx.dart';
 import 'package:abojude_flutter/features/auth/set_new_password/model/set_new_password_model.dart' as snp;
+import 'package:abojude_flutter/features/profile/data/rx_get_profile/rx.dart';
+import 'package:abojude_flutter/features/profile/model/get_profile_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 
@@ -66,6 +68,12 @@ ChangePasswordRx changePasswordRxObj = ChangePasswordRx(
 SetNewPasswordRx setNewPasswordRxObj = SetNewPasswordRx(
   empty: snp.ChangePasswordModel(),
   dataFetcher: BehaviorSubject<snp.ChangePasswordModel>(),
+);
+
+// // ------------- Get Profile Api Access -----------------//
+GetProfileRx getProfileRxObj = GetProfileRx(
+  empty: GetProfileModel(),
+  dataFetcher: BehaviorSubject<GetProfileModel>(),
 );
 
 // //___________________ Forget Password Api Access ______________________//
