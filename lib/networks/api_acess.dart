@@ -21,6 +21,8 @@ import 'package:abojude_flutter/features/home/data/rx_recent_post_list/rx.dart';
 import 'package:abojude_flutter/features/home/model/recent_post_list_model.dart';
 import 'package:abojude_flutter/features/profile/data/rx_change_password/rx.dart';
 import 'package:abojude_flutter/features/profile/model/change_password_model.dart';
+import 'package:abojude_flutter/features/auth/set_new_password/data/rx_set_new_password/rx.dart';
+import 'package:abojude_flutter/features/auth/set_new_password/model/set_new_password_model.dart' as snp;
 import 'package:rxdart/rxdart.dart';
 
 
@@ -58,6 +60,12 @@ DeleteAccountRx deleteAccountRxObj = DeleteAccountRx(
 ChangePasswordRx changePasswordRxObj = ChangePasswordRx(
   empty: ChangePasswordModel(),
   dataFetcher: BehaviorSubject<ChangePasswordModel>(),
+);
+
+// // ------------- Set New Password Api Access -----------------//
+SetNewPasswordRx setNewPasswordRxObj = SetNewPasswordRx(
+  empty: snp.ChangePasswordModel(),
+  dataFetcher: BehaviorSubject<snp.ChangePasswordModel>(),
 );
 
 // //___________________ Forget Password Api Access ______________________//

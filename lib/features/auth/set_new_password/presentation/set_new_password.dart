@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 
 class SetNewPassword extends StatefulWidget {
   const SetNewPassword({super.key});
@@ -20,6 +21,12 @@ class _SetNewPasswordState extends State<SetNewPassword> {
 
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    setNewPasswordRxObj.clean();
+  }
 
   @override
   void dispose() {
@@ -270,7 +277,7 @@ class _SetNewPasswordState extends State<SetNewPassword> {
                         return 'Please repeat your new password';
                       }
                       if (value != _passwordController.text) {
-                        return 'Passwords do not match';
+                        return 'The password field confirmation does not match.';
                       }
                       return null;
                     },
@@ -279,30 +286,61 @@ class _SetNewPasswordState extends State<SetNewPassword> {
                   SizedBox(height: 28.h),
 
                   // --------------- Continue Button ---------------
-                  GestureDetector(
-                    onTap: () {
-                      if (_formKey.currentState!.validate()) {
-                        _showSuccessDialog(context);
-                      }
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: 52.h,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF03045E),
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Continue',
-                          style: GoogleFonts.inter(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                  ValueListenableBuilder<bool>(
+                    valueListenable: setNewPasswordRxObj.isLoading,
+                    builder: (context, isLoading, child) {
+                      return GestureDetector(
+                        onTap: isLoading
+                            ? null
+                            : () async {
+                                if (_formKey.currentState!.validate()) {
+                                  final args = ModalRoute.of(context)
+                                      ?.settings
+                                      .arguments as Map<String, dynamic>?;
+                                  final email = args?['email'] ?? '';
+                                  final token = args?['otp'] ?? '';
+
+                                  final success = await setNewPasswordRxObj.setNewPassword(
+                                    email: email,
+                                    password: _passwordController.text,
+                                    passwordConfirmation: _confirmPasswordController.text,
+                                    token: token,
+                                  );
+
+                                  if (success) {
+                                    _showSuccessDialog(context);
+                                  }
+                                }
+                              },
+                        child: Container(
+                          width: double.infinity,
+                          height: 52.h,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF03045E),
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          child: Center(
+                            child: isLoading
+                                ? SizedBox(
+                                    width: 24.w,
+                                    height: 24.w,
+                                    child: const CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : Text(
+                                    'Continue',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                   SizedBox(height: 20.h),
                 ],
