@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:abojude_flutter/helpers/navigation_service.dart';
+import 'package:abojude_flutter/helpers/all_routes.dart';
 
 class CustomLogoutWidget extends StatefulWidget {
   const CustomLogoutWidget({super.key});
@@ -89,7 +91,7 @@ class _CustomLogoutWidgetState extends State<CustomLogoutWidget> {
                       });
                       try {
                         // Trigger logout mechanism if any
-                        await Future.delayed(const Duration(milliseconds: 600));
+                        await logoutRxObj.logOut();
                       } finally {
                         if (mounted) {
                           setState(() {
@@ -97,22 +99,10 @@ class _CustomLogoutWidgetState extends State<CustomLogoutWidget> {
                           });
                         }
                       }
-                      Fluttertoast.showToast(
-                        msg: "Logged out successfully",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        backgroundColor: Colors.black87,
-                        textColor: Colors.white,
-                        fontSize: 16.sp,
-                      );
                       if (mounted) {
-                        // Navigator.pushAndRemoveUntil(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const LoginScreen(),
-                        //   ),
-                        //   (route) => false,
-                        // );
+                        NavigationService.navigateToUntilReplacement(
+                          Routes.welcomeScreen,
+                        );
                       }
                     },
                     child: Container(

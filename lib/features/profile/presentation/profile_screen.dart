@@ -11,6 +11,7 @@ import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/constants/app_constants.dart';
 import 'package:abojude_flutter/networks/stream_cleaner.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 import 'my_listings_screen.dart';
 import 'favorites_screen.dart';
 import 'edit_profile_screen.dart';
@@ -520,9 +521,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () async {
                 Navigator.of(context).pop(); // Close the dialog
 
-                // Clear session tokens and auth states
-                await totalDataClean();
-                appData.remove(kKeyAccessToken);
+                // Trigger logout API & local storage clean
+                await logoutRxObj.logOut();
 
                 // Redirect user to the welcome screen
                 NavigationService.navigateToUntilReplacement(
