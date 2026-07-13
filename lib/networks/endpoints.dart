@@ -34,6 +34,10 @@ final class Endpoints {
   static String logout() => "/v1/auth/logout";
   // -------------------Logout end-------------------
 
+  // -------------------Delete Account start-------------------
+  static String deleteAccount() => "/v1/auth/delete-account";
+  // -------------------Delete Account end-------------------
+
   // -------------------Forget Password start-------------------
   static String forgetPassword() => "/v1/forgot-password";
   // -------------------Forget Password end-------------------
@@ -82,10 +86,6 @@ final class Endpoints {
   // // -------------------Get Profile start-------------------
   // static String getProfile() => "/api/me";
   // // -------------------Get Profile end-------------------
-
-  // // -------------------Delete Account start-------------------
-  // static String deleteAccount() => "/api/delete-profile";
-  // // -------------------Delete Account end-------------------
 
   // // -------------------Update Password start-------------------
   // static String updatePassword() => "/api/update-password";

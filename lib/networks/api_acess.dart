@@ -6,6 +6,7 @@ import 'package:abojude_flutter/features/auth/register/model/register_verify_otp
 import 'package:abojude_flutter/features/auth/login/data/rx_login/rx.dart';
 import 'package:abojude_flutter/features/auth/login/model/login_model.dart';
 import 'package:abojude_flutter/features/auth/login/data/rx_logout/rx.dart';
+import 'package:abojude_flutter/features/profile/data/rx_delete_account/rx.dart';
 import 'package:abojude_flutter/features/auth/forget_password/data/rx_forget_password/rx.dart';
 import 'package:abojude_flutter/features/auth/forget_password/model/forget_password_model.dart';
 import 'package:abojude_flutter/features/auth/forget_password/data/rx_forget_password_verify_otp/rx.dart';
@@ -41,6 +42,12 @@ LoginRx loginRxObj = LoginRx(
 
 // // ------------- Logout Api Access -----------------//
 LogoutRx logoutRxObj = LogoutRx(
+  empty: {},
+  dataFetcher: BehaviorSubject<Map>(),
+);
+
+// // ------------- Delete Account Api Access -----------------//
+DeleteAccountRx deleteAccountRxObj = DeleteAccountRx(
   empty: {},
   dataFetcher: BehaviorSubject<Map>(),
 );
@@ -81,10 +88,6 @@ GetRecentPostListRx getRecentPostListRxObj = GetRecentPostListRx(
   dataFetcher: BehaviorSubject<RecentPostListModel>(),
 );
 
-
-// //_________________Delete Account Api Access ______________________//
-// DeleteAccountRx deleteAccountRxObj =
-//     DeleteAccountRx(empty: {}, dataFetcher: BehaviorSubject<Map>());
 
 // //_________________Update Password Api Access ______________________//
 // UpdatePasswordRx updatePasswordRxObj =
@@ -510,8 +513,7 @@ GetRecentPostListRx getRecentPostListRxObj = GetRecentPostListRx(
 // //   dataFetcher: BehaviorSubject<RequestPaymentDetailsModel>(),
 // // );
 
-// // DeleteAccountRx deleteAccountRxObj =
-// //     DeleteAccountRx(empty: Map(), dataFetcher: BehaviorSubject<Map>());
+
 
 // // // _____________ Search Resident Api Access _____________
 // // SearchResidentRx searchResidentRxObj = SearchResidentRx(
