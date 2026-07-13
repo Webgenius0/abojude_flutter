@@ -3,8 +3,9 @@ import 'package:abojude_flutter/features/auth/register/data/rx_register/rx.dart'
 import 'package:abojude_flutter/features/auth/register/model/register_model.dart';
 import 'package:abojude_flutter/features/auth/register/data/rx_register_verify_otp/rx.dart';
 import 'package:abojude_flutter/features/auth/register/model/register_verify_otp_model.dart';
-import 'package:abojude_flutter/features/auth/login/data/rx.dart';
+import 'package:abojude_flutter/features/auth/login/data/rx_login/rx.dart';
 import 'package:abojude_flutter/features/auth/login/model/login_model.dart';
+import 'package:abojude_flutter/features/auth/login/data/rx_logout/rx.dart';
 import 'package:abojude_flutter/features/auth/forget_password/data/rx_forget_password/rx.dart';
 import 'package:abojude_flutter/features/auth/forget_password/model/forget_password_model.dart';
 import 'package:abojude_flutter/features/auth/forget_password/data/rx_forget_password_verify_otp/rx.dart';
@@ -36,6 +37,12 @@ RegisterVerifyOtpRx registerVerifyOtpRxObj = RegisterVerifyOtpRx(
 LoginRx loginRxObj = LoginRx(
   empty: LoginModel(),
   dataFetcher: BehaviorSubject<LoginModel>(),
+);
+
+// // ------------- Logout Api Access -----------------//
+LogoutRx logoutRxObj = LogoutRx(
+  empty: {},
+  dataFetcher: BehaviorSubject<Map>(),
 );
 
 // //___________________ Forget Password Api Access ______________________//
@@ -216,10 +223,7 @@ GetRecentPostListRx getRecentPostListRxObj = GetRecentPostListRx(
 // //   dataFetcher: BehaviorSubject<RegisterPropertyInfoModel>(),
 // // );
 
-// //_________________LogOut Api Access ______________________//
-// LogOutRx logOutRx = LogOutRx(empty: {}, dataFetcher: BehaviorSubject<Map>());
-
-// // //_________________Login Api Access ______________________//
+// //_________________Login Api Access ______________________//
 // // LoginRx loginRxObj = LoginRx(
 // //   empty: LoginModel(),
 // //   dataFetcher: BehaviorSubject<LoginModel>(),

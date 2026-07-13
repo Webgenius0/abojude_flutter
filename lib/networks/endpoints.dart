@@ -30,6 +30,10 @@ final class Endpoints {
   static String login() => "/v1/login";
   // -------------------Login end-------------------
 
+  // -------------------Logout start-------------------
+  static String logout() => "/v1/auth/logout";
+  // -------------------Logout end-------------------
+
   // -------------------Forget Password start-------------------
   static String forgetPassword() => "/v1/forgot-password";
   // -------------------Forget Password end-------------------
@@ -62,10 +66,6 @@ final class Endpoints {
   // // -------------------Resend OTP start-------------------
   // static String resendOtp() => "/api/resend-otp";
   // // -------------------Resend OTP end-------------------
-
-  // // -------------------Logout start-------------------
-  // static String logout() => "/api/logout";
-  // // -------------------Logout end-------------------
 
   // // -------------------Reset Password start-------------------
   // static String resetPassword() => "/api/reset-password";
