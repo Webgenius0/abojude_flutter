@@ -15,7 +15,6 @@ class CustomLogoutWidget extends StatefulWidget {
 }
 
 class _CustomLogoutWidgetState extends State<CustomLogoutWidget> {
-  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -84,54 +83,48 @@ class _CustomLogoutWidgetState extends State<CustomLogoutWidget> {
 
                 // Yes Button
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () async {
-                      setState(() {
-                        _isLoading = true;
-                      });
-                      try {
-                        // Trigger logout mechanism if any
-                        await logoutRxObj.logOut();
-                      } finally {
-                        if (mounted) {
-                          setState(() {
-                            _isLoading = false;
-                          });
-                        }
-                      }
-                      if (mounted) {
-                        NavigationService.navigateToUntilReplacement(
-                          Routes.welcomeScreen,
-                        );
-                      }
+                  child: ValueListenableBuilder<bool>(
+                    valueListenable: logoutRxObj.isLoading,
+                    builder: (context, isLoading, child) {
+                      return GestureDetector(
+                        onTap: isLoading
+                            ? null
+                            : () async {
+                                final success = await logoutRxObj.logOut();
+                                if (success && context.mounted) {
+                                  Navigator.pop(context);
+                                  NavigationService.navigateToUntilReplacement(
+                                    Routes.welcomeScreen,
+                                  );
+                                }
+                              },
+                        child: Container(
+                          height: 48.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFF4949), // Solid red color matching design mockup
+                            borderRadius: BorderRadius.circular(30.r),
+                          ),
+                          child: isLoading
+                              ? SizedBox(
+                                  width: 20.w,
+                                  height: 20.w,
+                                  child: const CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(
+                                  "Yes",
+                                  style: GoogleFonts.inter(
+                                    color: Colors.white,
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                        ),
+                      );
                     },
-                    child: Container(
-                      height: 48.h,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: const Color(
-                          0xFFFF4949,
-                        ), // Solid red color matching design mockup
-                        borderRadius: BorderRadius.circular(30.r),
-                      ),
-                      child: _isLoading
-                          ? SizedBox(
-                              width: 20.w,
-                              height: 20.w,
-                              child: const CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : Text(
-                              "Yes",
-                              style: GoogleFonts.inter(
-                                color: Colors.white,
-                                fontSize: 15.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                    ),
                   ),
                 ),
               ],

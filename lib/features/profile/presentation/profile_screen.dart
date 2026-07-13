@@ -519,10 +519,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
             CupertinoDialogAction(
               isDestructiveAction: true,
               onPressed: () async {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop(); // Close the confirmation dialog
+
+                // Show loader dialog (with CircularProgressIndicator)
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  ),
+                );
 
                 // Trigger logout API & local storage clean
                 await logoutRxObj.logOut();
+
+                // Close loader dialog
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
 
                 // Redirect user to the welcome screen
                 NavigationService.navigateToUntilReplacement(
