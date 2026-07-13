@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:developer';
 import 'package:abojude_flutter/features/auth/login/data/rx_logout/api.dart';
 import 'package:abojude_flutter/helpers/error_helper.dart';
@@ -15,9 +16,13 @@ final class LogoutRx extends RxResponseInt<Map> {
 
   LogoutRx({required super.empty, required super.dataFetcher});
 
+  /// Exposed so the UI can listen to loading state via ValueListenableBuilder.
+  final ValueNotifier<bool> isLoading = ValueNotifier(false);
+
   ValueStream get getFileData => dataFetcher.stream;
 
   Future<bool> logOut() async {
+    isLoading.value = true;
     try {
       Map data = await api.logOut();
       if (data.containsKey('message') && data['message'] != null) {
@@ -31,6 +36,7 @@ final class LogoutRx extends RxResponseInt<Map> {
       handleErrorWithReturn(error);
       return false;
     } finally {
+      isLoading.value = false;
       await totalDataClean();
       await appData.remove(kKeyAccessToken);
       DioSingleton.instance.create();
