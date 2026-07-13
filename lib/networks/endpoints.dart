@@ -69,6 +69,10 @@ final class Endpoints {
   // ------------------- GetRecentPostList start-------------------
   static String getRecentPostList() => "/v1/posts/recent";
   // -------------------GetRecentPostList end-------------------
+
+  // ------------------- GetProfile start-------------------
+  static String getProfile() => "/v1/auth/profile";
+  // -------------------GetProfile end-------------------
   
 
   // // -------------------Forget Password verify otp start-------------------
