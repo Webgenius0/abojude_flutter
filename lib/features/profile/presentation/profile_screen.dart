@@ -6,11 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 
-import 'package:abojude_flutter/helpers/di.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
-import 'package:abojude_flutter/constants/app_constants.dart';
-import 'package:abojude_flutter/networks/stream_cleaner.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 import 'my_listings_screen.dart';
 import 'favorites_screen.dart';
@@ -526,9 +523,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   context: context,
                   barrierDismissible: false,
                   builder: (context) => const Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                    ),
+                    child: CircularProgressIndicator(color: Colors.white),
                   ),
                 );
 
@@ -806,29 +801,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       SizedBox(height: 24.h),
                       // Delete Permanently Button
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFDC2626),
-                          minimumSize: Size(double.infinity, 44.h),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                          elevation: 0,
-                        ),
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            Navigator.of(context).pop();
-                            await _performAccountDeletion(context);
-                          }
+                      ValueListenableBuilder<bool>(
+                        valueListenable: deleteAccountRxObj.isLoading,
+                        builder: (context, isLoading, child) {
+                          return ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFDC2626),
+                              minimumSize: Size(double.infinity, 44.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                              elevation: 0,
+                            ),
+                            onPressed: isLoading
+                                ? null
+                                : () async {
+                                    if (formKey.currentState!.validate()) {
+                                      final success = await deleteAccountRxObj
+                                          .deleteAccount(
+                                            password: passwordController.text,
+                                          );
+                                      if (success && context.mounted) {
+                                        Navigator.of(
+                                          context,
+                                        ).pop(); // Close confirm password dialog
+                                        NavigationService.navigateToUntilReplacement(
+                                          Routes.welcomeScreen,
+                                        );
+                                      }
+                                    }
+                                  },
+                            child: isLoading
+                                ? SizedBox(
+                                    width: 20.w,
+                                    height: 20.w,
+                                    child: const CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Text(
+                                    'Delete Permanently',
+                                    style: GoogleFonts.inter(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 13.sp,
+                                    ),
+                                  ),
+                          );
                         },
-                        child: Text(
-                          'Delete Permanently',
-                          style: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 13.sp,
-                          ),
-                        ),
                       ),
                       SizedBox(height: 10.h),
                       // Back Button
@@ -864,29 +885,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
-  }
-
-  // Account deletion logic
-  Future<void> _performAccountDeletion(BuildContext context) async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Account deleted successfully.',
-          style: GoogleFonts.inter(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        backgroundColor: Colors.green[600],
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-
-    // Clean session tokens
-    await totalDataClean();
-    appData.remove(kKeyAccessToken);
-
-    // Redirect user to the welcome screen
-    NavigationService.navigateToUntilReplacement(Routes.welcomeScreen);
   }
 }
