@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -11,13 +12,21 @@ class ChangePasswordScreen extends StatefulWidget {
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _currentPasswordController = TextEditingController();
+  final TextEditingController _currentPasswordController =
+      TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   bool _obscureCurrent = true;
   bool _obscureNew = true;
   bool _obscureConfirm = true;
+
+  @override
+  void initState() {
+    super.initState();
+    changePasswordRxObj.clean();
+  }
 
   @override
   void dispose() {
@@ -27,16 +36,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     super.dispose();
   }
 
-  void _saveChanges() {
+  void _saveChanges() async {
     if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Password updated successfully!'),
-          backgroundColor: Color(0xFF2B8A3E),
-          behavior: SnackBarBehavior.floating,
-        ),
+      final success = await changePasswordRxObj.changePassword(
+        currentPassword: _currentPasswordController.text,
+        newPassword: _newPasswordController.text,
+        confirmPassword: _confirmPasswordController.text,
       );
-      Navigator.pop(context);
+      if (success) {
+        Navigator.pop(context);
+      }
     }
   }
 
@@ -59,7 +68,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0xFFF1F3F5), width: 1.5),
+                  border: Border.all(
+                    color: const Color(0xFFF1F3F5),
+                    width: 1.5,
+                  ),
                 ),
                 child: const Icon(
                   Icons.chevron_left_rounded,
@@ -118,7 +130,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your current password';
+                            return 'The current password field is required.';
                           }
                           return null;
                         },
@@ -138,7 +150,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter a new password';
+                            return 'The new password field is required.';
                           }
                           if (value.length < 6) {
                             return 'Password must be at least 6 characters long';
@@ -161,10 +173,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please confirm your new password';
+                            return 'The confirm password field is required.';
                           }
                           if (value != _newPasswordController.text) {
-                            return 'Passwords do not match';
+                            return 'The confirm password field must match new password.';
                           }
                           return null;
                         },
@@ -181,23 +193,40 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               child: SizedBox(
                 width: double.infinity,
                 height: 52.h,
-                child: ElevatedButton(
-                  onPressed: _saveChanges,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0F3D7A),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    'Save Changes',
-                    style: GoogleFonts.inter(
-                      color: Colors.white,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: changePasswordRxObj.isLoading,
+                  builder: (context, isLoading, child) {
+                    return ElevatedButton(
+                      onPressed: isLoading ? null : _saveChanges,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF0F3D7A),
+                        disabledBackgroundColor: const Color(
+                          0xFF0F3D7A,
+                        ).withOpacity(0.6),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: isLoading
+                          ? SizedBox(
+                              width: 24.w,
+                              height: 24.w,
+                              child: const CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text(
+                              'Save Changes',
+                              style: GoogleFonts.inter(
+                                color: Colors.white,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -236,10 +265,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(color: Colors.grey[400], fontSize: 15.sp),
-        prefixIcon: Icon(Icons.lock_outline_rounded, color: Colors.grey[400], size: 20.sp),
+        prefixIcon: Icon(
+          Icons.lock_outline_rounded,
+          color: Colors.grey[400],
+          size: 20.sp,
+        ),
         suffixIcon: IconButton(
           icon: Icon(
-            obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+            obscureText
+                ? Icons.visibility_off_outlined
+                : Icons.visibility_outlined,
             color: Colors.grey[400],
             size: 20.sp,
           ),

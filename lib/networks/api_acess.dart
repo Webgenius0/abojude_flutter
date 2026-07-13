@@ -19,6 +19,8 @@ import 'package:abojude_flutter/features/home/data/rx_get_category_list/rx.dart'
 import 'package:abojude_flutter/features/home/model/get_category_list_model.dart';
 import 'package:abojude_flutter/features/home/data/rx_recent_post_list/rx.dart';
 import 'package:abojude_flutter/features/home/model/recent_post_list_model.dart';
+import 'package:abojude_flutter/features/profile/data/rx_change_password/rx.dart';
+import 'package:abojude_flutter/features/profile/model/change_password_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 
@@ -50,6 +52,12 @@ LogoutRx logoutRxObj = LogoutRx(
 DeleteAccountRx deleteAccountRxObj = DeleteAccountRx(
   empty: {},
   dataFetcher: BehaviorSubject<Map>(),
+);
+
+// // ------------- Change Password Api Access -----------------//
+ChangePasswordRx changePasswordRxObj = ChangePasswordRx(
+  empty: ChangePasswordModel(),
+  dataFetcher: BehaviorSubject<ChangePasswordModel>(),
 );
 
 // //___________________ Forget Password Api Access ______________________//
