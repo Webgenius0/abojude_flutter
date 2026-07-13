@@ -42,6 +42,12 @@ final class Endpoints {
   static String forgetPassword() => "/v1/forgot-password";
   // -------------------Forget Password end-------------------
 
+    // -------------------Change Password start-------------------
+  static String changePassword() => "/v1/auth/change-password";
+  // -------------------Change Password end-------------------
+
+
+
   // -------------------Forget Password verify otp start-------------------
   static String forgetPasswordVerifyOtp() => "/v1/verify/otp";
   // -------------------Forget Password verify otp end-------------------
