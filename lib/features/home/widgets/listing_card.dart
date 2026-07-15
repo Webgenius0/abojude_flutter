@@ -10,11 +10,7 @@ class ListingCard extends StatefulWidget {
   final dynamic item;
   final VoidCallback? onFavoriteToggle;
 
-  const ListingCard({
-    super.key,
-    required this.item,
-    this.onFavoriteToggle,
-  });
+  const ListingCard({super.key, required this.item, this.onFavoriteToggle});
 
   @override
   State<ListingCard> createState() => _ListingCardState();
@@ -28,16 +24,40 @@ class _ListingCardState extends State<ListingCard> {
   Widget build(BuildContext context) {
     final item = widget.item;
 
-    final String title = item is Map ? (item['title'] as String? ?? '') : (item.title ?? '');
-    final String category = item is Map ? (item['category'] as String? ?? '') : (item.categoryName ?? '');
-    final String? imageUrl = item is Map ? (item['imageUrl'] as String?) : (item.thumbnail);
-    final bool isFeatured = item is Map ? (item['isFeatured'] as bool? ?? false) : (item.isFeatured ?? false);
-    final String time = item is Map ? (item['time'] as String? ?? '') : (item.timeAgo ?? '');
-    final bool isFavorite = item is Map ? (item['isFavorite'] as bool? ?? false) : (item.isWish ?? false);
-    final bool hasPrice = item is Map ? (item['hasPrice'] as bool? ?? false) : (item.price != null && item.price.toString().isNotEmpty);
-    final String priceStr = item is Map ? (item['price'] as String? ?? '') : (item.price != null ? (item.price.toString().startsWith('£') ? item.price.toString() : '£${item.price}') : '');
-    final String location = item is Map ? (item['location'] as String? ?? '') : ("${item.city ?? ''}${item.city != null && item.province != null ? ', ' : ''}${item.province ?? ''}");
-    final IconData icon = item is Map ? (item['icon'] as IconData? ?? Icons.image) : Icons.image;
+    final String title = item is Map
+        ? (item['title'] as String? ?? '')
+        : (item.title ?? '');
+    final String category = item is Map
+        ? (item['category'] as String? ?? '')
+        : (item.categoryName ?? '');
+    final String? imageUrl = item is Map
+        ? (item['imageUrl'] as String?)
+        : (item.thumbnail);
+    final bool isFeatured = item is Map
+        ? (item['isFeatured'] as bool? ?? false)
+        : (item.isFeatured ?? false);
+    final String time = item is Map
+        ? (item['time'] as String? ?? '')
+        : (item.timeAgo ?? '');
+    final bool isFavorite = item is Map
+        ? (item['isFavorite'] as bool? ?? false)
+        : (item.isWish ?? false);
+    final bool hasPrice = item is Map
+        ? (item['hasPrice'] as bool? ?? false)
+        : (item.price != null && item.price.toString().isNotEmpty);
+    final String priceStr = item is Map
+        ? (item['price'] as String? ?? '')
+        : (item.price != null
+              ? (item.price.toString().startsWith('£')
+                    ? item.price.toString()
+                    : '£${item.price}')
+              : '');
+    final String location = item is Map
+        ? (item['location'] as String? ?? '')
+        : ("${item.city ?? ''}${item.city != null && item.province != null ? ', ' : ''}${item.province ?? ''}");
+    final IconData icon = item is Map
+        ? (item['icon'] as IconData? ?? Icons.image)
+        : Icons.image;
 
     return GestureDetector(
       onTap: () {
@@ -64,14 +84,15 @@ class _ListingCardState extends State<ListingCard> {
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image area
-            Stack(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final bool isBounded = constraints.hasBoundedHeight;
+
+            Widget imageSection = Stack(
+              fit: isBounded ? StackFit.expand : StackFit.loose,
               children: [
                 Container(
-                  height: 110,
+                  height: isBounded ? null : 110,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.grey.shade200,
@@ -151,7 +172,10 @@ class _ListingCardState extends State<ListingCard> {
                       ),
                       child: Text(
                         time,
-                        style: const TextStyle(color: Colors.white, fontSize: 9),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                        ),
                       ),
                     ),
                   ),
@@ -162,7 +186,8 @@ class _ListingCardState extends State<ListingCard> {
                     onTap: () {
                       setState(() {
                         if (item is Map) {
-                          item['isFavorite'] = !(item['isFavorite'] as bool? ?? false);
+                          item['isFavorite'] =
+                              !(item['isFavorite'] as bool? ?? false);
                         } else if (item is Datum) {
                           item.isWish = !(item.isWish ?? false);
                         }
@@ -185,76 +210,86 @@ class _ListingCardState extends State<ListingCard> {
                   ),
                 ),
               ],
-            ),
-            // Info
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (hasPrice)
-                    Text(
-                      priceStr,
-                      style: const TextStyle(
-                        color: navyBlue,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 14,
-                      ),
-                    ),
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+            );
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (isBounded) Expanded(child: imageSection) else imageSection,
+                // Info
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 8,
                   ),
-                  const SizedBox(height: 6),
-                  if (category.isNotEmpty)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        category,
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey.shade700,
-                        ),
-                      ),
-                    ),
-                  const SizedBox(height: 6),
-                  Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                        size: 12,
-                        color: Colors.grey.shade500,
+                      if (hasPrice)
+                        Text(
+                          priceStr,
+                          style: const TextStyle(
+                            color: navyBlue,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 14,
+                          ),
+                        ),
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(width: 2),
-                      Expanded(
-                        child: Text(
-                          location,
-                          style: TextStyle(
-                            fontSize: 10,
+                      const SizedBox(height: 4),
+                      if (category.isNotEmpty)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            category,
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey.shade700,
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.location_on_outlined,
+                            size: 12,
                             color: Colors.grey.shade500,
                           ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                          const SizedBox(width: 2),
+                          Expanded(
+                            child: Text(
+                              location,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey.shade500,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-          ],
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
