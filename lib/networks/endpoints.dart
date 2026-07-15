@@ -30,6 +30,11 @@ final class Endpoints {
   static String getProvinceList() => "/v1/locations/provinces";
   // -------------------Get Province List end-------------------
 
+  // -------------------Get Cities List start-----------------
+  static String getCitiesList(String province) =>
+      "/v1/locations/provinces/$province/cities";
+  // -------------------Get Cities List end-------------------
+
   // -------------------Login start-------------------
   static String login() => "/v1/login";
   // -------------------Login end-------------------
