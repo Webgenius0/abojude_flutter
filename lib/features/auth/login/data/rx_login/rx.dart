@@ -32,6 +32,7 @@ final class LoginRx extends RxResponseInt<LoginModel> {
       if (data.token != null && data.token!.isNotEmpty) {
         appData.write(kKeyAccessToken, data.token);
         appData.write(kKeyIsLoggedIn, true);
+        appData.write(kKeySelectedLocation, true);
         DioSingleton.instance.update(data.token!);
       }
 

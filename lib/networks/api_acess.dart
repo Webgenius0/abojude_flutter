@@ -29,6 +29,10 @@ import 'package:abojude_flutter/features/auth/register/data/rx_get_province/rx.d
 import 'package:abojude_flutter/features/auth/register/model/get_province_model.dart';
 import 'package:abojude_flutter/features/auth/register/data/rx_get_city/rx.dart';
 import 'package:abojude_flutter/features/auth/register/model/get_city_model.dart';
+import 'package:abojude_flutter/features/auth/register/data/rx_select_location_for_auth_user/rx.dart';
+import 'package:abojude_flutter/features/auth/register/model/select_location_for_auth_user_model.dart';
+import 'package:abojude_flutter/features/auth/register/data/rx_select_location_for_guest/rx.dart';
+import 'package:abojude_flutter/features/auth/register/model/select_location_for_guest_user_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 // // ------------- Register Api Access -----------------//
@@ -111,6 +115,18 @@ GetProvinceRx getProvinceRxObj = GetProvinceRx(
 GetCityRx getCityRxObj = GetCityRx(
   empty: GetCityModel(),
   dataFetcher: BehaviorSubject<GetCityModel>(),
+);
+
+// // ------------- Select Location For Auth User Api Access -----------------//
+SelectLocationForAuthUserRx selectLocationForAuthUserRxObj = SelectLocationForAuthUserRx(
+  empty: SelectLocationForAuthUserModel(),
+  dataFetcher: BehaviorSubject<SelectLocationForAuthUserModel>(),
+);
+
+// // ------------- Select Location For Guest Api Access -----------------//
+SelectLocationForGuestRx selectLocationForGuestRxObj = SelectLocationForGuestRx(
+  empty: SelectLocationForGuestUserModel(),
+  dataFetcher: BehaviorSubject<SelectLocationForGuestUserModel>(),
 );
 
 // // ------------- Get Category List Api Access -----------------//

@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:abojude_flutter/assets_helper/app_images.dart';
+import 'package:abojude_flutter/constants/app_constants.dart';
+import 'package:abojude_flutter/helpers/di.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -43,9 +45,16 @@ class _SplashScreenState extends State<SplashScreen>
     // --------------- Start Animation ---------------
     _animationController.forward();
 
-    // --------------- Navigate to Login Screen ---------------
+    // --------------- Navigate to next Screen ---------------
     Future.delayed(const Duration(seconds: 3), () {
-      NavigationService.navigateToReplacement(Routes.welcomeScreen);
+      final bool isLoggedIn = appData.read(kKeyIsLoggedIn) ?? false;
+      final bool selectedLocation = appData.read(kKeySelectedLocation) ?? false;
+
+      if (isLoggedIn && selectedLocation) {
+        NavigationService.navigateToReplacement(Routes.navigationMenu);
+      } else {
+        NavigationService.navigateToReplacement(Routes.welcomeScreen);
+      }
     });
   }
 
