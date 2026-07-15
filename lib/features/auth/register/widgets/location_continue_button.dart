@@ -4,10 +4,12 @@ import 'package:google_fonts/google_fonts.dart';
 
 class LocationContinueButton extends StatelessWidget {
   final VoidCallback onTap;
+  final bool isLoading;
 
   const LocationContinueButton({
     super.key,
     required this.onTap,
+    this.isLoading = false,
   });
 
   @override
@@ -15,7 +17,7 @@ class LocationContinueButton extends StatelessWidget {
     return Column(
       children: [
         GestureDetector(
-          onTap: onTap,
+          onTap: isLoading ? null : onTap,
           child: Container(
             width: double.infinity,
             height: 52.h,
@@ -24,14 +26,23 @@ class LocationContinueButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: Center(
-              child: Text(
-                'Continue',
-                style: GoogleFonts.inter(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
+              child: isLoading
+                  ? SizedBox(
+                      width: 24.w,
+                      height: 24.w,
+                      child: const CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(
+                      'Continue',
+                      style: GoogleFonts.inter(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
             ),
           ),
         ),

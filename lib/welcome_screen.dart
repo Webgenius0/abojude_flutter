@@ -194,6 +194,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         if (success) {
                           NavigationService.navigateTo(
                             Routes.selectLocationScreen,
+                            arguments: true,
                           );
                         }
                       },

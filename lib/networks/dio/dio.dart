@@ -4,6 +4,9 @@ import '/helpers/di.dart';
 import '../../constants/app_constants.dart';
 import '../endpoints.dart';
 import 'log.dart';
+import 'package:abojude_flutter/networks/stream_cleaner.dart';
+import 'package:abojude_flutter/helpers/all_routes.dart';
+import 'package:abojude_flutter/helpers/navigation_service.dart';
 
 final class DioSingleton {
   static final DioSingleton _singleton = DioSingleton._internal();
@@ -13,6 +16,27 @@ final class DioSingleton {
   static DioSingleton get instance => _singleton;
 
   late Dio dio;
+
+  Dio _createDio(BaseOptions options) {
+    final dio = Dio(options);
+    dio.interceptors.addAll([
+      Logger(),
+      InterceptorsWrapper(
+        onError: (DioException e, handler) async {
+          if (e.response?.statusCode == 401) {
+            // Clean dynamic/static data
+            await totalDataClean();
+            await appData.remove(kKeyAccessToken);
+
+            // Redirect to welcome screen
+            NavigationService.navigateToUntilReplacement(Routes.welcomeScreen);
+          }
+          return handler.next(e);
+        },
+      ),
+    ]);
+    return dio;
+  }
 
   void create() {
     BaseOptions options = BaseOptions(
@@ -24,11 +48,10 @@ final class DioSingleton {
           NetworkConstants.ACCEPT_LANGUAGE: appData.read(kKeyCountryCode) ?? "pt",
           NetworkConstants.APP_KEY: NetworkConstants.APP_KEY_VALUE,
         });
-    dio = Dio(options)..interceptors.add(Logger());
+    dio = _createDio(options);
   }
 
   void update(String auth) {
-    
     if (kDebugMode) {
       print("Dio update");
     }
@@ -44,7 +67,7 @@ final class DioSingleton {
       connectTimeout: const Duration(milliseconds: 100000),
       receiveTimeout: const Duration(milliseconds: 100000),
     );
-    dio = Dio(options)..interceptors.add(Logger());
+    dio = _createDio(options);
   }
 
   void updateLanguage(String countryCode) {
@@ -63,7 +86,7 @@ final class DioSingleton {
       connectTimeout: const Duration(milliseconds: 100000),
       receiveTimeout: const Duration(milliseconds: 100000),
     );
-    dio = Dio(options)..interceptors.add(Logger());
+    dio = _createDio(options);
   }
 }
 

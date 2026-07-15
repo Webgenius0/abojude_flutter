@@ -177,13 +177,15 @@ final class RouteGenerator {
             : CupertinoPageRoute(builder: (context) => const NavigationMenu());
 
       case Routes.selectLocationScreen:
+        final isGuest = settings.arguments as bool? ?? false;
         return Platform.isAndroid
             ? _FadedTransitionRoute(
-                widget: const SelectLocationScreen(),
+                widget: SelectLocationScreen(isGuest: isGuest),
                 settings: settings,
               )
             : CupertinoPageRoute(
-                builder: (context) => const SelectLocationScreen(),
+                builder: (context) => SelectLocationScreen(isGuest: isGuest),
+                settings: settings,
               );
 
       case Routes.forgetPasswordScreen:

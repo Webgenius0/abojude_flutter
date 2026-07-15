@@ -13,9 +13,12 @@ import 'package:abojude_flutter/features/auth/register/widgets/location_continue
 import 'package:abojude_flutter/networks/api_acess.dart';
 import 'package:abojude_flutter/features/auth/register/model/get_province_model.dart';
 import 'package:abojude_flutter/features/auth/register/model/get_city_model.dart';
+import 'package:abojude_flutter/constants/app_constants.dart';
+import 'package:abojude_flutter/helpers/di.dart';
 
 class SelectLocationScreen extends StatefulWidget {
-  const SelectLocationScreen({super.key});
+  final bool isGuest;
+  const SelectLocationScreen({super.key, this.isGuest = false});
 
   @override
   State<SelectLocationScreen> createState() => _SelectLocationScreenState();
@@ -67,7 +70,8 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                         StreamBuilder<GetProvinceModel>(
                           stream: getProvinceRxObj.getProvinceData,
                           builder: (context, provinceSnapshot) {
-                            if (provinceSnapshot.connectionState == ConnectionState.waiting &&
+                            if (provinceSnapshot.connectionState ==
+                                    ConnectionState.waiting &&
                                 !provinceSnapshot.hasData) {
                               return const Center(
                                 child: Padding(
@@ -91,7 +95,9 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                             }
 
                             final provinceModel = provinceSnapshot.data;
-                            if (provinceModel == null || provinceModel.data == null || provinceModel.data!.isEmpty) {
+                            if (provinceModel == null ||
+                                provinceModel.data == null ||
+                                provinceModel.data!.isEmpty) {
                               return const Center(
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(vertical: 20),
@@ -102,7 +108,8 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                               );
                             }
 
-                            final List<String> provinceNames = provinceModel.data!;
+                            final List<String> provinceNames =
+                                provinceModel.data!;
 
                             return Column(
                               children: [
@@ -164,11 +171,14 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                   StreamBuilder<GetCityModel>(
                                     stream: getCityRxObj.getCityData,
                                     builder: (context, citySnapshot) {
-                                      if (citySnapshot.connectionState == ConnectionState.waiting &&
+                                      if (citySnapshot.connectionState ==
+                                              ConnectionState.waiting &&
                                           !citySnapshot.hasData) {
                                         return const Center(
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 20),
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 20,
+                                            ),
                                             child: CircularProgressIndicator(
                                               color: Color(0xFF03045E),
                                             ),
@@ -188,7 +198,8 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                       }
 
                                       final cityModel = citySnapshot.data;
-                                      final List<String> cityNames = cityModel?.data ?? [];
+                                      final List<String> cityNames =
+                                          cityModel?.data ?? [];
 
                                       return LocationDropdownField(
                                         label: 'City',
@@ -236,24 +247,54 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                         SizedBox(height: 40.h),
 
                         // --------------- Continue Button ---------------
-                        LocationContinueButton(
-                          onTap: () {
-                            if (_selectedProvince == null ||
-                                _selectedCity == null) {
-                              setState(() {
-                                _showValidationError = true;
-                              });
-                              ToastUtil.showShortToast(
-                                'Please select both province and city',
-                              );
-                            } else {
-                              ToastUtil.showShortToast(
-                                'Location saved successfully!',
-                              );
-                              NavigationService.navigateToUntilReplacement(
-                                Routes.navigationMenu,
-                              );
-                            }
+                        ValueListenableBuilder<bool>(
+                          valueListenable: widget.isGuest
+                              ? selectLocationForGuestRxObj.isLoading
+                              : selectLocationForAuthUserRxObj.isLoading,
+                          builder: (context, isLoading, child) {
+                            return LocationContinueButton(
+                              isLoading: isLoading,
+                              onTap: () async {
+                                if (_selectedProvince == null ||
+                                    _selectedCity == null) {
+                                  setState(() {
+                                    _showValidationError = true;
+                                  });
+                                  ToastUtil.showShortToast(
+                                    'Please select both province and city',
+                                  );
+                                } else {
+                                  bool success = false;
+                                  if (widget.isGuest) {
+                                    final String? guestToken = appData.read(kKeyAccessToken);
+                                    if (guestToken == null || guestToken.isEmpty) {
+                                      ToastUtil.showShortToast("Guest token is invalid or missing");
+                                      return;
+                                    }
+                                    success = await selectLocationForGuestRxObj
+                                        .selectLocationForGuestRx(
+                                      guestToken: guestToken,
+                                      province: _selectedProvince!,
+                                      city: _selectedCity!,
+                                    );
+                                  } else {
+                                    success = await selectLocationForAuthUserRxObj
+                                        .selectLocationForAuthUserRx(
+                                      province: _selectedProvince!,
+                                      city: _selectedCity!,
+                                    );
+                                  }
+
+                                  if (success) {
+                                    appData.write(kKeyIsLoggedIn, true);
+                                    appData.write(kKeySelectedLocation, true);
+                                    NavigationService.navigateToUntilReplacement(
+                                      Routes.navigationMenu,
+                                    );
+                                  }
+                                }
+                              },
+                            );
                           },
                         ),
                         SizedBox(height: 10.h),

@@ -199,6 +199,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                 if (success) {
                                   NavigationService.navigateToUntilReplacement(
                                     Routes.selectLocationScreen,
+                                    arguments: false,
                                   );
                                 } else {
                                   setState(() {

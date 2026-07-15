@@ -6,6 +6,9 @@ import 'package:abojude_flutter/networks/rx_base.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:abojude_flutter/constants/app_constants.dart';
+import 'package:abojude_flutter/helpers/di.dart';
+import 'package:abojude_flutter/networks/dio/dio.dart';
 import 'api.dart';
 
 final class RegisterVerifyOtpRx extends RxResponseInt<RegisterVerifyOtpModel> {
@@ -30,6 +33,12 @@ final class RegisterVerifyOtpRx extends RxResponseInt<RegisterVerifyOtpModel> {
         otp: otp,
         type: type,
       );
+
+      if (data.token != null && data.token!.isNotEmpty) {
+        appData.write(kKeyAccessToken, data.token);
+        appData.write(kKeyIsLoggedIn, true);
+        DioSingleton.instance.update(data.token!);
+      }
 
       handleSuccessWithReturn(data);
       return true;

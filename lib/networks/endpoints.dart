@@ -35,6 +35,15 @@ final class Endpoints {
       "/v1/locations/provinces/$province/cities";
   // -------------------Get Cities List end-------------------
 
+  // -------------------Select Location auth user start-----------------
+  static String selectLocationForAuthUser() => "/v1/locations/select";
+  // -------------------Select Location auth user end-------------------
+
+  // -------------------Guest user location start-----------------
+  static String guestUserLocation() => "/v1/guest/location";
+  // -------------------Guest user location end-------------------
+ 
+
   // -------------------Login start-------------------
   static String login() => "/v1/login";
   // -------------------Login end-------------------
