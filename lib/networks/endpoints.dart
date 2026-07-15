@@ -26,6 +26,10 @@ final class Endpoints {
   static String registerVerifyOtp() => "/v1/verify/otp";
   // -------------------Register Verify email end-------------------
 
+  // -------------------Get Province List start-----------------
+  static String getProvinceList() => "/v1/locations/provinces";
+  // -------------------Get Province List end-------------------
+
   // -------------------Login start-------------------
   static String login() => "/v1/login";
   // -------------------Login end-------------------

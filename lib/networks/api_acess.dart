@@ -1,4 +1,3 @@
-
 import 'package:abojude_flutter/features/auth/register/data/rx_register/rx.dart';
 import 'package:abojude_flutter/features/auth/register/model/register_model.dart';
 import 'package:abojude_flutter/features/auth/register/data/rx_register_verify_otp/rx.dart';
@@ -22,11 +21,13 @@ import 'package:abojude_flutter/features/home/model/recent_post_list_model.dart'
 import 'package:abojude_flutter/features/profile/data/rx_change_password/rx.dart';
 import 'package:abojude_flutter/features/profile/model/change_password_model.dart';
 import 'package:abojude_flutter/features/auth/set_new_password/data/rx_set_new_password/rx.dart';
-import 'package:abojude_flutter/features/auth/set_new_password/model/set_new_password_model.dart' as snp;
+import 'package:abojude_flutter/features/auth/set_new_password/model/set_new_password_model.dart'
+    as snp;
 import 'package:abojude_flutter/features/profile/data/rx_get_profile/rx.dart';
 import 'package:abojude_flutter/features/profile/model/get_profile_model.dart';
+import 'package:abojude_flutter/features/auth/register/data/rx_get_province/rx.dart';
+import 'package:abojude_flutter/features/auth/register/model/get_province_model.dart';
 import 'package:rxdart/rxdart.dart';
-
 
 // // ------------- Register Api Access -----------------//
 RegisterRx registerRxObj = RegisterRx(
@@ -47,10 +48,7 @@ LoginRx loginRxObj = LoginRx(
 );
 
 // // ------------- Logout Api Access -----------------//
-LogoutRx logoutRxObj = LogoutRx(
-  empty: {},
-  dataFetcher: BehaviorSubject<Map>(),
-);
+LogoutRx logoutRxObj = LogoutRx(empty: {}, dataFetcher: BehaviorSubject<Map>());
 
 // // ------------- Delete Account Api Access -----------------//
 DeleteAccountRx deleteAccountRxObj = DeleteAccountRx(
@@ -83,10 +81,11 @@ ForgetPasswordRx forgetPasswordRxObj = ForgetPasswordRx(
 );
 
 // // ------------- Forget Password Verify Otp Api Access -----------------//
-ForgetPasswordVerifyOtpRx forgetPasswordVerifyOtpRxObj = ForgetPasswordVerifyOtpRx(
-  empty: ForgetPasswordVerifyOtpModel(),
-  dataFetcher: BehaviorSubject<ForgetPasswordVerifyOtpModel>(),
-);
+ForgetPasswordVerifyOtpRx forgetPasswordVerifyOtpRxObj =
+    ForgetPasswordVerifyOtpRx(
+      empty: ForgetPasswordVerifyOtpModel(),
+      dataFetcher: BehaviorSubject<ForgetPasswordVerifyOtpModel>(),
+    );
 
 // // ------------- Guest User Api Access -----------------//
 GuestUserRx guestUserRxObj = GuestUserRx(
@@ -98,6 +97,12 @@ GuestUserRx guestUserRxObj = GuestUserRx(
 ResendOtpRx resendOtpRxObj = ResendOtpRx(
   empty: ResendOtpModel(),
   dataFetcher: BehaviorSubject<ResendOtpModel>(),
+);
+
+// // ------------- Get Province List Api Access -----------------//
+GetProvinceRx getProvinceRxObj = GetProvinceRx(
+  empty: GetProvinceModel(),
+  dataFetcher: BehaviorSubject<GetProvinceModel>(),
 );
 
 // // ------------- Get Category List Api Access -----------------//
