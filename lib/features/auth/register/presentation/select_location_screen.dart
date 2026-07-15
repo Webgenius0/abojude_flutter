@@ -10,9 +10,9 @@ import 'package:abojude_flutter/features/auth/register/widgets/location_header.d
 import 'package:abojude_flutter/features/auth/register/widgets/location_dropdown.dart';
 import 'package:abojude_flutter/features/auth/register/widgets/location_success_card.dart';
 import 'package:abojude_flutter/features/auth/register/widgets/location_continue_button.dart';
-import 'package:abojude_flutter/features/auth/register/widgets/location_data.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 import 'package:abojude_flutter/features/auth/register/model/get_province_model.dart';
+import 'package:abojude_flutter/features/auth/register/model/get_city_model.dart';
 
 class SelectLocationScreen extends StatefulWidget {
   const SelectLocationScreen({super.key});
@@ -66,9 +66,9 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
 
                         StreamBuilder<GetProvinceModel>(
                           stream: getProvinceRxObj.getProvinceData,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting &&
-                                !snapshot.hasData) {
+                          builder: (context, provinceSnapshot) {
+                            if (provinceSnapshot.connectionState == ConnectionState.waiting &&
+                                !provinceSnapshot.hasData) {
                               return const Center(
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(vertical: 20),
@@ -78,7 +78,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                 ),
                               );
                             }
-                            if (snapshot.hasError) {
+                            if (provinceSnapshot.hasError) {
                               return Center(
                                 child: Text(
                                   'Failed to load locations',
@@ -90,8 +90,8 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                               );
                             }
 
-                            final model = snapshot.data;
-                            if (model == null || model.data == null || model.data!.isEmpty) {
+                            final provinceModel = provinceSnapshot.data;
+                            if (provinceModel == null || provinceModel.data == null || provinceModel.data!.isEmpty) {
                               return const Center(
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(vertical: 20),
@@ -102,11 +102,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                               );
                             }
 
-                            final List<String> provinceNames = model.data!;
-
-                            final List<String>? cityNames = _selectedProvince == null
-                                ? null
-                                : citiesMap[_selectedProvince];
+                            final List<String> provinceNames = provinceModel.data!;
 
                             return Column(
                               children: [
@@ -122,6 +118,9 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                       _selectedCity = null;
                                       _showValidationError = false;
                                     });
+                                    if (value != null) {
+                                      getCityRxObj.getCityRx(value);
+                                    }
                                   },
                                   prefixIcon: Padding(
                                     padding: EdgeInsets.all(10.w),
@@ -140,35 +139,84 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                 SizedBox(height: 20.h),
 
                                 // --------------- City Dropdown ---------------
-                                LocationDropdownField(
-                                  label: 'City',
-                                  value: _selectedCity,
-                                  hintText: _selectedProvince == null
-                                      ? 'Select province first'
-                                      : 'Select city',
-                                  items: cityNames,
-                                  onChanged: _selectedProvince == null
-                                      ? null
-                                      : (value) {
+                                if (_selectedProvince == null)
+                                  LocationDropdownField(
+                                    label: 'City',
+                                    value: null,
+                                    hintText: 'Select province first',
+                                    items: null,
+                                    onChanged: null,
+                                    prefixIcon: Padding(
+                                      padding: EdgeInsets.all(12.w),
+                                      child: SvgPicture.asset(
+                                        'assets/icons/city.svg',
+                                        width: 20.w,
+                                        height: 20.w,
+                                        colorFilter: const ColorFilter.mode(
+                                          Color(0xFF9CA3AF),
+                                          BlendMode.srcIn,
+                                        ),
+                                      ),
+                                    ),
+                                    hasError: cityError,
+                                  )
+                                else
+                                  StreamBuilder<GetCityModel>(
+                                    stream: getCityRxObj.getCityData,
+                                    builder: (context, citySnapshot) {
+                                      if (citySnapshot.connectionState == ConnectionState.waiting &&
+                                          !citySnapshot.hasData) {
+                                        return const Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(vertical: 20),
+                                            child: CircularProgressIndicator(
+                                              color: Color(0xFF03045E),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                      if (citySnapshot.hasError) {
+                                        return Center(
+                                          child: Text(
+                                            'Failed to load cities',
+                                            style: GoogleFonts.inter(
+                                              fontSize: 14.sp,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        );
+                                      }
+
+                                      final cityModel = citySnapshot.data;
+                                      final List<String> cityNames = cityModel?.data ?? [];
+
+                                      return LocationDropdownField(
+                                        label: 'City',
+                                        value: _selectedCity,
+                                        hintText: 'Select city',
+                                        items: cityNames,
+                                        onChanged: (value) {
                                           setState(() {
                                             _selectedCity = value;
                                             _showValidationError = false;
                                           });
                                         },
-                                  prefixIcon: Padding(
-                                    padding: EdgeInsets.all(12.w),
-                                    child: SvgPicture.asset(
-                                      'assets/icons/city.svg',
-                                      width: 20.w,
-                                      height: 20.w,
-                                      colorFilter: const ColorFilter.mode(
-                                        Color(0xFF9CA3AF),
-                                        BlendMode.srcIn,
-                                      ),
-                                    ),
+                                        prefixIcon: Padding(
+                                          padding: EdgeInsets.all(12.w),
+                                          child: SvgPicture.asset(
+                                            'assets/icons/city.svg',
+                                            width: 20.w,
+                                            height: 20.w,
+                                            colorFilter: const ColorFilter.mode(
+                                              Color(0xFF9CA3AF),
+                                              BlendMode.srcIn,
+                                            ),
+                                          ),
+                                        ),
+                                        hasError: cityError,
+                                      );
+                                    },
                                   ),
-                                  hasError: cityError,
-                                ),
                               ],
                             );
                           },

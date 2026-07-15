@@ -27,6 +27,8 @@ import 'package:abojude_flutter/features/profile/data/rx_get_profile/rx.dart';
 import 'package:abojude_flutter/features/profile/model/get_profile_model.dart';
 import 'package:abojude_flutter/features/auth/register/data/rx_get_province/rx.dart';
 import 'package:abojude_flutter/features/auth/register/model/get_province_model.dart';
+import 'package:abojude_flutter/features/auth/register/data/rx_get_city/rx.dart';
+import 'package:abojude_flutter/features/auth/register/model/get_city_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 // // ------------- Register Api Access -----------------//
@@ -103,6 +105,12 @@ ResendOtpRx resendOtpRxObj = ResendOtpRx(
 GetProvinceRx getProvinceRxObj = GetProvinceRx(
   empty: GetProvinceModel(),
   dataFetcher: BehaviorSubject<GetProvinceModel>(),
+);
+
+// // ------------- Get Cities List Api Access -----------------//
+GetCityRx getCityRxObj = GetCityRx(
+  empty: GetCityModel(),
+  dataFetcher: BehaviorSubject<GetCityModel>(),
 );
 
 // // ------------- Get Category List Api Access -----------------//
