@@ -91,6 +91,10 @@ final class Endpoints {
   // ------------------- GetProfile start-------------------
   static String getProfile() => "/v1/auth/profile";
   // -------------------GetProfile end-------------------
+
+  // ------------------- UpdateProfile start-------------------
+  static String updateProfile() => "/v1/auth/profile";
+  // -------------------UpdateProfile end-------------------
   
 
   // // -------------------Forget Password verify otp start-------------------

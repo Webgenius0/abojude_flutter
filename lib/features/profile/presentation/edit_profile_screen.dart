@@ -1,12 +1,20 @@
 import 'dart:io';
+import 'package:abojude_flutter/features/auth/register/model/get_city_model.dart';
+import 'package:abojude_flutter/features/auth/register/model/get_province_model.dart';
+import 'package:abojude_flutter/features/auth/register/widgets/location_dropdown.dart';
+import 'package:abojude_flutter/features/profile/model/get_profile_model.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:get/get.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+  /// Pass the current profile data so we can pre-fill all fields.
+  final Data? profileData;
+
+  const EditProfileScreen({super.key, this.profileData});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -15,63 +23,111 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
-  late TextEditingController _emailController;
-  late TextEditingController _phoneController;
-  late TextEditingController _locationController;
 
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
 
+  // Province / City dropdown state
+  String? _selectedProvince;
+  String? _selectedCity;
+  bool _showValidationError = false;
+
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: "Hefzur Rahman");
-    _emailController = TextEditingController(text: "hefzurrahman0930@gmail.com");
-    _phoneController = TextEditingController(text: "+1 234 567 890");
-    _locationController = TextEditingController(text: "Toronto, Manitoba");
+
+    final data = widget.profileData;
+
+    // Pre-fill name
+    _nameController = TextEditingController(text: data?.name ?? '');
+
+    // Pre-fill province & city selections
+    _selectedProvince = (data?.province?.isNotEmpty == true)
+        ? data!.province
+        : null;
+    _selectedCity = (data?.city?.isNotEmpty == true) ? data!.city : null;
+
+    // Fetch province list
+    getProvinceRxObj.getProvinceRx();
+
+    // If there is a pre-selected province, also load cities for it
+    if (_selectedProvince != null) {
+      getCityRxObj.getCityRx(_selectedProvince!);
+    }
   }
 
   @override
   void dispose() {
     _nameController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    _locationController.dispose();
     super.dispose();
   }
 
   // Pick profile picture
   Future<void> _pickImage() async {
     try {
-      final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery,
+      );
       if (pickedFile != null) {
         setState(() {
           _imageFile = File(pickedFile.path);
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error picking image: $e')),
-      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error picking image: $e')));
     }
   }
 
-  void _saveChanges() {
-    if (_formKey.currentState!.validate()) {
-      // Simulate success toast/snackbar
+  Future<void> _saveChanges() async {
+    if (_selectedProvince == null || _selectedCity == null) {
+      setState(() => _showValidationError = true);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Profile updated successfully!'),
-          backgroundColor: Color(0xFF2B8A3E),
+          content: Text('Please select both province and city'),
+          backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
       );
-      Navigator.pop(context);
+      return;
     }
+
+    if (_formKey.currentState!.validate()) {
+      final success = await editProfileRxObj.editProfileRx(
+        name: _nameController.text.trim(),
+        province: _selectedProvince,
+        city: _selectedCity,
+        avatar: _imageFile,
+      );
+
+      if (!mounted) return;
+
+      if (success) {
+        await getProfileRxObj.getProfile();
+        if (!mounted) return;
+        Navigator.pop(context);
+      }
+    }
+  }
+
+  /// Returns the avatar initials from the user's name.
+  String _getInitials(String? name) {
+    if (name == null || name.trim().isEmpty) return 'U';
+    final parts = name.trim().split(' ');
+    if (parts.length > 1) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return parts[0][0].toUpperCase();
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool provinceError =
+        _showValidationError && _selectedProvince == null;
+    final bool cityError = _showValidationError && _selectedCity == null;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
@@ -89,7 +145,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0xFFF1F3F5), width: 1.5),
+                  border: Border.all(
+                    color: const Color(0xFFF1F3F5),
+                    width: 1.5,
+                  ),
                 ),
                 child: const Icon(
                   Icons.chevron_left_rounded,
@@ -132,7 +191,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 SizedBox(height: 32.h),
 
-                // Avatar picker
+                // --------------- Avatar Picker ---------------
                 Center(
                   child: Stack(
                     children: [
@@ -152,10 +211,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: CircleAvatar(
                           radius: 54.r,
                           backgroundColor: const Color(0xFFE9ECEF),
-                          backgroundImage: _imageFile != null ? FileImage(_imageFile!) : null,
-                          child: _imageFile == null
+                          // Priority: local picked image > network avatar URL > initials
+                          backgroundImage: _imageFile != null
+                              ? FileImage(_imageFile!) as ImageProvider
+                              : (widget.profileData?.avatar != null &&
+                                    widget.profileData!.avatar!.isNotEmpty)
+                              ? NetworkImage(widget.profileData!.avatar!)
+                                    as ImageProvider
+                              : null,
+                          child:
+                              (_imageFile == null &&
+                                  (widget.profileData?.avatar == null ||
+                                      widget.profileData!.avatar!.isEmpty))
                               ? Text(
-                                  "HR",
+                                  _getInitials(widget.profileData?.name),
                                   style: GoogleFonts.inter(
                                     color: const Color(0xFF0F3D7A),
                                     fontSize: 32.sp,
@@ -190,12 +259,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                 SizedBox(height: 36.h),
 
-                // Inputs
+                // --------------- Full Name ---------------
                 _buildLabel('Full Name'),
                 _buildTextField(
                   controller: _nameController,
                   hintText: 'Enter your full name',
-                  icon: Icons.person_outline_rounded,
+                  icon: Padding(
+                    padding: EdgeInsets.all(10.w),
+                    child: SvgPicture.asset(
+                      'assets/icons/person.svg',
+                      width: 20.w,
+                      height: 20.w,
+                      colorFilter: const ColorFilter.mode(
+                        Color(0xFF9CA3AF),
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter your name';
@@ -203,78 +283,199 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 24.h),
 
-                _buildLabel('Email Address'),
-                _buildTextField(
-                  controller: _emailController,
-                  hintText: 'Enter your email address',
-                  icon: Icons.email_outlined,
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your email';
+                // --------------- Province Dropdown (API-driven) ---------------
+                StreamBuilder<GetProvinceModel>(
+                  stream: getProvinceRxObj.getProvinceData,
+                  builder: (context, provinceSnapshot) {
+                    // Loading state
+                    if (provinceSnapshot.connectionState ==
+                            ConnectionState.waiting &&
+                        !provinceSnapshot.hasData) {
+                      return _buildLoadingDropdown('Province/Territory');
                     }
-                    if (!GetUtils.isEmail(value)) {
-                      return 'Please enter a valid email';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20.h),
 
-                _buildLabel('Phone Number'),
-                _buildTextField(
-                  controller: _phoneController,
-                  hintText: 'Enter your phone number',
-                  icon: Icons.phone_outlined,
-                  keyboardType: TextInputType.phone,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your phone number';
+                    // Error state
+                    if (provinceSnapshot.hasError &&
+                        !provinceSnapshot.hasData) {
+                      return _buildErrorDropdown('Province/Territory');
                     }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20.h),
 
-                _buildLabel('Location'),
-                _buildTextField(
-                  controller: _locationController,
-                  hintText: 'Enter your location',
-                  icon: Icons.location_on_outlined,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your location';
+                    final provinceModel = provinceSnapshot.data;
+                    // Deduplicate to avoid DropdownButton assertion
+                    final List<String> provinceNames =
+                        (provinceModel?.data ?? []).toSet().toList();
+
+                    // If the pre-selected province is not in the list, clear it
+                    if (_selectedProvince != null &&
+                        !provinceNames.contains(_selectedProvince)) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (mounted) setState(() => _selectedProvince = null);
+                      });
                     }
-                    return null;
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Province dropdown
+                        LocationDropdownField(
+                          label: 'Province/Territory',
+                          value: provinceNames.contains(_selectedProvince)
+                              ? _selectedProvince
+                              : null,
+                          hintText: 'Select province',
+                          items: provinceNames,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedProvince = value;
+                              _selectedCity = null;
+                              _showValidationError = false;
+                            });
+                            if (value != null) {
+                              getCityRxObj.getCityRx(value);
+                            }
+                          },
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.all(10.w),
+                            child: SvgPicture.asset(
+                              'assets/icons/map.svg',
+                              width: 20.w,
+                              height: 20.w,
+                              colorFilter: const ColorFilter.mode(
+                                Color(0xFF9CA3AF),
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ),
+                          hasError: provinceError,
+                        ),
+                        SizedBox(height: 20.h),
+
+                        // City dropdown
+                        if (_selectedProvince == null)
+                          LocationDropdownField(
+                            label: 'City',
+                            value: null,
+                            hintText: 'Select province first',
+                            items: null,
+                            onChanged: null,
+                            prefixIcon: Padding(
+                              padding: EdgeInsets.all(12.w),
+                              child: SvgPicture.asset(
+                                'assets/icons/city.svg',
+                                width: 20.w,
+                                height: 20.w,
+                                colorFilter: const ColorFilter.mode(
+                                  Color(0xFF9CA3AF),
+                                  BlendMode.srcIn,
+                                ),
+                              ),
+                            ),
+                            hasError: cityError,
+                          )
+                        else
+                          StreamBuilder<GetCityModel>(
+                            stream: getCityRxObj.getCityData,
+                            builder: (context, citySnapshot) {
+                              if (citySnapshot.connectionState ==
+                                      ConnectionState.waiting &&
+                                  !citySnapshot.hasData) {
+                                return _buildLoadingDropdown('City');
+                              }
+
+                              final cityModel = citySnapshot.data;
+                              // Deduplicate to avoid DropdownButton assertion
+                              final List<String> cityNames =
+                                  (cityModel?.data ?? []).toSet().toList();
+
+                              // If the pre-selected city is not in the list, clear it
+                              if (_selectedCity != null &&
+                                  !cityNames.contains(_selectedCity)) {
+                                WidgetsBinding.instance.addPostFrameCallback((
+                                  _,
+                                ) {
+                                  if (mounted) {
+                                    setState(() => _selectedCity = null);
+                                  }
+                                });
+                              }
+
+                              return LocationDropdownField(
+                                label: 'City',
+                                value: cityNames.contains(_selectedCity)
+                                    ? _selectedCity
+                                    : null,
+                                hintText: 'Select city',
+                                items: cityNames,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedCity = value;
+                                    _showValidationError = false;
+                                  });
+                                },
+                                prefixIcon: Padding(
+                                  padding: EdgeInsets.all(12.w),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/city.svg',
+                                    width: 20.w,
+                                    height: 20.w,
+                                    colorFilter: const ColorFilter.mode(
+                                      Color(0xFF9CA3AF),
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                                ),
+                                hasError: cityError,
+                              );
+                            },
+                          ),
+                      ],
+                    );
                   },
                 ),
 
                 SizedBox(height: 48.h),
 
-                // Save button
-                SizedBox(
-                  width: double.infinity,
-                  height: 52.h,
-                  child: ElevatedButton(
-                    onPressed: _saveChanges,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0F3D7A),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(26.r),
+                // --------------- Save Button ---------------
+                ValueListenableBuilder<bool>(
+                  valueListenable: editProfileRxObj.isLoading,
+                  builder: (context, isLoading, child) {
+                    return SizedBox(
+                      width: double.infinity,
+                      height: 52.h,
+                      child: ElevatedButton(
+                        onPressed: isLoading ? null : _saveChanges,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF0F3D7A),
+                          disabledBackgroundColor: const Color(
+                            0xFF0F3D7A,
+                          ).withOpacity(0.6),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(26.r),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: isLoading
+                            ? SizedBox(
+                                width: 24.w,
+                                height: 24.w,
+                                child: const CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Text(
+                                'Save Changes',
+                                style: GoogleFonts.inter(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                       ),
-                      elevation: 0,
-                    ),
-                    child: Text(
-                      'Save Changes',
-                      style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
                 SizedBox(height: 36.h),
               ],
@@ -284,6 +485,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
   }
+
+  // ----------------------------------------------------------------
+  // Helper widgets
+  // ----------------------------------------------------------------
 
   Widget _buildLabel(String text) {
     return Padding(
@@ -302,7 +507,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget _buildTextField({
     required TextEditingController controller,
     required String hintText,
-    required IconData icon,
+    required Widget icon,
     TextInputType? keyboardType,
     String? Function(String?)? validator,
   }) {
@@ -314,7 +519,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(color: Colors.grey[400], fontSize: 15.sp),
-        prefixIcon: Icon(icon, color: Colors.grey[400], size: 20.sp),
+        prefixIcon: icon,
         filled: true,
         fillColor: const Color(0xFFF8F9FA),
         contentPadding: EdgeInsets.symmetric(vertical: 16.h),
@@ -339,6 +544,74 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           borderSide: BorderSide(color: Colors.red[300]!),
         ),
       ),
+    );
+  }
+
+  /// Shown while the province/city list is loading.
+  Widget _buildLoadingDropdown(String label) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF374151),
+          ),
+        ),
+        SizedBox(height: 6.h),
+        Container(
+          height: 56.h,
+          decoration: BoxDecoration(
+            color: const Color(0xFFF9FAFB),
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(color: const Color(0xFFE5E7EB)),
+          ),
+          child: const Center(
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Color(0xFF0F3D7A),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Shown when loading the province/city list fails.
+  Widget _buildErrorDropdown(String label) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF374151),
+          ),
+        ),
+        SizedBox(height: 6.h),
+        Container(
+          height: 56.h,
+          decoration: BoxDecoration(
+            color: const Color(0xFFF9FAFB),
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(color: Colors.red.shade300),
+          ),
+          child: Center(
+            child: Text(
+              'Failed to load — tap to retry',
+              style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.red),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
