@@ -95,6 +95,10 @@ final class Endpoints {
   // ------------------- UpdateProfile start-------------------
   static String updateProfile() => "/v1/auth/profile";
   // -------------------UpdateProfile end-------------------
+
+  // -------------------ContactSupport start-------------------
+  static String contactSupport() => "/v1/contact-support";
+  // -------------------ContactSupport end-------------------
   
 
   // // -------------------Forget Password verify otp start-------------------
