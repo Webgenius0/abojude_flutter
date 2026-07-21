@@ -266,23 +266,29 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                 } else {
                                   bool success = false;
                                   if (widget.isGuest) {
-                                    final String? guestToken = appData.read(kKeyAccessToken);
-                                    if (guestToken == null || guestToken.isEmpty) {
-                                      ToastUtil.showShortToast("Guest token is invalid or missing");
+                                    final String? guestToken = appData.read(
+                                      kKeyAccessToken,
+                                    );
+                                    if (guestToken == null ||
+                                        guestToken.isEmpty) {
+                                      ToastUtil.showShortToast(
+                                        "Guest token is invalid or missing",
+                                      );
                                       return;
                                     }
                                     success = await selectLocationForGuestRxObj
                                         .selectLocationForGuestRx(
-                                      guestToken: guestToken,
-                                      province: _selectedProvince!,
-                                      city: _selectedCity!,
-                                    );
+                                          guestToken: guestToken,
+                                          province: _selectedProvince!,
+                                          city: _selectedCity!,
+                                        );
                                   } else {
-                                    success = await selectLocationForAuthUserRxObj
-                                        .selectLocationForAuthUserRx(
-                                      province: _selectedProvince!,
-                                      city: _selectedCity!,
-                                    );
+                                    success =
+                                        await selectLocationForAuthUserRxObj
+                                            .selectLocationForAuthUserRx(
+                                              province: _selectedProvince!,
+                                              city: _selectedCity!,
+                                            );
                                   }
 
                                   if (success) {

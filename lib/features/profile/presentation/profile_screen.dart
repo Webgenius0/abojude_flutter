@@ -265,7 +265,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   icon: Icons.person_outline_rounded,
                   title: 'Edit Profile',
                   onTap: () {
-                    Get.to(() => const EditProfileScreen());
+                    Get.to(() => EditProfileScreen(
+                          profileData: getProfileRxObj.getProfileData.valueOrNull?.data,
+                        ));
                   },
                 ),
                 _buildDivider(),

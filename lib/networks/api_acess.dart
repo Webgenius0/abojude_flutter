@@ -33,6 +33,8 @@ import 'package:abojude_flutter/features/auth/register/data/rx_select_location_f
 import 'package:abojude_flutter/features/auth/register/model/select_location_for_auth_user_model.dart';
 import 'package:abojude_flutter/features/auth/register/data/rx_select_location_for_guest/rx.dart';
 import 'package:abojude_flutter/features/auth/register/model/select_location_for_guest_user_model.dart';
+import 'package:abojude_flutter/features/profile/data/rx_edit_profile/rx.dart';
+import 'package:abojude_flutter/features/profile/model/edit_profile_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 // // ------------- Register Api Access -----------------//
@@ -78,6 +80,12 @@ SetNewPasswordRx setNewPasswordRxObj = SetNewPasswordRx(
 GetProfileRx getProfileRxObj = GetProfileRx(
   empty: GetProfileModel(),
   dataFetcher: BehaviorSubject<GetProfileModel>(),
+);
+
+// // ------------- Edit Profile Api Access -----------------//
+EditProfileRx editProfileRxObj = EditProfileRx(
+  empty: EditProfileModel(),
+  dataFetcher: BehaviorSubject<EditProfileModel>(),
 );
 
 // //___________________ Forget Password Api Access ______________________//
