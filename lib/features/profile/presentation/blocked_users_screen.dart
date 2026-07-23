@@ -1,20 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-class BlockedUser {
-  final String id;
-  final String name;
-  final String initials;
-  final String blockedTime;
-
-  BlockedUser({
-    required this.id,
-    required this.name,
-    required this.initials,
-    required this.blockedTime,
-  });
-}
+import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:abojude_flutter/helpers/loading_helper.dart';
+import 'package:abojude_flutter/features/profile/model/block_user_list_model.dart';
 
 class BlockedUsersScreen extends StatefulWidget {
   const BlockedUsersScreen({super.key});
@@ -24,42 +13,45 @@ class BlockedUsersScreen extends StatefulWidget {
 }
 
 class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
-  final List<BlockedUser> _blockedUsers = [
-    BlockedUser(
-      id: '1',
-      name: "Maryam Aaliyah",
-      initials: "MA",
-      blockedTime: "Blocked 1 week ago",
-    ),
-    BlockedUser(
-      id: '2',
-      name: "Ahmed Al Rashid",
-      initials: "AR",
-      blockedTime: "Blocked 2 week ago",
-    ),
-    BlockedUser(
-      id: '3',
-      name: "Fatima Nour",
-      initials: "FN",
-      blockedTime: "Blocked 3 week ago",
-    ),
-  ];
+  List<Datum>? _blockedUsers;
 
-  void _unblockUser(BlockedUser user) {
-    setState(() {
-      _blockedUsers.removeWhere((u) => u.id == user.id);
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${user.name} has been unblocked.'),
-        backgroundColor: const Color(0xFF2B8A3E),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+  @override
+  void initState() {
+    super.initState();
+    _fetchBlockedUsers();
   }
 
-  void _showOptionsBottomSheet(BlockedUser user) {
+  void _fetchBlockedUsers() {
+    blockUserListRxObj
+        .getBlockUserList()
+        .then((data) {
+          if (mounted) {
+            setState(() {
+              _blockedUsers = List<Datum>.from(data.data ?? []);
+            });
+          }
+        })
+        .catchError((_) {
+          if (mounted) {
+            setState(() {
+              _blockedUsers = [];
+            });
+          }
+        });
+  }
+
+  void _blockUser(Datum user) {
+    if (user.id == null) return;
+    blockUserRxObj.blockUser(id: user.id!).waitingForFuture().then((success) {
+      if (success) {
+        setState(() {
+          _blockedUsers?.removeWhere((u) => u.id == user.id);
+        });
+      }
+    });
+  }
+
+  void _showOptionsBottomSheet(Datum user) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -88,10 +80,10 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
                     color: Colors.green.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.check_circle_outline, color: Colors.green),
+                  child: const Icon(Icons.block, color: Colors.green),
                 ),
                 title: Text(
-                  'Unblock ${user.name}',
+                  'Block ${user.name ?? "User"}',
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
                     color: Colors.black87,
@@ -99,7 +91,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                  _unblockUser(user);
+                  _blockUser(user);
                 },
               ),
               const Divider(height: 1),
@@ -126,6 +118,15 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
     );
   }
 
+  String _getInitials(String name) {
+    if (name.trim().isEmpty) return '';
+    List<String> nameParts = name.trim().split(' ');
+    if (nameParts.length > 1) {
+      return (nameParts[0][0] + nameParts[1][0]).toUpperCase();
+    }
+    return nameParts[0][0].toUpperCase();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,7 +146,10 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0xFFF1F3F5), width: 1.5),
+                  border: Border.all(
+                    color: const Color(0xFFF1F3F5),
+                    width: 1.5,
+                  ),
                 ),
                 child: const Icon(
                   Icons.chevron_left_rounded,
@@ -187,16 +191,32 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
 
               // Blocked list
               Expanded(
-                child: _blockedUsers.isEmpty
-                    ? _buildEmptyState()
-                    : ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: _blockedUsers.length,
-                        itemBuilder: (context, index) {
-                          final user = _blockedUsers[index];
-                          return _buildBlockedUserCard(user);
-                        },
-                      ),
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: blockUserListRxObj.isLoading,
+                  builder: (context, isLoading, child) {
+                    if (isLoading && _blockedUsers == null) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Color(0xFF0F3D7A),
+                        ),
+                      );
+                    }
+
+                    final users = _blockedUsers ?? [];
+                    if (users.isEmpty) {
+                      return _buildEmptyState();
+                    }
+
+                    return ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: users.length,
+                      itemBuilder: (context, index) {
+                        final user = users[index];
+                        return _buildBlockedUserCard(user);
+                      },
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -205,7 +225,11 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
     );
   }
 
-  Widget _buildBlockedUserCard(BlockedUser user) {
+  Widget _buildBlockedUserCard(Datum user) {
+    final name = user.name ?? 'User';
+    final initials = _getInitials(name);
+    final blockedTime = user.timeAgo ?? 'Blocked recently';
+
     return Container(
       margin: EdgeInsets.only(bottom: 14.h),
       padding: EdgeInsets.all(16.r),
@@ -227,14 +251,20 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
           CircleAvatar(
             radius: 24.r,
             backgroundColor: const Color(0xFFE9ECEF),
-            child: Text(
-              user.initials,
-              style: GoogleFonts.inter(
-                color: const Color(0xFF0F3D7A),
-                fontWeight: FontWeight.bold,
-                fontSize: 15.sp,
-              ),
-            ),
+            backgroundImage:
+                (user.avatar != null && user.avatar.toString().isNotEmpty)
+                ? NetworkImage(user.avatar.toString())
+                : null,
+            child: (user.avatar != null && user.avatar.toString().isNotEmpty)
+                ? null
+                : Text(
+                    initials,
+                    style: GoogleFonts.inter(
+                      color: const Color(0xFF0F3D7A),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15.sp,
+                    ),
+                  ),
           ),
           SizedBox(width: 14.w),
 
@@ -244,7 +274,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  user.name,
+                  name,
                   style: GoogleFonts.inter(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.bold,
@@ -253,7 +283,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  user.blockedTime,
+                  blockedTime,
                   style: GoogleFonts.inter(
                     fontSize: 13.sp,
                     color: Colors.grey[400],
@@ -279,7 +309,11 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.people_outline_rounded, size: 64.sp, color: Colors.grey[300]),
+          Icon(
+            Icons.people_outline_rounded,
+            size: 64.sp,
+            color: Colors.grey[300],
+          ),
           SizedBox(height: 16.h),
           Text(
             'No Blocked Users',
@@ -292,10 +326,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
           SizedBox(height: 8.h),
           Text(
             'Profiles you block will appear here.',
-            style: GoogleFonts.inter(
-              fontSize: 13.sp,
-              color: Colors.grey[400],
-            ),
+            style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.grey[400]),
           ),
         ],
       ),

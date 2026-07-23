@@ -99,6 +99,18 @@ final class Endpoints {
   // -------------------ContactSupport start-------------------
   static String contactSupport() => "/v1/contact-support";
   // -------------------ContactSupport end-------------------
+
+  // // ------------------- BlockUserList start-------------------
+  static String blockUserList() => "/v1/auth/blocked-users";
+  // // -------------------BlockUserList end-------------------
+
+  // // ------------------- BlockUser start-------------------
+  static String blockUser() => "/v1/auth/block";
+  // // -------------------BlockUser end-------------------
+
+  // // ------------------- UnBlockUser start-------------------
+  // static String unBlockUser(int id) => "/v1/auth/blocked-users/$id/unblock";
+  // // -------------------UnBlockUser end-------------------
   
 
   // // -------------------Forget Password verify otp start-------------------

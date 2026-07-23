@@ -232,8 +232,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             : () async {
                                 if (_formKey.currentState!.validate()) {
                                   final success = await loginRxObj.loginRx(
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
+                                    email: _emailController.text.trim(),
+                                    password: _passwordController.text.trim(),
                                   );
                                   if (success) {
                                     Get.offAll(NavigationMenu());
