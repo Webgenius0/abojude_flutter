@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:abojude_flutter/helpers/loading_helper.dart';
 import 'package:abojude_flutter/features/profile/model/block_user_list_model.dart';
 
 class BlockedUsersScreen extends StatefulWidget {
@@ -39,18 +40,15 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
         });
   }
 
-  void _unblockUser(Datum user) {
-    setState(() {
-      _blockedUsers?.removeWhere((u) => u.id == user.id);
+  void _blockUser(Datum user) {
+    if (user.id == null) return;
+    blockUserRxObj.blockUser(id: user.id!).waitingForFuture().then((success) {
+      if (success) {
+        setState(() {
+          _blockedUsers?.removeWhere((u) => u.id == user.id);
+        });
+      }
     });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${user.name ?? "User"} has been unblocked.'),
-        backgroundColor: const Color(0xFF2B8A3E),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
   }
 
   void _showOptionsBottomSheet(Datum user) {
@@ -82,13 +80,10 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
                     color: Colors.green.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    Icons.check_circle_outline,
-                    color: Colors.green,
-                  ),
+                  child: const Icon(Icons.block, color: Colors.green),
                 ),
                 title: Text(
-                  'Unblock ${user.name ?? "User"}',
+                  'Block ${user.name ?? "User"}',
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
                     color: Colors.black87,
@@ -96,7 +91,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                  _unblockUser(user);
+                  _blockUser(user);
                 },
               ),
               const Divider(height: 1),
