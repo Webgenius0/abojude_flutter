@@ -7,6 +7,7 @@ import 'log.dart';
 import 'package:abojude_flutter/networks/stream_cleaner.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
+import 'package:abojude_flutter/helpers/toast.dart';
 
 final class DioSingleton {
   static final DioSingleton _singleton = DioSingleton._internal();
@@ -27,6 +28,9 @@ final class DioSingleton {
             // Clean dynamic/static data
             await totalDataClean();
             await appData.remove(kKeyAccessToken);
+            DioSingleton.instance.create();
+
+            ToastUtil.showShortToast("Session expired. Please log in again.");
 
             // Redirect to welcome screen
             NavigationService.navigateToUntilReplacement(Routes.welcomeScreen);
@@ -40,14 +44,15 @@ final class DioSingleton {
 
   void create() {
     BaseOptions options = BaseOptions(
-        baseUrl: url,
-        connectTimeout: const Duration(milliseconds: 100000), 
-        receiveTimeout: const Duration(milliseconds: 100000),
-        headers: {
-          NetworkConstants.ACCEPT: NetworkConstants.ACCEPT_TYPE,
-          NetworkConstants.ACCEPT_LANGUAGE: appData.read(kKeyCountryCode) ?? "pt",
-          NetworkConstants.APP_KEY: NetworkConstants.APP_KEY_VALUE,
-        });
+      baseUrl: url,
+      connectTimeout: const Duration(milliseconds: 100000),
+      receiveTimeout: const Duration(milliseconds: 100000),
+      headers: {
+        NetworkConstants.ACCEPT: NetworkConstants.ACCEPT_TYPE,
+        NetworkConstants.ACCEPT_LANGUAGE: appData.read(kKeyCountryCode) ?? "pt",
+        NetworkConstants.APP_KEY: NetworkConstants.APP_KEY_VALUE,
+      },
+    );
     dio = _createDio(options);
   }
 
@@ -81,7 +86,8 @@ final class DioSingleton {
         NetworkConstants.ACCEPT: NetworkConstants.ACCEPT_TYPE,
         NetworkConstants.ACCEPT_LANGUAGE: countryCode,
         NetworkConstants.APP_KEY: NetworkConstants.APP_KEY_VALUE,
-        NetworkConstants.AUTHORIZATION: "Bearer ${appData.read(kKeyAccessToken)} ",
+        NetworkConstants.AUTHORIZATION:
+            "Bearer ${appData.read(kKeyAccessToken)} ",
       },
       connectTimeout: const Duration(milliseconds: 100000),
       receiveTimeout: const Duration(milliseconds: 100000),
@@ -90,14 +96,20 @@ final class DioSingleton {
   }
 }
 
-Future<Response> postHttp(String path, [dynamic data]) =>
-    DioSingleton.instance.dio.post(path, data: data, cancelToken: DioSingleton.cancelToken);
+Future<Response> postHttp(String path, [dynamic data]) => DioSingleton
+    .instance
+    .dio
+    .post(path, data: data, cancelToken: DioSingleton.cancelToken);
 
-Future<Response> putHttp(String path, [dynamic data]) =>
-    DioSingleton.instance.dio.put(path, data: data, cancelToken: DioSingleton.cancelToken);
+Future<Response> putHttp(String path, [dynamic data]) => DioSingleton
+    .instance
+    .dio
+    .put(path, data: data, cancelToken: DioSingleton.cancelToken);
 
 Future<Response> getHttp(String path, [dynamic data]) =>
     DioSingleton.instance.dio.get(path, cancelToken: DioSingleton.cancelToken);
 
-Future<Response> deleteHttp(String path, [dynamic data]) =>
-    DioSingleton.instance.dio.delete(path, data: data, cancelToken: DioSingleton.cancelToken);
+Future<Response> deleteHttp(String path, [dynamic data]) => DioSingleton
+    .instance
+    .dio
+    .delete(path, data: data, cancelToken: DioSingleton.cancelToken);

@@ -25,6 +25,8 @@ import 'package:abojude_flutter/features/auth/set_new_password/model/set_new_pas
     as snp;
 import 'package:abojude_flutter/features/profile/data/rx_get_profile/rx.dart';
 import 'package:abojude_flutter/features/profile/model/get_profile_model.dart';
+import 'package:abojude_flutter/features/profile/data/rx_block_user_list/rx.dart';
+import 'package:abojude_flutter/features/profile/model/block_user_list_model.dart';
 import 'package:abojude_flutter/features/auth/register/data/rx_get_province/rx.dart';
 import 'package:abojude_flutter/features/auth/register/model/get_province_model.dart';
 import 'package:abojude_flutter/features/auth/register/data/rx_get_city/rx.dart';
@@ -82,6 +84,12 @@ SetNewPasswordRx setNewPasswordRxObj = SetNewPasswordRx(
 GetProfileRx getProfileRxObj = GetProfileRx(
   empty: GetProfileModel(),
   dataFetcher: BehaviorSubject<GetProfileModel>(),
+);
+
+// // ------------- Block User List Api Access -----------------//
+BlockUserListRx blockUserListRxObj = BlockUserListRx(
+  empty: BlockUserListModel(),
+  dataFetcher: BehaviorSubject<BlockUserListModel>(),
 );
 
 // // ------------- Edit Profile Api Access -----------------//
