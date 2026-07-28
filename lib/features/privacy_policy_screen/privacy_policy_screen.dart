@@ -43,26 +43,20 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
         ),
         leadingWidth: 72,
         leading: Padding(
-          padding:
-              const Size.fromHeight(kToolbarHeight) > const Size.fromHeight(0)
-              ? const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0)
-              : EdgeInsets.zero,
-          child: Transform.scale(
-            scale: 0.9,
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey.shade200, width: 1),
+          padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.grey.shade200, width: 1),
+            ),
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios_new,
+                size: 14,
+                color: Colors.black87,
               ),
-              child: IconButton(
-                icon: Icon(
-                  Icons.arrow_back_ios_new,
-                  size: 10.sp,
-                  color: Colors.black87,
-                ),
-                onPressed: () => Navigator.of(context).pop(),
-                padding: EdgeInsets.zero,
-              ),
+              onPressed: () => Navigator.of(context).pop(),
+              padding: EdgeInsets.zero,
             ),
           ),
         ),
