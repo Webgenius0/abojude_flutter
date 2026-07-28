@@ -1,9 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:abojude_flutter/features/terms_of_service_screen/model/terms_and_condition_model.dart';
 
-class AboutWaselCanadaScreen extends StatelessWidget {
+class AboutWaselCanadaScreen extends StatefulWidget {
   const AboutWaselCanadaScreen({super.key});
+
+  @override
+  State<AboutWaselCanadaScreen> createState() => _AboutWaselCanadaScreenState();
+}
+
+class _AboutWaselCanadaScreenState extends State<AboutWaselCanadaScreen> {
+  @override
+  void initState() {
+    super.initState();
+    aboutPageRxObj.getTermsAndCondition('about-page');
+  }
+
+  String _stripHtml(String htmlString) {
+    String result = htmlString.replaceAll(RegExp(r'<[^>]*>'), '');
+    result = result.replaceAll('&nbsp;', ' ');
+    result = result.replaceAll('&amp;', '&');
+    result = result.replaceAll('&lt;', '<');
+    result = result.replaceAll('&gt;', '>');
+    result = result.replaceAll('&quot;', '"');
+    result = result.replaceAll('&#39;', "'");
+    return result.trim();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,110 +58,86 @@ class AboutWaselCanadaScreen extends StatelessWidget {
               ),
             ),
           ),
-          title: Text(
-            'About Wasel Canada',
-            style: GoogleFonts.inter(
-              color: Colors.black87,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-            ),
+          title: StreamBuilder<TermsAndConditionModel>(
+            stream: aboutPageRxObj.getTermsAndConditionData,
+            builder: (context, snapshot) {
+              final title = snapshot.data?.data?.title ?? 'About Wasel Canada';
+              return Text(
+                title,
+                style: GoogleFonts.inter(
+                  color: Colors.black87,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              );
+            },
           ),
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 1. Logo Branding Header box
-              _buildLogoBanner(),
-
-              SizedBox(height: 12.h),
-              // Version info
-              Center(
-                child: Text(
-                  'Version 1.0.0',
-                  style: GoogleFonts.inter(
-                    color: Colors.grey[400],
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
+        child: ValueListenableBuilder<bool>(
+          valueListenable: aboutPageRxObj.isLoading,
+          builder: (context, isLoading, child) {
+            if (isLoading) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Color(0xFF0F3D7A),
                 ),
-              ),
-              SizedBox(height: 24.h),
+              );
+            }
 
-              // 2. Main Description paragraphs
-              _buildBodyText(
-                "Wasel Canada is a modern community marketplace designed to help Arabic-speaking communities across Canada connect, buy, sell, find jobs, discover local businesses, and access trusted services — all in one place.",
-              ),
-              SizedBox(height: 14.h),
-              _buildBodyText(
-                "Whether you're a newcomer, a long-time resident, a business owner, or a service provider, Wasel Canada makes it easier to connect with your local community and find what you need.",
-              ),
-              SizedBox(height: 24.h),
+            return StreamBuilder<TermsAndConditionModel>(
+              stream: aboutPageRxObj.getTermsAndConditionData,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      'Failed to load about page information.',
+                      style: TextStyle(color: Colors.grey.shade600, fontSize: 16.sp),
+                    ),
+                  );
+                }
 
-              // 3. Our Mission
-              _buildSectionHeader('Our Mission'),
-              _buildBodyText(
-                "Our mission is to empower Arabic-speaking communities throughout Canada by providing a trusted, user-friendly platform that brings people, businesses, opportunities, and services together.\n\nWe aim to simplify everyday life by helping users discover local opportunities while supporting community growth and meaningful connections.",
-              ),
-              SizedBox(height: 24.h),
+                if (!snapshot.hasData || snapshot.data?.data == null) {
+                  return Center(
+                    child: Text(
+                      'No data available.',
+                      style: TextStyle(color: Colors.grey.shade600, fontSize: 16.sp),
+                    ),
+                  );
+                }
 
-              // 4. What We Offer
-              _buildSectionHeader('What We Offer'),
-              _buildBulletItem('Buy & Sell', 'Find great deals on new and used items, or easily list products for sale within your local community.'),
-              _buildBulletItem('Jobs', 'Explore employment opportunities from local businesses and employers across Canada.'),
-              _buildBulletItem('Business Directory', 'Connect with trusted businesses, restaurants, shops, and professional services within your area.'),
-              _buildBulletItem('Services', 'Find skilled service providers for home services, maintenance, cleaning, transportation, and more.'),
-              SizedBox(height: 24.h),
+                final content = snapshot.data!.data!.content ?? '';
+                final cleanContent = _stripHtml(content);
 
-              // 5. Who We Serve
-              _buildSectionHeader('Who We Serve'),
-              _buildBodyText("Wasel Canada is built for:"),
-              SizedBox(height: 8.h),
-              _buildSimpleBullet('Arabic-speaking individuals and families'),
-              _buildSimpleBullet('New immigrants and newcomers to Canada'),
-              _buildSimpleBullet('Job seekers and employers'),
-              _buildSimpleBullet('Small business owners and entrepreneurs'),
-              _buildSimpleBullet('Service providers and local professionals'),
-              _buildSimpleBullet('Community members looking to connect and grow'),
-              SizedBox(height: 8.h),
-              _buildBodyText(
-                "Our platform welcomes everyone while maintaining a strong focus on supporting Canada's diverse Arabic-speaking communities.",
-              ),
-              SizedBox(height: 24.h),
+                return SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Logo Branding Header box
+                      _buildLogoBanner(),
 
-              // 6. Our Values
-              _buildSectionHeader('Our Values'),
-              _buildBulletItem('Trust', 'We promote a safe and reliable marketplace experience for all users.'),
-              _buildBulletItem('Community', 'We believe strong communities are built through meaningful local connections.'),
-              _buildBulletItem('Transparency', 'We encourage honest communication between buyers, sellers, businesses, and service providers.'),
-              _buildBulletItem('Accessibility', 'We strive to make information, opportunities, and services easy to access for everyone.'),
-              SizedBox(height: 24.h),
+                      SizedBox(height: 24.h),
 
-              // 7. Our Vision
-              _buildSectionHeader('Our Vision'),
-              _buildBodyText(
-                "To become the leading community marketplace for Arabic-speaking communities across Canada, helping people connect with opportunities, businesses, services, and each other — all in one trusted platform.",
-              ),
-
-              SizedBox(height: 48.h),
-              // Footer Quote
-              Center(
-                child: Text(
-                  'Wasel Canada Everything You Need in One Place',
-                  style: GoogleFonts.inter(
-                    color: const Color(0xFF0F3D7A),
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.bold,
+                      // API content
+                      Text(
+                        cleanContent,
+                        style: GoogleFonts.inter(
+                          fontSize: 14.sp,
+                          color: Colors.grey[700],
+                          height: 1.5,
+                        ),
+                      ),
+                      
+                      SizedBox(height: 24.h),
+                    ],
                   ),
-                ),
-              ),
-              SizedBox(height: 24.h),
-            ],
-          ),
+                );
+              },
+            );
+          },
         ),
       ),
     );
@@ -146,7 +146,6 @@ class AboutWaselCanadaScreen extends StatelessWidget {
   Widget _buildLogoBanner() {
     return Container(
       width: double.infinity,
-
       padding: EdgeInsets.symmetric(
         vertical: 84.h,
         horizontal: 30.w,
@@ -157,96 +156,6 @@ class AboutWaselCanadaScreen extends StatelessWidget {
           image: AssetImage('assets/images/app_canada_image.png'),
           fit: BoxFit.cover,
         ),
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(String title) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 10.h),
-      child: Text(
-        title,
-        style: GoogleFonts.inter(
-          fontSize: 16.sp,
-          fontWeight: FontWeight.bold,
-          color: Colors.black87,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBodyText(String text) {
-    return Text(
-      text,
-      style: GoogleFonts.inter(
-        fontSize: 14.sp,
-        color: Colors.grey[600],
-        height: 1.5,
-      ),
-    );
-  }
-
-  Widget _buildBulletItem(String title, String desc) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 5.h),
-            width: 6.r,
-            height: 6.r,
-            decoration: const BoxDecoration(
-              color: Color(0xFF2B8A3E),
-              shape: BoxShape.circle,
-            ),
-          ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: RichText(
-              text: TextSpan(
-                style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey[600], height: 1.5),
-                children: [
-                  TextSpan(
-                    text: '$title: ',
-                    style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87),
-                  ),
-                  TextSpan(text: desc),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSimpleBullet(String text) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 8.h, left: 8.w),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '•',
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: const Color(0xFF0F3D7A),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(width: 8.w),
-          Expanded(
-            child: Text(
-              text,
-              style: GoogleFonts.inter(
-                fontSize: 14.sp,
-                color: Colors.grey[600],
-                height: 1.4,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

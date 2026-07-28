@@ -180,6 +180,18 @@ TermsAndConditionRx termsAndConditionRxObj = TermsAndConditionRx(
   dataFetcher: BehaviorSubject<TermsAndConditionModel>(),
 );
 
+// // ------------- About Page Api Access -----------------//
+TermsAndConditionRx aboutPageRxObj = TermsAndConditionRx(
+  empty: TermsAndConditionModel(),
+  dataFetcher: BehaviorSubject<TermsAndConditionModel>(),
+);
+
+// // ------------- Privacy Policy Api Access -----------------//
+TermsAndConditionRx privacyPolicyRxObj = TermsAndConditionRx(
+  empty: TermsAndConditionModel(),
+  dataFetcher: BehaviorSubject<TermsAndConditionModel>(),
+);
+
 
 
 
