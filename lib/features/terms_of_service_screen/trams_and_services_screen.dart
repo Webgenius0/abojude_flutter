@@ -1,7 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:abojude_flutter/features/terms_of_service_screen/model/terms_and_condition_model.dart';
 
-class TermsOfServiceScreen extends StatelessWidget {
-  const TermsOfServiceScreen({Key? key}) : super(key: key);
+class TermsOfServiceScreen extends StatefulWidget {
+  final String slug;
+  const TermsOfServiceScreen({super.key, this.slug = 'terms-of-service'});
+
+  @override
+  State<TermsOfServiceScreen> createState() => _TermsOfServiceScreenState();
+}
+
+class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
+  @override
+  void initState() {
+    super.initState();
+    termsAndConditionRxObj.getTermsAndCondition(widget.slug);
+  }
+
+  String _stripHtml(String htmlString) {
+    // Basic regex to strip common HTML tags and decode basic HTML entities
+    String result = htmlString.replaceAll(RegExp(r'<[^>]*>'), '');
+    result = result.replaceAll('&nbsp;', ' ');
+    result = result.replaceAll('&amp;', '&');
+    result = result.replaceAll('&lt;', '<');
+    result = result.replaceAll('&gt;', '>');
+    result = result.replaceAll('&quot;', '"');
+    result = result.replaceAll('&#39;', "'");
+    return result.trim();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,105 +59,76 @@ class TermsOfServiceScreen extends StatelessWidget {
             ),
           ),
         ),
-        title: const Text(
-          'Terms of Service',
-          style: TextStyle(
-            color: Colors.black87,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
+        title: StreamBuilder<TermsAndConditionModel>(
+          stream: termsAndConditionRxObj.getTermsAndConditionData,
+          builder: (context, snapshot) {
+            final title = snapshot.data?.data?.title ?? 'Terms of Service';
+            return Text(
+              title,
+              style: const TextStyle(
+                color: Colors.black87,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            );
+          },
         ),
         centerTitle: false,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Last Updated: November 2024',
-              style: TextStyle(
-                color: Colors.grey.shade500,
-                fontSize: 14,
+      body: ValueListenableBuilder<bool>(
+        valueListenable: termsAndConditionRxObj.isLoading,
+        builder: (context, isLoading, child) {
+          if (isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Color(0xFF0F3D7A),
               ),
-            ),
-            const SizedBox(height: 24),
+            );
+          }
 
-            _buildSection(
-              title: 'Acceptance of Terms',
-              content: 'By accessing and using Wasel Canada, you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our service.',
-            ),
+          return StreamBuilder<TermsAndConditionModel>(
+            stream: termsAndConditionRxObj.getTermsAndConditionData,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    'Failed to load terms and conditions.',
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+                  ),
+                );
+              }
 
-            _buildSection(
-              title: 'User Accounts',
-              content: 'You are responsible for maintaining the confidentiality of your account credentials. You agree to immediately notify us of any unauthorized use of your account.',
-            ),
+              if (!snapshot.hasData || snapshot.data?.data == null) {
+                return Center(
+                  child: Text(
+                    'No data available.',
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+                  ),
+                );
+              }
 
-            _buildSection(
-              title: 'Content Standards',
-              content: 'All listings and content posted on Wasel Canada must be accurate, legal, and not misleading. We reserve the right to remove any content that violates our policies.',
-            ),
+              final content = snapshot.data!.data!.content ?? '';
+              final cleanContent = _stripHtml(content);
 
-            _buildSection(
-              title: 'Prohibited Activities',
-              content: 'Users may not use Wasel Canada for fraudulent activities, spam, harassment, or posting illegal items. Violations may result in immediate account suspension.',
-            ),
-
-            _buildSection(
-              title: 'Marketplace Rules',
-              content: 'Buyers and sellers are responsible for their transactions. Wasel Canada is a platform connecting users and is not responsible for the quality or legality of items listed.',
-            ),
-
-            _buildSection(
-              title: 'Privacy',
-              content: 'Your use of Wasel Canada is also governed by our Privacy Policy, which is incorporated into these terms by reference.',
-            ),
-
-            _buildSection(
-              title: 'Limitation of Liability',
-              content: 'Wasel Canada shall not be liable for any indirect, incidental, special, or consequential damages resulting from your use of our service.',
-            ),
-
-            _buildSection(
-              title: 'Changes to Terms',
-              content: 'We reserve the right to modify these terms at any time. Continued use of the platform after changes constitutes acceptance of the new terms.',
-            ),
-
-            _buildSection(
-              title: 'Contact',
-              content: 'For questions about these Terms, contact us at [appemail@gmail.com]',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSection({required String title, required String content}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.black87,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              height: 1.3,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            content,
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 15,
-              height: 1.45,
-            ),
-          ),
-        ],
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      cleanContent,
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 16,
+                        height: 1.5,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }

@@ -1,8 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:abojude_flutter/features/terms_of_service_screen/model/terms_and_condition_model.dart';
 
-class PrivacyPolicyScreen extends StatelessWidget {
-  const PrivacyPolicyScreen({Key? key}) : super(key: key);
+class PrivacyPolicyScreen extends StatefulWidget {
+  final String slug;
+  const PrivacyPolicyScreen({super.key, this.slug = 'privacy-policy'});
+
+  @override
+  State<PrivacyPolicyScreen> createState() => _PrivacyPolicyScreenState();
+}
+
+class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
+  @override
+  void initState() {
+    super.initState();
+    privacyPolicyRxObj.getTermsAndCondition(widget.slug);
+  }
+
+  String _stripHtml(String htmlString) {
+    String result = htmlString.replaceAll(RegExp(r'<[^>]*>'), '');
+    result = result.replaceAll('&nbsp;', ' ');
+    result = result.replaceAll('&amp;', '&');
+    result = result.replaceAll('&lt;', '<');
+    result = result.replaceAll('&gt;', '>');
+    result = result.replaceAll('&quot;', '"');
+    result = result.replaceAll('&#39;', "'");
+    return result.trim();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,14 +39,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
         // Bottom border under the app bar matching the screenshot line
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: Colors.grey.shade100,
-            height: 1.0,
-          ),
+          child: Container(color: Colors.grey.shade100, height: 1.0),
         ),
         leadingWidth: 72,
         leading: Padding(
-          padding: const Size.fromHeight(kToolbarHeight) > const Size.fromHeight(0)
+          padding:
+              const Size.fromHeight(kToolbarHeight) > const Size.fromHeight(0)
               ? const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0)
               : EdgeInsets.zero,
           child: Transform.scale(
@@ -32,102 +55,91 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 border: Border.all(color: Colors.grey.shade200, width: 1),
               ),
               child: IconButton(
-                icon:   Icon(Icons.arrow_back_ios_new, size: 10.sp, color: Colors.black87),
+                icon: Icon(
+                  Icons.arrow_back_ios_new,
+                  size: 10.sp,
+                  color: Colors.black87,
+                ),
                 onPressed: () => Navigator.of(context).pop(),
                 padding: EdgeInsets.zero,
               ),
             ),
           ),
         ),
-        title: const Text(
-          'Privacy Policy',
-          style: TextStyle(
-            color: Colors.black87,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
+        title: StreamBuilder<TermsAndConditionModel>(
+          stream: privacyPolicyRxObj.getTermsAndConditionData,
+          builder: (context, snapshot) {
+            final title = snapshot.data?.data?.title ?? 'Privacy Policy';
+            return Text(
+              title,
+              style: const TextStyle(
+                color: Colors.black87,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            );
+          },
         ),
         centerTitle: false,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Last Updated: November 2024',
-              style: TextStyle(
-                color: Colors.grey.shade500,
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(height: 24),
+      body: ValueListenableBuilder<bool>(
+        valueListenable: privacyPolicyRxObj.isLoading,
+        builder: (context, isLoading, child) {
+          if (isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(color: Color(0xFF0F3D7A)),
+            );
+          }
 
-            _buildSection(
-              title: 'Information We Collect',
-              content: 'We collect information you provide directly to us, such as when you create an account, post a listing, or contact us for support. This includes your name, email address, phone number, and location.',
-            ),
+          return StreamBuilder<TermsAndConditionModel>(
+            stream: privacyPolicyRxObj.getTermsAndConditionData,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    'Failed to load privacy policy.',
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 16.sp,
+                    ),
+                  ),
+                );
+              }
 
-            _buildSection(
-              title: 'How We Use Your Information',
-              content: 'We use the information we collect to provide, maintain, and improve our services, to process transactions, send notifications, and to communicate with you about products, services, and events.',
-            ),
+              if (!snapshot.hasData || snapshot.data?.data == null) {
+                return Center(
+                  child: Text(
+                    'No data available.',
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 16.sp,
+                    ),
+                  ),
+                );
+              }
 
-            _buildSection(
-              title: 'Information Sharing',
-              content: 'We do not share your personal information with third parties except as described in this policy. We may share information with service providers who assist us in operating our platform.',
-            ),
+              final content = snapshot.data!.data!.content ?? '';
+              final cleanContent = _stripHtml(content);
 
-            _buildSection(
-              title: 'Data Security',
-              content: 'We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.',
-            ),
-
-            _buildSection(
-              title: 'Your Rights',
-              content: 'You have the right to access, update, or delete your personal information. You can do this through your account settings or by contacting our support team.',
-            ),
-
-            _buildSection(
-              title: 'Location Data',
-              content: 'We collect location information to provide location-based services such as showing listings near you. You can control location permissions through your device settings.',
-            ),
-
-            _buildSection(
-              title: 'Contact Us',
-              content: 'If you have questions about this Privacy Policy, please contact us at [app email address]',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSection({required String title, required String content}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.black87,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              height: 1.3,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            content,
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 15,
-              height: 1.45,
-            ),
-          ),
-        ],
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      cleanContent,
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 16,
+                        height: 1.5,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }

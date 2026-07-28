@@ -40,6 +40,8 @@ import 'package:abojude_flutter/features/profile/data/rx_edit_profile/rx.dart';
 import 'package:abojude_flutter/features/profile/model/edit_profile_model.dart';
 import 'package:abojude_flutter/features/profile/data/rx_contact_support/rx.dart';
 import 'package:abojude_flutter/features/profile/model/contact_support_model.dart';
+import 'package:abojude_flutter/features/terms_of_service_screen/data/rx_terms_and_condition/rx.dart';
+import 'package:abojude_flutter/features/terms_of_service_screen/model/terms_and_condition_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 // // ------------- Register Api Access -----------------//
@@ -170,6 +172,24 @@ GetCategoryListRx getCategoryListRxObj = GetCategoryListRx(
 GetRecentPostListRx getRecentPostListRxObj = GetRecentPostListRx(
   empty: RecentPostListModel(),
   dataFetcher: BehaviorSubject<RecentPostListModel>(),
+);
+
+// // ------------- Terms And Condition Api Access -----------------//
+TermsAndConditionRx termsAndConditionRxObj = TermsAndConditionRx(
+  empty: TermsAndConditionModel(),
+  dataFetcher: BehaviorSubject<TermsAndConditionModel>(),
+);
+
+// // ------------- About Page Api Access -----------------//
+TermsAndConditionRx aboutPageRxObj = TermsAndConditionRx(
+  empty: TermsAndConditionModel(),
+  dataFetcher: BehaviorSubject<TermsAndConditionModel>(),
+);
+
+// // ------------- Privacy Policy Api Access -----------------//
+TermsAndConditionRx privacyPolicyRxObj = TermsAndConditionRx(
+  empty: TermsAndConditionModel(),
+  dataFetcher: BehaviorSubject<TermsAndConditionModel>(),
 );
 
 
