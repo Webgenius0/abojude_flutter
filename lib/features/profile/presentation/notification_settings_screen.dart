@@ -2,17 +2,20 @@ import 'package:flutter/cupertino.dart'; // Added for CupertinoSwitch
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 
 class NotificationSettingsScreen extends StatefulWidget {
   const NotificationSettingsScreen({super.key});
 
   @override
-  State<NotificationSettingsScreen> createState() => _NotificationSettingsScreenState();
+  State<NotificationSettingsScreen> createState() =>
+      _NotificationSettingsScreenState();
 }
 
-class _NotificationSettingsScreenState extends State<NotificationSettingsScreen> {
-  bool _masterEnable = true;
-  bool _messagesEnabled = true;
+class _NotificationSettingsScreenState
+    extends State<NotificationSettingsScreen> {
+  bool _masterEnable = false;
+  bool _messagesEnabled = false;
   bool _marketingEnabled = false;
   bool _emailEnabled = false;
 
@@ -24,30 +27,43 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
     return count;
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _loadNotificationSettings();
+  }
+
+  Future<void> _loadNotificationSettings() async {
+    try {
+      final model = await getNotificationSettingRxObj.getNotificationSetting();
+      if (model.data != null) {
+        setState(() {
+          _masterEnable = model.data!.allNotification ?? false;
+          _messagesEnabled = model.data!.newMessage ?? false;
+          _marketingEnabled = model.data!.marketing ?? false;
+          _emailEnabled = model.data!.emailNotification ?? false;
+        });
+      }
+    } catch (e) {
+      // Handled in rx.dart via toast/error sink
+    }
+  }
+
   void _onMasterToggle(bool value) {
     setState(() {
       _masterEnable = value;
-      if (!value) {
-        // Turning off master disables all individual types
-        _messagesEnabled = false;
-        _marketingEnabled = false;
-        _emailEnabled = false;
-      } else {
-        // Turning on master enables at least the message notifications by default
+      // If master is turned on, turn on all options.
+      // If master is turned off, we don't automatically turn off all of them.
+      if (value) {
         _messagesEnabled = true;
+        _marketingEnabled = true;
+        _emailEnabled = true;
       }
     });
+    _saveSettings();
   }
 
   void _onSubToggle(String type, bool value) {
-    if (!_masterEnable && value) {
-      // If master is disabled and user tries to enable any sub-notification,
-      // we auto-enable the master toggle first
-      setState(() {
-        _masterEnable = true;
-      });
-    }
-
     setState(() {
       switch (type) {
         case 'messages':
@@ -61,11 +77,26 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
           break;
       }
 
-      // If all sub-notifications are toggled off, master is also toggled off
-      if (!_messagesEnabled && !_marketingEnabled && !_emailEnabled) {
+      // If any individual switch is turned off, master switch must also be off
+      if (!value) {
         _masterEnable = false;
+      } else {
+        // If all individual switches are turned on, master switch becomes on
+        if (_messagesEnabled && _marketingEnabled && _emailEnabled) {
+          _masterEnable = true;
+        }
       }
     });
+    _saveSettings();
+  }
+
+  Future<void> _saveSettings() async {
+    await updateNotificationSettingRxObj.updateNotificationSetting(
+      allNotification: _masterEnable,
+      newMessage: _messagesEnabled,
+      marketing: _marketingEnabled,
+      emailNotification: _emailEnabled,
+    );
   }
 
   @override
@@ -87,7 +118,10 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                 decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0xFFF1F3F5), width: 1.5),
+                  border: Border.all(
+                    color: const Color(0xFFF1F3F5),
+                    width: 1.5,
+                  ),
                 ),
                 child: const Icon(
                   Icons.chevron_left_rounded,
@@ -100,85 +134,118 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 10.h),
-              // Title
-              Text(
-                'Notification Settings',
-                style: GoogleFonts.inter(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              SizedBox(height: 12.h),
-              // Description
-              Text(
-                'Control which updates and activities you want to receive',
-                style: GoogleFonts.inter(
-                  fontSize: 14.sp,
-                  color: Colors.grey[500],
-                  height: 1.4,
-                ),
-              ),
-              SizedBox(height: 32.h),
+        child: ValueListenableBuilder<bool>(
+          valueListenable: getNotificationSettingRxObj.isLoading,
+          builder: (context, isLoading, child) {
+            if (isLoading) {
+              return const Center(
+                child: CircularProgressIndicator(color: Color(0xFF0F3D7A)),
+              );
+            }
 
-              // 1. Master Enable Notifications Card
-              _buildMasterCard(),
+            return ValueListenableBuilder<bool>(
+              valueListenable: updateNotificationSettingRxObj.isLoading,
+              builder: (context, isUpdating, child) {
+                return Stack(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 10.h),
+                          // Title
+                          Text(
+                            'Notification Settings',
+                            style: GoogleFonts.inter(
+                              fontSize: 24.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          SizedBox(height: 12.h),
+                          // Description
+                          Text(
+                            'Control which updates and activities you want to receive',
+                            style: GoogleFonts.inter(
+                              fontSize: 14.sp,
+                              color: Colors.grey[500],
+                              height: 1.4,
+                            ),
+                          ),
+                          SizedBox(height: 32.h),
 
-              SizedBox(height: 24.h),
-              // Subtitle Label
-              Text(
-                'Notification Types',
-                style: GoogleFonts.inter(
-                  fontSize: 13.sp,
-                  color: Colors.grey[500],
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 12.h),
+                          // 1. Master Enable Notifications Card
+                          _buildMasterCard(isUpdating),
 
-              // 2. Individual Notification Sub-options
-              _buildSubOptionCard(
-                type: 'messages',
-                title: 'New Messages',
-                subtitle: 'When someone sends you a message',
-                value: _messagesEnabled,
-              ),
-              SizedBox(height: 14.h),
+                          SizedBox(height: 24.h),
+                          // Subtitle Label
+                          Text(
+                            'Notification Types',
+                            style: GoogleFonts.inter(
+                              fontSize: 13.sp,
+                              color: Colors.grey[500],
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: 12.h),
 
-              _buildSubOptionCard(
-                type: 'marketing',
-                title: 'Marketing',
-                subtitle: 'Promotions and tips from Wasel Canada',
-                value: _marketingEnabled,
-              ),
-              SizedBox(height: 14.h),
+                          // 2. Individual Notification Sub-options
+                          _buildSubOptionCard(
+                            type: 'messages',
+                            title: 'New Messages',
+                            subtitle: 'When someone sends you a message',
+                            value: _messagesEnabled,
+                            disabled: isUpdating,
+                          ),
+                          SizedBox(height: 14.h),
 
-              _buildSubOptionCard(
-                type: 'email',
-                title: 'Email Notification',
-                subtitle: 'Receive updates via email',
-                value: _emailEnabled,
-              ),
+                          _buildSubOptionCard(
+                            type: 'marketing',
+                            title: 'Marketing',
+                            subtitle: 'Promotions and tips from Wasel Canada',
+                            value: _marketingEnabled,
+                            disabled: isUpdating,
+                          ),
+                          SizedBox(height: 14.h),
 
-              const Spacer(),
+                          _buildSubOptionCard(
+                            type: 'email',
+                            title: 'Email Notification',
+                            subtitle: 'Receive updates via email',
+                            value: _emailEnabled,
+                            disabled: isUpdating,
+                          ),
 
-              // 3. Bottom Auto-save Warning Banner
-              _buildAutoSaveBanner(),
-              SizedBox(height: 20.h),
-            ],
-          ),
+                          const Spacer(),
+
+                          // 3. Bottom Auto-save Warning Banner
+                          _buildAutoSaveBanner(),
+                          SizedBox(height: 20.h),
+                        ],
+                      ),
+                    ),
+                    if (isUpdating)
+                      const Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        child: LinearProgressIndicator(
+                          color: Color(0xFF0F3D7A),
+                          backgroundColor: Colors.transparent,
+                        ),
+                      ),
+                  ],
+                );
+              },
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _buildMasterCard() {
+  Widget _buildMasterCard(bool disabled) {
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
@@ -238,7 +305,7 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
           // Master Cupertino Switch
           CupertinoSwitch(
             value: _masterEnable,
-            onChanged: _onMasterToggle,
+            onChanged: disabled ? null : _onMasterToggle,
             activeColor: const Color(0xFF0F3D7A),
           ),
         ],
@@ -251,6 +318,7 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
     required String title,
     required String subtitle,
     required bool value,
+    required bool disabled,
   }) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
@@ -297,7 +365,9 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
           // Individual Cupertino Switch
           CupertinoSwitch(
             value: value,
-            onChanged: (newValue) => _onSubToggle(type, newValue),
+            onChanged: disabled
+                ? null
+                : (newValue) => _onSubToggle(type, newValue),
             activeColor: const Color(0xFF0F3D7A),
           ),
         ],

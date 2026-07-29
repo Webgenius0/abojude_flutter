@@ -25,6 +25,10 @@ import 'package:abojude_flutter/features/auth/set_new_password/model/set_new_pas
     as snp;
 import 'package:abojude_flutter/features/profile/data/rx_get_profile/rx.dart';
 import 'package:abojude_flutter/features/profile/model/get_profile_model.dart';
+import 'package:abojude_flutter/features/profile/data/get_notification_setting/rx.dart';
+import 'package:abojude_flutter/features/profile/model/get_notification_setting_model.dart';
+import 'package:abojude_flutter/features/profile/data/update_notification_setting/rx.dart';
+import 'package:abojude_flutter/features/profile/model/update_notification_setting_model.dart';
 import 'package:abojude_flutter/features/profile/data/rx_block_user_list/rx.dart';
 import 'package:abojude_flutter/features/profile/model/block_user_list_model.dart';
 import 'package:abojude_flutter/features/profile/data/rx_block_user/rx.dart';
@@ -87,6 +91,18 @@ SetNewPasswordRx setNewPasswordRxObj = SetNewPasswordRx(
 GetProfileRx getProfileRxObj = GetProfileRx(
   empty: GetProfileModel(),
   dataFetcher: BehaviorSubject<GetProfileModel>(),
+);
+
+// // ------------- Get Notification Setting Api Access -----------------//
+GetNotificationSettingRx getNotificationSettingRxObj = GetNotificationSettingRx(
+  empty: GetNotificationModel(),
+  dataFetcher: BehaviorSubject<GetNotificationModel>(),
+);
+
+// // ------------- Update Notification Setting Api Access -----------------//
+UpdateNotificationSettingRx updateNotificationSettingRxObj = UpdateNotificationSettingRx(
+  empty: UpdateNotificationSettingsModel(),
+  dataFetcher: BehaviorSubject<UpdateNotificationSettingsModel>(),
 );
 
 // // ------------- Block User List Api Access -----------------//

@@ -18,6 +18,9 @@ final class NetworkConstants {
 final class Endpoints {
   Endpoints._();
 
+
+  // ------------------- Azizul Hakim -------------------
+  
   // -------------------Register start-------------------
   static String register() => "/v1/sign-up";
   // -------------------Register end-------------------
@@ -111,6 +114,14 @@ final class Endpoints {
   // -------------------TermsAndService start--------------
   static String termsAndService(String slug) => "/v1/page?slug=$slug";
   // -------------------TermsAndService end-------------------
+
+  // ------------------- GetNotificationSetting start--------------
+  static String getNotificationSetting() => "/v1/auth/notification-settings";
+  // -------------------GetNotificationSetting end-------------------
+
+  // ------------------- UpdateNotificationSetting start--------------
+  static String updateNotificationSetting() => "/v1/auth/notification-settings";
+  // -------------------UpdateNotificationSetting end-------------------
 
 
 }
