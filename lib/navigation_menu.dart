@@ -4,6 +4,7 @@ import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'features/home/presentation/explore_screen.dart';
 import 'features/home/presentation/home_screen.dart';
@@ -123,8 +124,8 @@ class _NavigationMenuState extends State<NavigationMenu> {
         NavigationService.navigateTo(Routes.createListingScreen);
       },
       child: Container(
-        width: 56,
-        height: 56,
+        width: 56.w,
+        height: 56.h,
         decoration: const BoxDecoration(
           color: _fabColor,
           shape: BoxShape.circle,
