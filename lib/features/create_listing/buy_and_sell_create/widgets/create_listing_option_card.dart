@@ -1,17 +1,16 @@
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 
 class CreateListingOptionCard extends StatelessWidget {
-  final String iconPath;
+  final Widget icon;
   final String title;
   final String subtitle;
   final VoidCallback onTap;
 
   const CreateListingOptionCard({
     super.key,
-    required this.iconPath,
+    required this.icon,
     required this.title,
     required this.subtitle,
     required this.onTap,
@@ -47,15 +46,7 @@ class CreateListingOptionCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Center(
-                child: SvgPicture.asset(
-                  iconPath,
-                  width: 24.w,
-                  height: 24.w,
-                  colorFilter: ColorFilter.mode(
-                    Color(0xFF1D3B71),
-                    BlendMode.srcIn,
-                  ),
-                ),
+                child: icon,
               ),
             ),
             SizedBox(width: 16.w),

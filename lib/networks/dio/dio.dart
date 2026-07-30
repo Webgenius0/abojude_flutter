@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import '/helpers/di.dart';
@@ -25,15 +26,22 @@ final class DioSingleton {
       InterceptorsWrapper(
         onError: (DioException e, handler) async {
           if (e.response?.statusCode == 401) {
-            // Clean dynamic/static data
-            await totalDataClean();
-            await appData.remove(kKeyAccessToken);
-            DioSingleton.instance.create();
+            final bool isLoggedIn = appData.read(kKeyIsLoggedIn) ?? false;
+            if (isLoggedIn) {
+              // Clean dynamic/static data
+              await totalDataClean();
+              await appData.remove(kKeyAccessToken);
+              DioSingleton.instance.create();
 
-            ToastUtil.showShortToast("Session expired. Please log in again.");
+              ToastUtil.showShortToast("Session expired. Please log in again.");
 
-            // Redirect to welcome screen
-            NavigationService.navigateToUntilReplacement(Routes.welcomeScreen);
+              // Redirect to welcome screen safely on the next frame
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (NavigationService.navigatorKey.currentState != null) {
+                  NavigationService.navigateToUntilReplacement(Routes.welcomeScreen);
+                }
+              });
+            }
           }
           return handler.next(e);
         },

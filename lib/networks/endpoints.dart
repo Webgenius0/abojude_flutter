@@ -83,7 +83,7 @@ final class Endpoints {
   static String resendOtp() => "/v1/resend-otp";
   // -------------------Resend Otp end-------------------
 
-    // ------------------- GetCategoryList start-------------------
+    // ------------------- GetCategoryList start--------------
   static String getCategoryList() => "/v1/categories";
   // -------------------GetCategoryList end-------------------
 
@@ -122,6 +122,13 @@ final class Endpoints {
   // ------------------- UpdateNotificationSetting start--------------
   static String updateNotificationSetting() => "/v1/auth/notification-settings";
   // -------------------UpdateNotificationSetting end-------------------
+
+  // ------------------- GetWishList start--------------
+  static String getWishList() => "/v1/auth/wishes";
+  // -------------------GetWishList end-------------------
+
+
+  
 
 
 }
