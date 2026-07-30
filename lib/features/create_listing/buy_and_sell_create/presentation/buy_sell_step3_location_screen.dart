@@ -71,6 +71,7 @@ class _BuySellStep3LocationScreenState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Province/Territory Dropdown
+                      // TODO: implement province and city dropdown
                       _buildLabel("Province/Territory"),
                       StreamBuilder<GetProvinceModel>(
                         stream: getProvinceRxObj.getProvinceData,
