@@ -2,6 +2,8 @@ import 'package:abojude_flutter/features/auth/register/data/rx_register/rx.dart'
 import 'package:abojude_flutter/features/auth/register/model/register_model.dart';
 import 'package:abojude_flutter/features/auth/register/data/rx_register_verify_otp/rx.dart';
 import 'package:abojude_flutter/features/auth/register/model/register_verify_otp_model.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/rx_create_buy_and_sell_category/rx.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_category_post_create_model.dart';
 import 'package:abojude_flutter/features/auth/login/data/rx_login/rx.dart';
 import 'package:abojude_flutter/features/auth/login/model/login_model.dart';
 import 'package:abojude_flutter/features/auth/login/data/rx_logout/rx.dart';
@@ -206,6 +208,12 @@ TermsAndConditionRx aboutPageRxObj = TermsAndConditionRx(
 TermsAndConditionRx privacyPolicyRxObj = TermsAndConditionRx(
   empty: TermsAndConditionModel(),
   dataFetcher: BehaviorSubject<TermsAndConditionModel>(),
+);
+
+// // ------------- Create Buy and Sell Category Api Access -----------------//
+CreateBuyAndSellCategoryRx createBuyAndSellCategoryRxObj = CreateBuyAndSellCategoryRx(
+  empty: BuyAndSellCategoryPostCreateModel(),
+  dataFetcher: BehaviorSubject<BuyAndSellCategoryPostCreateModel>(),
 );
 
 

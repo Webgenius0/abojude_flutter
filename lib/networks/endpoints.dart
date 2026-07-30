@@ -127,8 +127,8 @@ final class Endpoints {
   static String getWishList() => "/v1/auth/wishes";
   // -------------------GetWishList end-------------------
 
-
-  
-
+ // ------------------- Create buy and sell category list start--------------
+  static String createBuyAndSellCategory() => "/v1/auth/post/draft";
+ // -------------------Create buy and sell category list end-----------------
 
 }

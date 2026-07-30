@@ -9,6 +9,7 @@ import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/buy_sell_listing_model.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/buy_sell_step_header.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/buy_sell_button.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 
 class BuySellStep4ContactScreen extends StatefulWidget {
   final BuySellListingModel model;
@@ -165,29 +166,65 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
               // Continue Button
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-                child: BuySellButton(
-                  text: "Continue",
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      final phone = _phoneController.text.trim();
-                      final whatsapp = _whatsAppController.text.trim();
-                      final email = _emailController.text.trim();
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: createBuyAndSellCategoryRxObj.isLoading,
+                  builder: (context, isLoading, child) {
+                    return BuySellButton(
+                      text: isLoading ? "Submitting..." : "Continue",
+                      onTap: isLoading
+                          ? () {}
+                          : () {
+                              if (_formKey.currentState!.validate()) {
+                                final phone = _phoneController.text.trim();
+                                final whatsapp = _whatsAppController.text.trim();
+                                final email = _emailController.text.trim();
 
-                      if (phone.isEmpty && whatsapp.isEmpty && email.isEmpty && !_enableInAppChat) {
-                        ToastUtil.showShortToast("Please provide or enable at least one contact method.");
-                        return;
-                      }
+                                if (phone.isEmpty &&
+                                    whatsapp.isEmpty &&
+                                    email.isEmpty &&
+                                    !_enableInAppChat) {
+                                  ToastUtil.showShortToast(
+                                    "Please provide or enable at least one contact method.",
+                                  );
+                                  return;
+                                }
 
-                      widget.model.phoneNumber = phone;
-                      widget.model.whatsAppNumber = whatsapp;
-                      widget.model.emailAddress = email;
-                      widget.model.enableInAppChat = _enableInAppChat;
+                                widget.model.phoneNumber = phone;
+                                widget.model.whatsAppNumber = whatsapp;
+                                widget.model.emailAddress = email;
+                                widget.model.enableInAppChat = _enableInAppChat;
 
-                      NavigationService.navigateTo(
-                        Routes.buySellStep5Review,
-                        arguments: widget.model,
-                      );
-                    }
+                                createBuyAndSellCategoryRxObj
+                                    .createBuyAndSellCategory(
+                                  categorySlug: "buy-sell",
+                                  title: widget.model.title,
+                                  description: widget.model.description,
+                                  price: widget.model.price,
+                                  condition: [widget.model.condition],
+                                  province: widget.model.province,
+                                  city: widget.model.city,
+                                  address: widget.model.address,
+                                  phone: phone,
+                                  whatsapp: whatsapp,
+                                  email: email,
+                                  isAppChat: _enableInAppChat ? 1 : 0,
+                                  photos: widget.model.images,
+                                ).then((res) {
+                                  ToastUtil.showShortToast(
+                                    res.message ?? "Listing drafted successfully",
+                                  );
+                                  NavigationService.navigateTo(
+                                    Routes.buySellStep5Review,
+                                    arguments: widget.model,
+                                  );
+                                }).catchError((e) {
+                                  ToastUtil.showShortToast(
+                                    "Failed to create draft listing.",
+                                  );
+                                });
+                              }
+                            },
+                    );
                   },
                 ),
               ),
