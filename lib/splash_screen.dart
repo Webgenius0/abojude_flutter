@@ -8,6 +8,8 @@ import 'package:abojude_flutter/assets_helper/app_images.dart';
 import 'package:abojude_flutter/constants/app_constants.dart';
 import 'package:abojude_flutter/helpers/di.dart';
 
+import 'package:abojude_flutter/helpers/helper_methods.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -24,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+    setInitValue();
 
     // --------------- Animation Controller ---------------
     _animationController = AnimationController(
