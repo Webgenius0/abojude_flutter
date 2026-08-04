@@ -23,7 +23,7 @@ class ServiceSuccessScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
+                  physics: BouncingScrollPhysics(),
                   child: Column(
                     children: [
                       SizedBox(height: 48.h),

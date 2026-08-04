@@ -82,7 +82,8 @@ class _JobStep1PhotosScreenState extends State<JobStep1PhotosScreen> {
                                       borderRadius: BorderRadius.circular(12.r),
                                     ),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.camera_alt_outlined,

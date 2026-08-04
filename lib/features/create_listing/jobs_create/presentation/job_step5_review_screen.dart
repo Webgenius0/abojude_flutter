@@ -59,53 +59,63 @@ class JobStep5ReviewScreen extends StatelessWidget {
                         children: [
                           // Thumbnail Image Area
                           if (imageFile != null)
-                            Stack(
-                              children: [
-                                Container(
-                                  height: 200.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(16.r),
-                                    ),
-                                    image: DecorationImage(
-                                      image: FileImage(imageFile),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                // Click to see public view overlay banner
-                                Positioned(
-                                  bottom: 0,
-                                  left: 0,
-                                  right: 0,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16.w,
-                                      vertical: 10.h,
-                                    ),
-                                    decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.bottomCenter,
-                                        end: Alignment.topCenter,
-                                        colors: [
-                                          Color(0x99000000), // 60% opacity black
-                                          Colors.transparent,
-                                        ],
+                            GestureDetector(
+                              onTap: () {
+                                NavigationService.navigateTo(
+                                  Routes.jobDetails,
+                                  arguments: model,
+                                );
+                              },
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    height: 200.h,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(16.r),
+                                      ),
+                                      image: DecorationImage(
+                                        image: FileImage(imageFile),
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
-                                    child: Center(
-                                      child: Text(
-                                        "Click to See Public View",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w600,
+                                  ),
+                                  // Click to see public view overlay banner
+                                  Positioned(
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16.w,
+                                        vertical: 10.h,
+                                      ),
+                                      decoration: const BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.bottomCenter,
+                                          end: Alignment.topCenter,
+                                          colors: [
+                                            Color(
+                                              0x99000000,
+                                            ), // 60% opacity black
+                                            Colors.transparent,
+                                          ],
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          "Click to See Public View",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             )
                           else
                             Container(
@@ -154,7 +164,9 @@ class JobStep5ReviewScreen extends StatelessWidget {
                                       ),
                                       decoration: BoxDecoration(
                                         color: const Color(0xFFF3F4F6),
-                                        borderRadius: BorderRadius.circular(6.r),
+                                        borderRadius: BorderRadius.circular(
+                                          6.r,
+                                        ),
                                       ),
                                       child: Text(
                                         "Jobs",
@@ -176,7 +188,9 @@ class JobStep5ReviewScreen extends StatelessWidget {
                                       ),
                                       decoration: BoxDecoration(
                                         color: const Color(0xFFECFDF5),
-                                        borderRadius: BorderRadius.circular(6.r),
+                                        borderRadius: BorderRadius.circular(
+                                          6.r,
+                                        ),
                                       ),
                                       child: Text(
                                         model.jobType,
@@ -269,7 +283,7 @@ class JobStep5ReviewScreen extends StatelessWidget {
                 isSubmit: true,
                 onTap: () {
                   NavigationService.navigateTo(
-                    Routes.jobDetails,
+                    Routes.jobSuccess,
                     arguments: model,
                   );
                 },

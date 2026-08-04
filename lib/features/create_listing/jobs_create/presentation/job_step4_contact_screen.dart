@@ -9,6 +9,7 @@ import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_listing_model.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_step_header.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_button.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 
 class JobStep4ContactScreen extends StatefulWidget {
   final JobListingModel model;
@@ -30,7 +31,9 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
   void initState() {
     super.initState();
     _phoneController = TextEditingController(text: widget.model.phoneNumber);
-    _whatsAppController = TextEditingController(text: widget.model.whatsAppNumber);
+    _whatsAppController = TextEditingController(
+      text: widget.model.whatsAppNumber,
+    );
     _emailController = TextEditingController(text: widget.model.emailAddress);
     _enableInAppChat = widget.model.enableInAppChat;
   }
@@ -55,15 +58,17 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 16.h,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         "Choose how buyers can reach you. Enable at least one contact method.",
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: const Color(0xFF6B7280),
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: const Color(0xFF6B7280)),
                       ),
                       SizedBox(height: 24.h),
 
@@ -73,9 +78,8 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                         controller: _phoneController,
                         keyboardType: TextInputType.phone,
                         textInputAction: TextInputAction.next,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration("+1 (416) 555-0123"),
                       ),
                       SizedBox(height: 20.h),
@@ -86,9 +90,8 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                         controller: _whatsAppController,
                         keyboardType: TextInputType.phone,
                         textInputAction: TextInputAction.next,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration("+1 (416) 555-0123"),
                       ),
                       SizedBox(height: 20.h),
@@ -99,13 +102,14 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.done,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration("your@email.com"),
                         validator: (value) {
                           if (value != null && value.trim().isNotEmpty) {
-                            final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                            final emailRegex = RegExp(
+                              r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                            );
                             if (!emailRegex.hasMatch(value.trim())) {
                               return "Please enter a valid email address";
                             }
@@ -117,7 +121,10 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
 
                       // Enable in-App Chat Card
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 16.h,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12.r),
@@ -134,17 +141,19 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                                 children: [
                                   Text(
                                     "Enable in-App Chat",
-                                    style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
-                                      fontSize: 15.sp,
-                                    ),
+                                    style: TextFontStyle
+                                        .textStyle16IbmPlexSansW600
+                                        .copyWith(fontSize: 15.sp),
                                   ),
                                   SizedBox(height: 4.h),
                                   Text(
                                     "Allow buyers to message you in the app",
-                                    style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                                      fontSize: 13.sp,
-                                      color: const Color(0xFF6B7280),
-                                    ),
+                                    style: TextFontStyle
+                                        .textStyle14IbmPlexSansW400
+                                        .copyWith(
+                                          fontSize: 13.sp,
+                                          color: const Color(0xFF6B7280),
+                                        ),
                                   ),
                                 ],
                               ),
@@ -168,29 +177,74 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
               // Continue Button
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-                child: JobButton(
-                  text: "Continue",
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      final phone = _phoneController.text.trim();
-                      final whatsapp = _whatsAppController.text.trim();
-                      final email = _emailController.text.trim();
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: createJobRxObj.isLoading,
+                  builder: (context, isLoading, child) {
+                    return JobButton(
+                      text: isLoading ? "Submitting..." : "Continue",
+                      onTap: isLoading
+                          ? () {}
+                          : () {
+                              if (_formKey.currentState!.validate()) {
+                                final phone = _phoneController.text.trim();
+                                final whatsapp = _whatsAppController.text
+                                    .trim();
+                                final email = _emailController.text.trim();
 
-                      if (phone.isEmpty && whatsapp.isEmpty && email.isEmpty && !_enableInAppChat) {
-                        ToastUtil.showShortToast("Please provide or enable at least one contact method.");
-                        return;
-                      }
+                                if (phone.isEmpty &&
+                                    whatsapp.isEmpty &&
+                                    email.isEmpty &&
+                                    !_enableInAppChat) {
+                                  ToastUtil.showShortToast(
+                                    "Please provide or enable at least one contact method.",
+                                  );
+                                  return;
+                                }
 
-                      widget.model.phoneNumber = phone;
-                      widget.model.whatsAppNumber = whatsapp;
-                      widget.model.emailAddress = email;
-                      widget.model.enableInAppChat = _enableInAppChat;
+                                widget.model.phoneNumber = phone;
+                                widget.model.whatsAppNumber = whatsapp;
+                                widget.model.emailAddress = email;
+                                widget.model.enableInAppChat = _enableInAppChat;
 
-                      NavigationService.navigateTo(
-                        Routes.jobStep5Review,
-                        arguments: widget.model,
-                      );
-                    }
+                                createJobRxObj
+                                    .createJob(
+                                      categorySlug: "jobs",
+                                      title: widget.model.title,
+                                      companyName: widget.model.companyName,
+                                      description: widget.model.description,
+                                      jobType: [
+                                        widget.model.jobType.replaceAll(
+                                          '-',
+                                          ' ',
+                                        ),
+                                      ],
+                                      province: widget.model.province,
+                                      city: widget.model.city,
+                                      address: widget.model.address,
+                                      phone: phone,
+                                      whatsapp: whatsapp,
+                                      email: email,
+                                      isAppChat: _enableInAppChat ? 1 : 0,
+                                      thumbnail: widget.model.image,
+                                    )
+                                    .then((res) {
+                                      ToastUtil.showShortToast(
+                                        res.message ??
+                                            "Listing drafted successfully",
+                                      );
+                                      NavigationService.navigateTo(
+                                        Routes.jobStep5Review,
+                                        arguments: widget.model,
+                                      );
+                                    })
+                                    .catchError((e) {
+                                      ToastUtil.showShortToast(
+                                        "Failed to create draft listing.",
+                                      );
+                                    });
+                              }
+                            },
+                    );
                   },
                 ),
               ),

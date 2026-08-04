@@ -4,6 +4,8 @@ import 'package:abojude_flutter/features/auth/register/data/rx_register_verify_o
 import 'package:abojude_flutter/features/auth/register/model/register_verify_otp_model.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/rx_create_buy_and_sell_category/rx.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_category_post_create_model.dart';
+import 'package:abojude_flutter/features/create_listing/jobs_create/data/rx_job_create/rx.dart';
+import 'package:abojude_flutter/features/create_listing/jobs_create/model/job_post_create_model.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/rx_buy_and_sell_get_post_draft/rx.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_get_post_draft_model.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/buy_and_sell_create_listing/rx.dart';
@@ -120,10 +122,11 @@ GetNotificationSettingRx getNotificationSettingRxObj = GetNotificationSettingRx(
 );
 
 // // ------------- Update Notification Setting Api Access -----------------//
-UpdateNotificationSettingRx updateNotificationSettingRxObj = UpdateNotificationSettingRx(
-  empty: UpdateNotificationSettingsModel(),
-  dataFetcher: BehaviorSubject<UpdateNotificationSettingsModel>(),
-);
+UpdateNotificationSettingRx updateNotificationSettingRxObj =
+    UpdateNotificationSettingRx(
+      empty: UpdateNotificationSettingsModel(),
+      dataFetcher: BehaviorSubject<UpdateNotificationSettingsModel>(),
+    );
 
 // // ------------- Block User List Api Access -----------------//
 BlockUserListRx blockUserListRxObj = BlockUserListRx(
@@ -187,10 +190,11 @@ GetCityRx getCityRxObj = GetCityRx(
 );
 
 // // ------------- Select Location For Auth User Api Access -----------------//
-SelectLocationForAuthUserRx selectLocationForAuthUserRxObj = SelectLocationForAuthUserRx(
-  empty: SelectLocationForAuthUserModel(),
-  dataFetcher: BehaviorSubject<SelectLocationForAuthUserModel>(),
-);
+SelectLocationForAuthUserRx selectLocationForAuthUserRxObj =
+    SelectLocationForAuthUserRx(
+      empty: SelectLocationForAuthUserModel(),
+      dataFetcher: BehaviorSubject<SelectLocationForAuthUserModel>(),
+    );
 
 // // ------------- Select Location For Guest Api Access -----------------//
 SelectLocationForGuestRx selectLocationForGuestRxObj = SelectLocationForGuestRx(
@@ -229,9 +233,16 @@ TermsAndConditionRx privacyPolicyRxObj = TermsAndConditionRx(
 );
 
 // // ------------- Create Buy and Sell Category Api Access -----------------//
-CreateBuyAndSellCategoryRx createBuyAndSellCategoryRxObj = CreateBuyAndSellCategoryRx(
-  empty: BuyAndSellCategoryPostCreateModel(),
-  dataFetcher: BehaviorSubject<BuyAndSellCategoryPostCreateModel>(),
+CreateBuyAndSellCategoryRx createBuyAndSellCategoryRxObj =
+    CreateBuyAndSellCategoryRx(
+      empty: BuyAndSellCategoryPostCreateModel(),
+      dataFetcher: BehaviorSubject<BuyAndSellCategoryPostCreateModel>(),
+    );
+
+// // ------------- Create Job Api Access -----------------//
+CreateJobRx createJobRxObj = CreateJobRx(
+  empty: JobPostCreateModel(),
+  dataFetcher: BehaviorSubject<JobPostCreateModel>(),
 );
 
 // // ------------- Get Buy and Sell Post Draft Api Access -----------------//
@@ -245,9 +256,6 @@ BuyAndSellPostCreateRx buyAndSellPostCreateRxObj = BuyAndSellPostCreateRx(
   empty: BuyAndSellPostCreateModel(),
   dataFetcher: BehaviorSubject<BuyAndSellPostCreateModel>(),
 );
-
-
-
 
 // //_________________Update Password Api Access ______________________//
 // UpdatePasswordRx updatePasswordRxObj =
@@ -270,8 +278,6 @@ BuyAndSellPostCreateRx buyAndSellPostCreateRxObj = BuyAndSellPostCreateRx(
 //   empty: {},
 //   dataFetcher: BehaviorSubject<Map>(),
 // );
-
-
 
 // // ------------- Verify Register Otp Api Access -----------------//
 // VerifyRegisterOtpRx verifyRegisterOtpRxObj = VerifyRegisterOtpRx(
@@ -312,7 +318,9 @@ BuyAndSellPostCreateRx buyAndSellPostCreateRxObj = BuyAndSellPostCreateRx(
 // //___________________  chat List Api Access ______________________//
 GetAllChatListRx chatListRxObj = GetAllChatListRx(
   empty: GetMessageListModel(),
-  dataFetcher: BehaviorSubject<GetMessageListModel>.seeded(GetMessageListModel()),
+  dataFetcher: BehaviorSubject<GetMessageListModel>.seeded(
+    GetMessageListModel(),
+  ),
 );
 
 // //___________________  Featured Listings Api Access ______________________//
