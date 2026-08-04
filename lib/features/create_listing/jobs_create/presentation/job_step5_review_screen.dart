@@ -40,35 +40,35 @@ class JobStep5ReviewScreen extends StatelessWidget {
                     SizedBox(height: 24.h),
 
                     // Preview Listing Card
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16.r),
-                        border: Border.all(
-                          color: const Color(0xFFEFF4FC),
-                          width: 1.5,
-                        ),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x04000000),
-                            blurRadius: 10,
-                            offset: Offset(0, 4),
+                    GestureDetector(
+                      onTap: () {
+                        NavigationService.navigateTo(
+                          Routes.jobDetails,
+                          arguments: model,
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16.r),
+                          border: Border.all(
+                            color: const Color(0xFFEFF4FC),
+                            width: 1.5,
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Thumbnail Image Area
-                          if (imageFile != null)
-                            GestureDetector(
-                              onTap: () {
-                                NavigationService.navigateTo(
-                                  Routes.jobDetails,
-                                  arguments: model,
-                                );
-                              },
-                              child: Stack(
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x04000000),
+                              blurRadius: 10,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Thumbnail Image Area
+                            if (imageFile != null)
+                              Stack(
                                 children: [
                                   Container(
                                     height: 200.h,
@@ -117,121 +117,121 @@ class JobStep5ReviewScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ],
-                              ),
-                            )
-                          else
-                            Container(
-                              height: 180.h,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF3F4F6),
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(16.r),
+                              )
+                            else
+                              Container(
+                                height: 180.h,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF3F4F6),
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(16.r),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    Icons.image_not_supported_outlined,
+                                    color: const Color(0xFF9CA3AF),
+                                    size: 40.w,
+                                  ),
                                 ),
                               ),
-                              child: Center(
-                                child: Icon(
-                                  Icons.image_not_supported_outlined,
-                                  color: const Color(0xFF9CA3AF),
-                                  size: 40.w,
-                                ),
-                              ),
-                            ),
 
-                          // Text Content details
-                          Padding(
-                            padding: EdgeInsets.all(16.w),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Title
-                                Text(
-                                  model.title,
-                                  style: TextFontStyle
-                                      .textStyle22IbmPlexSansW600
-                                      .copyWith(
-                                        color: AppColor.c2E3227,
-                                        fontSize: 18.sp,
-                                      ),
-                                ),
-                                SizedBox(height: 12.h),
+                            // Text Content details
+                            Padding(
+                              padding: EdgeInsets.all(16.w),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Title
+                                  Text(
+                                    model.title,
+                                    style: TextFontStyle
+                                        .textStyle22IbmPlexSansW600
+                                        .copyWith(
+                                          color: AppColor.c2E3227,
+                                          fontSize: 18.sp,
+                                        ),
+                                  ),
+                                  SizedBox(height: 12.h),
 
-                                // Badges
-                                Row(
-                                  children: [
-                                    // Category Badge (Jobs or Service)
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 12.w,
-                                        vertical: 6.h,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFF3F4F6),
-                                        borderRadius: BorderRadius.circular(
-                                          6.r,
+                                  // Badges
+                                  Row(
+                                    children: [
+                                      // Category Badge (Jobs or Service)
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 12.w,
+                                          vertical: 6.h,
                                         ),
-                                      ),
-                                      child: Text(
-                                        "Jobs",
-                                        style: TextFontStyle
-                                            .textStyle14IbmPlexSansW400
-                                            .copyWith(
-                                              fontSize: 12.sp,
-                                              color: const Color(0xFF4B5563),
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 8.w),
-                                    // Job Type Badge
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 12.w,
-                                        vertical: 6.h,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFECFDF5),
-                                        borderRadius: BorderRadius.circular(
-                                          6.r,
-                                        ),
-                                      ),
-                                      child: Text(
-                                        model.jobType,
-                                        style: TextFontStyle
-                                            .textStyle14IbmPlexSansW400
-                                            .copyWith(
-                                              fontSize: 12.sp,
-                                              color: const Color(0xFF059669),
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 12.h),
-                                // Location Badge
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.location_on_outlined,
-                                      size: 16.w,
-                                      color: const Color(0xFF797A7C),
-                                    ),
-                                    SizedBox(width: 4.w),
-                                    Text(
-                                      "${model.city}, ${model.province}",
-                                      style: TextFontStyle
-                                          .textStyle14IbmPlexSansW400
-                                          .copyWith(
-                                            fontSize: 13.sp,
-                                            color: const Color(0xFF797A7C),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFF3F4F6),
+                                          borderRadius: BorderRadius.circular(
+                                            6.r,
                                           ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                        ),
+                                        child: Text(
+                                          "Jobs",
+                                          style: TextFontStyle
+                                              .textStyle14IbmPlexSansW400
+                                              .copyWith(
+                                                fontSize: 12.sp,
+                                                color: const Color(0xFF4B5563),
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 8.w),
+                                      // Job Type Badge
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 12.w,
+                                          vertical: 6.h,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFECFDF5),
+                                          borderRadius: BorderRadius.circular(
+                                            6.r,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          model.jobType,
+                                          style: TextFontStyle
+                                              .textStyle14IbmPlexSansW400
+                                              .copyWith(
+                                                fontSize: 12.sp,
+                                                color: const Color(0xFF059669),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 12.h),
+                                  // Location Badge
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.location_on_outlined,
+                                        size: 16.w,
+                                        color: const Color(0xFF797A7C),
+                                      ),
+                                      SizedBox(width: 4.w),
+                                      Text(
+                                        "${model.city}, ${model.province}",
+                                        style: TextFontStyle
+                                            .textStyle14IbmPlexSansW400
+                                            .copyWith(
+                                              fontSize: 13.sp,
+                                              color: const Color(0xFF797A7C),
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(height: 24.h),
