@@ -33,8 +33,10 @@ import 'package:abojude_flutter/features/home/model/get_explore_model.dart';
 import 'package:abojude_flutter/features/home/data/rx_all_porducaosn_deatils_api/rx.dart';
 import 'package:abojude_flutter/features/home/model/get_post_details_model.dart';
 import 'package:abojude_flutter/features/profile/data/rx_change_password/rx.dart';
+import 'package:abojude_flutter/features/profile/data/rx_my_listing_api/rx.dart';
 import 'package:abojude_flutter/features/profile/data/rx_my_whises_list_api/rx.dart';
 import 'package:abojude_flutter/features/profile/data/rx_save_wishes_api/rx.dart';
+import 'package:abojude_flutter/features/profile/model/my_listing_model.dart';
 import 'package:abojude_flutter/features/profile/model/wishes_save_model.dart';
 import 'package:abojude_flutter/features/profile/model/change_password_model.dart';
 import 'package:abojude_flutter/features/auth/set_new_password/data/rx_set_new_password/rx.dart';
@@ -334,6 +336,11 @@ GetPostDetailsRx getPostDetailsRxObj = GetPostDetailsRx(
 GetWishesListRx getWishesListRxObj = GetWishesListRx(
   empty: GetWishListModel(),
   dataFetcher: BehaviorSubject<GetWishListModel>(),
+);
+
+GetMyListRx getMyListRxObj = GetMyListRx(
+  empty: GetMyListingModel(),
+  dataFetcher: BehaviorSubject<GetMyListingModel>(),
 );
 
 SaveWishesRx saveWishesRxObj = SaveWishesRx(

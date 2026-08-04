@@ -196,9 +196,16 @@ final class Endpoints {
   ///____________________________ferdaus hossan sojib_______________________///
 
   static String chatList() => "/v1/auth/conversations";
+ 
+  static String getMyList({
+    int page = 1,
+    int perPage = 10,
+  }) =>
+      "/v1/auth/posts?page=$page&per_page=$perPage";
+ 
 
   static String postDetails(int postId) => "/v1/post/details?post_id=$postId";
-
+ 
   static String wishesList() => "/v1/auth/wishes";
   static String saveWishe() => "/v1/auth/wishes";
   static String postDetails(int postId) =>
