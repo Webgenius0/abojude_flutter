@@ -195,6 +195,8 @@ final class Endpoints {
 
 
   static String chatList() => "/v1/auth/conversations";
+  static String wishesList() => "/v1/auth/wishes";
+  static String saveWishe() => "/v1/auth/wishes";
   static String postDetails(int postId) =>
       "/v1/post/details?post_id=$postId";
 }

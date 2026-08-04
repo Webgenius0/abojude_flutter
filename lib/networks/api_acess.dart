@@ -29,6 +29,9 @@ import 'package:abojude_flutter/features/home/model/get_explore_model.dart';
 import 'package:abojude_flutter/features/home/data/rx_all_porducaosn_deatils_api/rx.dart';
 import 'package:abojude_flutter/features/home/model/get_post_details_model.dart';
 import 'package:abojude_flutter/features/profile/data/rx_change_password/rx.dart';
+import 'package:abojude_flutter/features/profile/data/rx_my_whises_list_api/rx.dart';
+import 'package:abojude_flutter/features/profile/data/rx_save_wishes_api/rx.dart';
+import 'package:abojude_flutter/features/profile/model/wishes_save_model.dart';
 import 'package:abojude_flutter/features/profile/model/change_password_model.dart';
 import 'package:abojude_flutter/features/auth/set_new_password/data/rx_set_new_password/rx.dart';
 import 'package:abojude_flutter/features/auth/set_new_password/model/set_new_password_model.dart'
@@ -38,6 +41,7 @@ import 'package:abojude_flutter/features/profile/model/get_profile_model.dart';
 import 'package:abojude_flutter/features/profile/data/get_notification_setting/rx.dart';
 import 'package:abojude_flutter/features/profile/model/get_notification_setting_model.dart';
 import 'package:abojude_flutter/features/profile/data/update_notification_setting/rx.dart';
+import 'package:abojude_flutter/features/profile/model/get_wishes_list_model.dart';
 import 'package:abojude_flutter/features/profile/model/update_notification_setting_model.dart';
 import 'package:abojude_flutter/features/profile/data/rx_block_user_list/rx.dart';
 import 'package:abojude_flutter/features/profile/model/block_user_list_model.dart';
@@ -307,6 +311,16 @@ GetExploreRx getExploreRxObj = GetExploreRx(
 GetPostDetailsRx getPostDetailsRxObj = GetPostDetailsRx(
   empty: GetPostDetailsModel(),
   dataFetcher: BehaviorSubject<GetPostDetailsModel>(),
+);
+
+GetWishesListRx getWishesListRxObj = GetWishesListRx(
+  empty: GetWishListModel(),
+  dataFetcher: BehaviorSubject<GetWishListModel>(),
+);
+
+SaveWishesRx saveWishesRxObj = SaveWishesRx(
+  empty: GetWhiesSavetModel(),
+  dataFetcher: BehaviorSubject<GetWhiesSavetModel>(),
 );
 
 // FilterListRx studentDesignListRxObj = FilterListRx(
