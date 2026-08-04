@@ -190,7 +190,7 @@ final class Endpoints {
   // -------------------Get buy and sell post draft end-----------------
 
   // ------------------- Create buy and sell post start--------------
-  static String buyAndSellPostCreate() => "/v1/auth/post/create";
+  static String postCreateDraft() => "/v1/auth/post/create";
   // ------------------- Create buy and sell post end-----------------
 
   ///____________________________ferdaus hossan sojib_______________________///
