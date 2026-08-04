@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
-import 'package:abojude_flutter/helpers/toast.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/buy_sell_listing_model.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
-import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_get_post_draft_model.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_post_create_model.dart';
 
 class BuySellSuccessScreen extends StatefulWidget {
@@ -133,9 +131,10 @@ class _BuySellSuccessScreenState extends State<BuySellSuccessScreen> {
 
                       // Pending Approval Status Chip
                       StreamBuilder<BuyAndSellPostCreateModel>(
-                        stream: buyAndSellPostCreateRxObj.getPostCreateData,
+                        stream: createListingAfterDraftRxObj.getPostCreateData,
                         builder: (context, snapshot) {
-                          final status = snapshot.data?.data?.status ?? "pending";
+                          final status =
+                              snapshot.data?.data?.status ?? "pending";
                           final capitalizedStatus = status.isNotEmpty
                               ? status[0].toUpperCase() + status.substring(1)
                               : status;
@@ -204,7 +203,7 @@ class _BuySellSuccessScreenState extends State<BuySellSuccessScreen> {
                   GestureDetector(
                     onTap: () {
                       NavigationService.navigateToUntilReplacement(
-                        Routes.createListingScreen,
+                        Routes.myListingsScreen,
                       );
                     },
                     child: Container(

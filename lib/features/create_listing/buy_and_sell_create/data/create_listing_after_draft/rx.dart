@@ -5,19 +5,26 @@ import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'api.dart';
 
-final class BuyAndSellPostCreateRx extends RxResponseInt<BuyAndSellPostCreateModel> {
-  final api = BuyAndSellPostCreateApi.instance;
+final class CreateListingAfterDraftRx
+    extends RxResponseInt<BuyAndSellPostCreateModel> {
+  final api = CreateListingAfterDraftApi.instance;
 
-  BuyAndSellPostCreateRx({required super.empty, required super.dataFetcher});
+  CreateListingAfterDraftRx({required super.empty, required super.dataFetcher});
 
   final ValueNotifier<bool> isLoading = ValueNotifier(false);
 
-  ValueStream<BuyAndSellPostCreateModel> get getPostCreateData => dataFetcher.stream;
+  ValueStream<BuyAndSellPostCreateModel> get getPostCreateData =>
+      dataFetcher.stream;
 
-  Future<BuyAndSellPostCreateModel> createPost({required String categorySlug}) async {
+  Future<BuyAndSellPostCreateModel> createPost(
+    // { required String categorySlug,}
+  ) async {
     isLoading.value = true;
     try {
-      final data = await api.createPost(categorySlug: categorySlug);
+      final data = await api.createPost(
+        // categorySlug: categorySlug
+        
+        );
       handleSuccessWithReturn(data);
       return data;
     } catch (error) {

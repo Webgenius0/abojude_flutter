@@ -7,6 +7,8 @@ import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_listing_model.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_step_header.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_button.dart';
+import 'package:abojude_flutter/helpers/toast.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 
 class JobStep5ReviewScreen extends StatelessWidget {
   final JobListingModel model;
@@ -278,13 +280,29 @@ class JobStep5ReviewScreen extends StatelessWidget {
             // Submit Button
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-              child: JobButton(
-                text: "Submit Listing",
-                isSubmit: true,
-                onTap: () {
-                  NavigationService.navigateTo(
-                    Routes.jobSuccess,
-                    arguments: model,
+              child: ValueListenableBuilder<bool>(
+                valueListenable: createListingAfterDraftRxObj.isLoading,
+                builder: (context, isLoading, child) {
+                  return JobButton(
+                    text: isLoading ? "Submitting..." : "Submit Listing",
+                    isSubmit: true,
+                    onTap: isLoading
+                        ? () {}
+                        : () {
+                            createListingAfterDraftRxObj
+                                .createPost()
+                                .then((res) {
+                                  NavigationService.navigateTo(
+                                    Routes.jobSuccess,
+                                    arguments: model,
+                                  );
+                                })
+                                .catchError((e) {
+                                  ToastUtil.showShortToast(
+                                    "Failed to submit listing.",
+                                  );
+                                });
+                          },
                   );
                 },
               ),

@@ -5,18 +5,18 @@ import 'package:abojude_flutter/networks/exception_handler/data_source.dart';
 import 'package:dio/dio.dart';
 import '/networks/endpoints.dart';
 
-final class BuyAndSellPostCreateApi {
-  static final BuyAndSellPostCreateApi _singleton =
-      BuyAndSellPostCreateApi._internal();
-  BuyAndSellPostCreateApi._internal();
-  static BuyAndSellPostCreateApi get instance => _singleton;
+final class CreateListingAfterDraftApi {
+  static final CreateListingAfterDraftApi _singleton =
+      CreateListingAfterDraftApi._internal();
+  CreateListingAfterDraftApi._internal();
+  static CreateListingAfterDraftApi get instance => _singleton;
 
-  Future<BuyAndSellPostCreateModel> createPost({
-    required String categorySlug,
-  }) async {
+  Future<BuyAndSellPostCreateModel> createPost(
+    // { required String categorySlug, }
+  ) async {
     try {
       Response response = await postHttp(Endpoints.postCreateDraft(), {
-        "category_slug": categorySlug,
+        // "category_slug": categorySlug,
       });
 
       if (response.statusCode == 200 || response.statusCode == 201) {

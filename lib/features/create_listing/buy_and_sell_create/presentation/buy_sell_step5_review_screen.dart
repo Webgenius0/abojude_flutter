@@ -301,7 +301,7 @@ class _BuySellStep5ReviewScreenState extends State<BuySellStep5ReviewScreen> {
                     vertical: 16.h,
                   ),
                   child: ValueListenableBuilder<bool>(
-                    valueListenable: buyAndSellPostCreateRxObj.isLoading,
+                    valueListenable: createListingAfterDraftRxObj.isLoading,
                     builder: (context, isLoading, child) {
                       return BuySellButton(
                         text: isLoading ? "Submitting..." : "Submit Listing",
@@ -309,8 +309,10 @@ class _BuySellStep5ReviewScreenState extends State<BuySellStep5ReviewScreen> {
                         onTap: isLoading
                             ? () {}
                             : () {
-                                buyAndSellPostCreateRxObj
-                                    .createPost(categorySlug: "buy-sell")
+                                createListingAfterDraftRxObj
+                                    .createPost(
+                                      // categorySlug: "buy-sell"
+                                    )
                                     .then((res) {
                                       NavigationService.navigateTo(
                                         Routes.buySellSuccess,
