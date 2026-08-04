@@ -282,11 +282,6 @@ class JobStep5ReviewScreen extends StatelessWidget {
                 text: "Submit Listing",
                 isSubmit: true,
                 onTap: () {
-                  // NavigationService.navigateTo(
-                  //   Routes.jobDetails,
-                  //   arguments: model,
-                  // );
-
                   NavigationService.navigateTo(
                     Routes.jobSuccess,
                     arguments: model,

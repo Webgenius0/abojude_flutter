@@ -4,6 +4,8 @@ import 'package:abojude_flutter/features/auth/register/data/rx_register_verify_o
 import 'package:abojude_flutter/features/auth/register/model/register_verify_otp_model.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/rx_create_buy_and_sell_category/rx.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_category_post_create_model.dart';
+import 'package:abojude_flutter/features/create_listing/jobs_create/data/rx_job_create/rx.dart';
+import 'package:abojude_flutter/features/create_listing/jobs_create/model/job_post_create_model.dart';
 import 'package:abojude_flutter/features/auth/login/data/rx_login/rx.dart';
 import 'package:abojude_flutter/features/auth/login/model/login_model.dart';
 import 'package:abojude_flutter/features/auth/login/data/rx_logout/rx.dart';
@@ -223,6 +225,13 @@ CreateBuyAndSellCategoryRx createBuyAndSellCategoryRxObj = CreateBuyAndSellCateg
   empty: BuyAndSellCategoryPostCreateModel(),
   dataFetcher: BehaviorSubject<BuyAndSellCategoryPostCreateModel>(),
 );
+
+// // ------------- Create Job Api Access -----------------//
+CreateJobRx createJobRxObj = CreateJobRx(
+  empty: JobPostCreateModel(),
+  dataFetcher: BehaviorSubject<JobPostCreateModel>(),
+);
+
 
 
 // //_________________Update Password Api Access ______________________//
