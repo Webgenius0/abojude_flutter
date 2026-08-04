@@ -23,7 +23,12 @@ class _BusinessStep1PhotosScreenState extends State<BusinessStep1PhotosScreen> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickCoverImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? image = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 70,
+      maxWidth: 1440,
+      maxHeight: 1440,
+    );
     if (image != null) {
       setState(() {
         _model.coverImage = File(image.path);
@@ -32,7 +37,12 @@ class _BusinessStep1PhotosScreenState extends State<BusinessStep1PhotosScreen> {
   }
 
   Future<void> _pickLogo() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? image = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 70,
+      maxWidth: 1440,
+      maxHeight: 1440,
+    );
     if (image != null) {
       setState(() {
         _model.logo = File(image.path);
