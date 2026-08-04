@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
-import 'package:abojude_flutter/helpers/toast.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_listing_model.dart';
@@ -57,11 +56,12 @@ class JobSuccessScreen extends StatelessWidget {
                       Text(
                         "Listing Submitted\nSuccessfully",
                         textAlign: TextAlign.center,
-                        style: TextFontStyle.textStyle22IbmPlexSansW600.copyWith(
-                          fontSize: 22.sp,
-                          color: AppColor.c2E3227,
-                          height: 1.3,
-                        ),
+                        style: TextFontStyle.textStyle22IbmPlexSansW600
+                            .copyWith(
+                              fontSize: 22.sp,
+                              color: AppColor.c2E3227,
+                              height: 1.3,
+                            ),
                       ),
                       SizedBox(height: 12.h),
 
@@ -69,11 +69,12 @@ class JobSuccessScreen extends StatelessWidget {
                       Text(
                         "Your job opportunity has been submitted and is currently awaiting admin approval. It will become visible to other users once approved.",
                         textAlign: TextAlign.center,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: const Color(0xFF6B7280),
-                          fontSize: 13.5,
-                          height: 1.5,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(
+                              color: const Color(0xFF6B7280),
+                              fontSize: 13.5,
+                              height: 1.5,
+                            ),
                       ),
                       SizedBox(height: 32.h),
 
@@ -99,7 +100,8 @@ class JobSuccessScreen extends StatelessWidget {
                               iconBg: const Color(0xFFECFDF5),
                               iconColor: const Color(0xFF10B981),
                               title: "Notification",
-                              subtitle: "You'll be notified when approved or rejected",
+                              subtitle:
+                                  "You'll be notified when approved or rejected",
                             ),
                             const Divider(color: Color(0xFFF3F4F6), height: 1),
                             _buildStatusItem(
@@ -116,11 +118,17 @@ class JobSuccessScreen extends StatelessWidget {
 
                       // Pending Approval Status Chip
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 8.h,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFFF7ED),
                           borderRadius: BorderRadius.circular(20.r),
-                          border: Border.all(color: const Color(0xFFFFEDD5), width: 1),
+                          border: Border.all(
+                            color: const Color(0xFFFFEDD5),
+                            width: 1,
+                          ),
                         ),
                         child: Text(
                           "Status: Pending Approval",
@@ -170,7 +178,7 @@ class JobSuccessScreen extends StatelessWidget {
                   // View My Listings Button
                   GestureDetector(
                     onTap: () {
-                      ToastUtil.showShortToast("My Listings coming soon!");
+                      NavigationService.navigateTo(Routes.myListingsScreen);
                     },
                     child: Container(
                       width: double.infinity,
@@ -213,15 +221,8 @@ class JobSuccessScreen extends StatelessWidget {
         children: [
           Container(
             padding: EdgeInsets.all(8.w),
-            decoration: BoxDecoration(
-              color: iconBg,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              color: iconColor,
-              size: 20.w,
-            ),
+            decoration: BoxDecoration(color: iconBg, shape: BoxShape.circle),
+            child: Icon(icon, color: iconColor, size: 20.w),
           ),
           SizedBox(width: 16.w),
           Expanded(
