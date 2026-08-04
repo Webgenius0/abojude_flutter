@@ -6,21 +6,23 @@ import 'package:dio/dio.dart';
 import '/networks/endpoints.dart';
 
 final class BuyAndSellPostCreateApi {
-  static final BuyAndSellPostCreateApi _singleton = BuyAndSellPostCreateApi._internal();
+  static final BuyAndSellPostCreateApi _singleton =
+      BuyAndSellPostCreateApi._internal();
   BuyAndSellPostCreateApi._internal();
   static BuyAndSellPostCreateApi get instance => _singleton;
 
-  Future<BuyAndSellPostCreateModel> createPost({required String categorySlug}) async {
+  Future<BuyAndSellPostCreateModel> createPost({
+    required String categorySlug,
+  }) async {
     try {
-      Response response = await postHttp(
-        Endpoints.buyAndSellPostCreate(),
-        {
-          "category_slug": categorySlug,
-        },
-      );
+      Response response = await postHttp(Endpoints.postCreateDraft(), {
+        "category_slug": categorySlug,
+      });
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = BuyAndSellPostCreateModel.fromRawJson(json.encode(response.data));
+        final data = BuyAndSellPostCreateModel.fromRawJson(
+          json.encode(response.data),
+        );
         return data;
       } else {
         throw DataSource.DEFAULT.getFailure();
