@@ -20,20 +20,18 @@ final class Endpoints {
 
   // ------------------- Azizul Hakim -------------------
 
- 
- 
   // -------------------Register start-------------------
-   static String register() => "/v1/sign-up";
+  static String register() => "/v1/sign-up";
   static String registerVerifyOtp() => "/v1/verify/otp";
   static String getProvinceList() => "/v1/locations/provinces";
   static String getCitiesList(String province) =>
       "/v1/locations/provinces/$province/cities";
   static String selectLocationForAuthUser() => "/v1/locations/select";
   static String guestUserLocation() => "/v1/guest/location";
-   // -------------------Guest user location end-------------------
+  // -------------------Guest user location end-------------------
 
   // -------------------Login start-------------------
-   static String login() => "/v1/login";
+  static String login() => "/v1/login";
   static String logout() => "/v1/auth/logout";
   static String deleteAccount() => "/v1/auth/delete-account";
   static String forgetPassword() => "/v1/forgot-password";
@@ -42,20 +40,20 @@ final class Endpoints {
   static String forgetPasswordVerifyOtp() => "/v1/verify/otp";
   static String guestUser() => "/v1/guest";
   static String resendOtp() => "/v1/resend-otp";
-  
+
   // -------------------Resend Otp end-------------------
 
   // ------------------- GetCategoryList start--------------
-   static String getCategoryList() => "/v1/categories";
+  static String getCategoryList() => "/v1/categories";
   static String getRecentPostList() => "/v1/posts/recent";
 
-   //......................ABu essa start..............................
+  //......................ABu essa start..............................
   static String jobCreate() => "/v1/auth/post/draft";
 
   //......................ABu essa end..............................
 
-   // ------------------- GetFeaturedListings start-------------------
-   static String getFeaturedListings({int page = 1, int perPage = 10}) =>
+  // ------------------- GetFeaturedListings start-------------------
+  static String getFeaturedListings({int page = 1, int perPage = 10}) =>
       "/v1/posts/featured?page=$page&per_page=$perPage";
   // -------------------GetFeaturedListings end-------------------
 
@@ -149,7 +147,7 @@ final class Endpoints {
   // ------------------- Create buy and sell category list start--------------
   static String createBuyAndSellCategory() => "/v1/auth/post/draft";
   // -------------------Create buy and sell category list end-----------------
- 
+
   // ------------------- Get buy and sell post draft start--------------
   static String buyAndSellGetPostDraft() => "/v1/auth/post/draft";
   // -------------------Get buy and sell post draft end-----------------
@@ -157,23 +155,15 @@ final class Endpoints {
   // ------------------- Create buy and sell post start--------------
   static String postCreateDraft() => "/v1/auth/post/create";
   // ------------------- Create buy and sell post end-----------------
- 
+
   ///____________________________ferdaus hossan sojib_______________________///
 
   static String chatList() => "/v1/auth/conversations";
-   static String postDetails(int postId) => "/v1/post/details?post_id=$postId";
-  
-  static String getMyList({
-    int page = 1,
-    int perPage = 10,
-  }) =>
-      "/v1/auth/posts?page=$page&per_page=$perPage";
- 
-
   static String postDetails(int postId) => "/v1/post/details?post_id=$postId";
- 
+
   static String wishesList() => "/v1/auth/wishes";
   static String saveWishe() => "/v1/auth/wishes";
-  static String postDetails(int postId) =>
-      "/v1/post/details?post_id=$postId";
- }
+
+  static String getMyList({int page = 1, int perPage = 10}) =>
+      "/v1/auth/posts?page=$page&per_page=$perPage";
+}
