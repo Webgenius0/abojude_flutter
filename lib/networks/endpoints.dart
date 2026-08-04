@@ -18,9 +18,8 @@ final class NetworkConstants {
 final class Endpoints {
   Endpoints._();
 
-
   // ------------------- Azizul Hakim -------------------
-  
+
   // -------------------Register start-------------------
   static String register() => "/v1/sign-up";
   // -------------------Register end-------------------
@@ -45,7 +44,6 @@ final class Endpoints {
   // -------------------Guest user location start-----------------
   static String guestUserLocation() => "/v1/guest/location";
   // -------------------Guest user location end-------------------
- 
 
   // -------------------Login start-------------------
   static String login() => "/v1/login";
@@ -83,7 +81,7 @@ final class Endpoints {
   static String resendOtp() => "/v1/resend-otp";
   // -------------------Resend Otp end-------------------
 
-    // ------------------- GetCategoryList start--------------
+  // ------------------- GetCategoryList start--------------
   static String getCategoryList() => "/v1/categories";
   // -------------------GetCategoryList end-------------------
 
@@ -92,10 +90,7 @@ final class Endpoints {
   // -------------------GetRecentPostList end-------------------
 
   // ------------------- GetFeaturedListings start-------------------
-  static String getFeaturedListings({
-    int page = 1,
-    int perPage = 10,
-  }) =>
+  static String getFeaturedListings({int page = 1, int perPage = 10}) =>
       "/v1/posts/featured?page=$page&per_page=$perPage";
   // -------------------GetFeaturedListings end-------------------
 
@@ -186,20 +181,31 @@ final class Endpoints {
   static String getWishList() => "/v1/auth/wishes";
   // -------------------GetWishList end-------------------
 
- // ------------------- Create buy and sell category list start--------------
+  // ------------------- Create buy and sell category list start--------------
   static String createBuyAndSellCategory() => "/v1/auth/post/draft";
- // -------------------Create buy and sell category list end-----------------
+  // -------------------Create buy and sell category list end-----------------
 
+  // ------------------- Get buy and sell post draft start--------------
+  static String buyAndSellGetPostDraft() => "/v1/auth/post/draft";
+  // -------------------Get buy and sell post draft end-----------------
 
-///____________________________ferdaus hossan sojib_______________________///
+  // ------------------- Create buy and sell post start--------------
+  static String buyAndSellPostCreate() => "/v1/auth/post/create";
+  // ------------------- Create buy and sell post end-----------------
 
+  ///____________________________ferdaus hossan sojib_______________________///
 
   static String chatList() => "/v1/auth/conversations";
+ 
   static String getMyList({
     int page = 1,
     int perPage = 10,
   }) =>
       "/v1/auth/posts?page=$page&per_page=$perPage";
+ 
+
+  static String postDetails(int postId) => "/v1/post/details?post_id=$postId";
+ 
   static String wishesList() => "/v1/auth/wishes";
   static String saveWishe() => "/v1/auth/wishes";
   static String postDetails(int postId) =>

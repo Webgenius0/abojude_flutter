@@ -45,7 +45,12 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
 
   Future<void> _pickScreenshot() async {
     try {
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 70,
+        maxWidth: 1440,
+        maxHeight: 1440,
+      );
       if (image != null) setState(() => _screenshotFile = File(image.path));
     } catch (e) {
       if (!mounted) return;

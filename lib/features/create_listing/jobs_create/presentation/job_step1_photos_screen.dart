@@ -22,7 +22,12 @@ class _JobStep1PhotosScreenState extends State<JobStep1PhotosScreen> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? image = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 70,
+      maxWidth: 1440,
+      maxHeight: 1440,
+    );
     if (image != null) {
       setState(() {
         _model.image = File(image.path);
