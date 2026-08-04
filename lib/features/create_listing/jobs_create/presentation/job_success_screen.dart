@@ -152,7 +152,7 @@ class JobSuccessScreen extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       NavigationService.navigateToUntilReplacement(
-                        Routes.navigationMenu, 
+                        Routes.navigationMenu,
                       );
                     },
                     child: Container(
