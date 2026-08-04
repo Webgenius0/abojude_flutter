@@ -6,11 +6,25 @@ import 'package:abojude_flutter/helpers/toast.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/buy_sell_listing_model.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_get_post_draft_model.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_post_create_model.dart';
 
-class BuySellSuccessScreen extends StatelessWidget {
+class BuySellSuccessScreen extends StatefulWidget {
   final BuySellListingModel model;
 
   const BuySellSuccessScreen({super.key, required this.model});
+
+  @override
+  State<BuySellSuccessScreen> createState() => _BuySellSuccessScreenState();
+}
+
+class _BuySellSuccessScreenState extends State<BuySellSuccessScreen> {
+  @override
+  void initState() {
+    super.initState();
+    buyAndSellGetPostDraftRxObj.getPostDraft();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +71,12 @@ class BuySellSuccessScreen extends StatelessWidget {
                       Text(
                         "Listing Submitted\nSuccessfully",
                         textAlign: TextAlign.center,
-                        style: TextFontStyle.textStyle22IbmPlexSansW600.copyWith(
-                          fontSize: 22.sp,
-                          color: AppColor.c2E3227,
-                          height: 1.3,
-                        ),
+                        style: TextFontStyle.textStyle22IbmPlexSansW600
+                            .copyWith(
+                              fontSize: 22.sp,
+                              color: AppColor.c2E3227,
+                              height: 1.3,
+                            ),
                       ),
                       SizedBox(height: 12.h),
 
@@ -69,11 +84,12 @@ class BuySellSuccessScreen extends StatelessWidget {
                       Text(
                         "Your listing has been submitted and is currently awaiting admin approval. It will become visible to other users once approved.",
                         textAlign: TextAlign.center,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: const Color(0xFF6B7280),
-                          fontSize: 13.5,
-                          height: 1.5,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(
+                              color: const Color(0xFF6B7280),
+                              fontSize: 13.5,
+                              height: 1.5,
+                            ),
                       ),
                       SizedBox(height: 32.h),
 
@@ -99,7 +115,8 @@ class BuySellSuccessScreen extends StatelessWidget {
                               iconBg: const Color(0xFFECFDF5),
                               iconColor: const Color(0xFF10B981),
                               title: "Notification",
-                              subtitle: "You'll be notified when approved or rejected",
+                              subtitle:
+                                  "You'll be notified when approved or rejected",
                             ),
                             const Divider(color: Color(0xFFF3F4F6), height: 1),
                             _buildStatusItem(
@@ -115,21 +132,37 @@ class BuySellSuccessScreen extends StatelessWidget {
                       SizedBox(height: 28.h),
 
                       // Pending Approval Status Chip
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFFF7ED),
-                          borderRadius: BorderRadius.circular(20.r),
-                          border: Border.all(color: const Color(0xFFFFEDD5), width: 1),
-                        ),
-                        child: Text(
-                          "Status: Pending Approval",
-                          style: TextStyle(
-                            color: const Color(0xFFEA580C),
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                      StreamBuilder<BuyAndSellPostCreateModel>(
+                        stream: buyAndSellPostCreateRxObj.getPostCreateData,
+                        builder: (context, snapshot) {
+                          final status = snapshot.data?.data?.status ?? "pending";
+                          final capitalizedStatus = status.isNotEmpty
+                              ? status[0].toUpperCase() + status.substring(1)
+                              : status;
+
+                          return Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 8.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFFF7ED),
+                              borderRadius: BorderRadius.circular(20.r),
+                              border: Border.all(
+                                color: const Color(0xFFFFEDD5),
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              "Status: $capitalizedStatus",
+                              style: TextStyle(
+                                color: const Color(0xFFEA580C),
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                       SizedBox(height: 24.h),
                     ],
@@ -144,7 +177,7 @@ class BuySellSuccessScreen extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       NavigationService.navigateToUntilReplacement(
-                        Routes.createListingScreen,
+                        Routes.navigationMenu,
                       );
                     },
                     child: Container(
@@ -170,7 +203,9 @@ class BuySellSuccessScreen extends StatelessWidget {
                   // View My Listings Button
                   GestureDetector(
                     onTap: () {
-                      ToastUtil.showShortToast("My Listings coming soon!");
+                      NavigationService.navigateToUntilReplacement(
+                        Routes.createListingScreen,
+                      );
                     },
                     child: Container(
                       width: double.infinity,
@@ -213,15 +248,8 @@ class BuySellSuccessScreen extends StatelessWidget {
         children: [
           Container(
             padding: EdgeInsets.all(8.w),
-            decoration: BoxDecoration(
-              color: iconBg,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              color: iconColor,
-              size: 20.w,
-            ),
+            decoration: BoxDecoration(color: iconBg, shape: BoxShape.circle),
+            child: Icon(icon, color: iconColor, size: 20.w),
           ),
           SizedBox(width: 16.w),
           Expanded(

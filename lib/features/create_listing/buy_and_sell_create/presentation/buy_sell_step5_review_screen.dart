@@ -7,266 +7,327 @@ import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/buy_sell_listing_model.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/buy_sell_step_header.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/buy_sell_button.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_get_post_draft_model.dart';
 
-class BuySellStep5ReviewScreen extends StatelessWidget {
+class BuySellStep5ReviewScreen extends StatefulWidget {
   final BuySellListingModel model;
 
   const BuySellStep5ReviewScreen({super.key, required this.model});
 
   @override
+  State<BuySellStep5ReviewScreen> createState() =>
+      _BuySellStep5ReviewScreenState();
+}
+
+class _BuySellStep5ReviewScreenState extends State<BuySellStep5ReviewScreen> {
+  @override
+  void initState() {
+    super.initState();
+    buyAndSellGetPostDraftRxObj.getPostDraft();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final imageFile = model.images.isNotEmpty ? model.images[0] : null;
+    final imageFile = widget.model.images.isNotEmpty
+        ? widget.model.images[0]
+        : null;
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: BuySellStepHeader(currentStep: 5, title: "Review & Submit"),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Review your listing details before submitting for approval.",
-                      style: TextFontStyle.textStyle14IbmPlexSansW400,
-                    ),
-                    SizedBox(height: 24.h),
+        child: StreamBuilder<BuyAndSellGetPostDraftModel>(
+          stream: buyAndSellGetPostDraftRxObj.getPostDraftData,
+          builder: (context, snapshot) {
+            final draftData = snapshot.data?.data;
+            final displayTitle = draftData?.title ?? widget.model.title;
+            final displayProvince =
+                draftData?.province ?? widget.model.province;
+            final displayCity = draftData?.city ?? widget.model.city;
+            final displayPrice = widget.model.price;
 
-                    // Preview Listing Card
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16.r),
-                        border: Border.all(
-                          color: const Color(0xFFEFF4FC),
-                          width: 1.5,
+            return Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 16.h,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Review your listing details before submitting for approval.",
+                          style: TextFontStyle.textStyle14IbmPlexSansW400,
                         ),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x04000000),
-                            blurRadius: 10,
-                            offset: Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Thumbnail Image Area
-                          if (imageFile != null)
-                            Stack(
-                              children: [
-                                Container(
-                                  height: 200.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(16.r),
-                                    ),
-                                    image: DecorationImage(
-                                      image: FileImage(imageFile),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                // Click to see public view overlay banner
-                                Positioned(
-                                  bottom: 0,
-                                  left: 0,
-                                  right: 0,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16.w,
-                                      vertical: 10.h,
-                                    ),
-                                    decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.bottomCenter,
-                                        end: Alignment.topCenter,
-                                        colors: [
-                                          Color(
-                                            0x99000000,
-                                          ), // 60% opacity black
-                                          Colors.transparent,
-                                        ],
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "Click to See Public View",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                        SizedBox(height: 24.h),
+
+                        // Preview Listing Card
+                        GestureDetector(
+                          onTap: () {
+                            NavigationService.navigateTo(
+                              Routes.buySellDetails,
+                              arguments: widget.model,
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16.r),
+                              border: Border.all(
+                                color: const Color(0xFFEFF4FC),
+                                width: 1.5,
+                              ),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x04000000),
+                                  blurRadius: 10,
+                                  offset: Offset(0, 4),
                                 ),
                               ],
-                            )
-                          else
-                            Container(
-                              height: 180.h,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF3F4F6),
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(16.r),
-                                ),
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  Icons.image_not_supported_outlined,
-                                  color: const Color(0xFF9CA3AF),
-                                  size: 40.w,
-                                ),
-                              ),
                             ),
-
-                          // Text Content details
-                          Padding(
-                            padding: EdgeInsets.all(16.w),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Price
-                                Text(
-                                  model.price,
-                                  style: TextFontStyle
-                                      .textStyle22IbmPlexSansW600
-                                      .copyWith(
-                                        color: const Color(0xFF1D3B71),
-                                        fontSize: 18.sp,
-                                      ),
-                                ),
-                                SizedBox(height: 6.h),
-                                // Title
-                                Text(
-                                  model.title,
-                                  style: TextFontStyle
-                                      .textStyle16IbmPlexSansW600
-                                      .copyWith(
-                                        color: AppColor.c2E3227,
-                                        fontSize: 15.sp,
-                                      ),
-                                ),
-                                SizedBox(height: 12.h),
-
-                                // Badges
-                                Row(
-                                  children: [
-                                    // Category Badge
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 12.w,
-                                        vertical: 6.h,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFF3F4F6),
-                                        borderRadius: BorderRadius.circular(
-                                          6.r,
+                                // Thumbnail Image Area
+                                if (imageFile != null)
+                                  Stack(
+                                    children: [
+                                      Container(
+                                        height: 200.h,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(16.r),
+                                          ),
+                                          image: DecorationImage(
+                                            image: FileImage(imageFile),
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
-                                      child: Text(
-                                        "Buy & Sell",
+                                      // Click to see public view overlay banner
+                                      Positioned(
+                                        bottom: 0,
+                                        left: 0,
+                                        right: 0,
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 16.w,
+                                            vertical: 10.h,
+                                          ),
+                                          decoration: const BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.bottomCenter,
+                                              end: Alignment.topCenter,
+                                              colors: [
+                                                Color(
+                                                  0x99000000,
+                                                ), // 60% opacity black
+                                                Colors.transparent,
+                                              ],
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              "Click to See Public View",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                else
+                                  Container(
+                                    height: 180.h,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF3F4F6),
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(16.r),
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.image_not_supported_outlined,
+                                        color: const Color(0xFF9CA3AF),
+                                        size: 40.w,
+                                      ),
+                                    ),
+                                  ),
+
+                                // Text Content details
+                                Padding(
+                                  padding: EdgeInsets.all(16.w),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Price
+                                      Text(
+                                        displayPrice,
                                         style: TextFontStyle
-                                            .textStyle14IbmPlexSansW400
+                                            .textStyle22IbmPlexSansW600
                                             .copyWith(
-                                              fontSize: 12.sp,
-                                              color: const Color(0xFF4B5563),
-                                              fontWeight: FontWeight.w500,
+                                              color: const Color(0xFF1D3B71),
+                                              fontSize: 18.sp,
                                             ),
                                       ),
-                                    ),
-                                    SizedBox(width: 12.w),
-                                    // Location Badge
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.location_on_outlined,
-                                          size: 16.w,
-                                          color: const Color(0xFF797A7C),
-                                        ),
-                                        SizedBox(width: 4.w),
-                                        Text(
-                                          "${model.city}, ${model.province}",
-                                          style: TextFontStyle
-                                              .textStyle14IbmPlexSansW400
-                                              .copyWith(
-                                                fontSize: 12.sp,
+                                      SizedBox(height: 6.h),
+                                      // Title
+                                      Text(
+                                        displayTitle,
+                                        style: TextFontStyle
+                                            .textStyle16IbmPlexSansW600
+                                            .copyWith(
+                                              color: AppColor.c2E3227,
+                                              fontSize: 15.sp,
+                                            ),
+                                      ),
+                                      SizedBox(height: 12.h),
+
+                                      // Badges
+                                      Row(
+                                        children: [
+                                          // Category Badge
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 12.w,
+                                              vertical: 6.h,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFFF3F4F6),
+                                              borderRadius:
+                                                  BorderRadius.circular(6.r),
+                                            ),
+                                            child: Text(
+                                              "Buy & Sell",
+                                              style: TextFontStyle
+                                                  .textStyle14IbmPlexSansW400
+                                                  .copyWith(
+                                                    fontSize: 12.sp,
+                                                    color: const Color(
+                                                      0xFF4B5563,
+                                                    ),
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 12.w),
+                                          // Location Badge
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.location_on_outlined,
+                                                size: 16.w,
                                                 color: const Color(0xFF797A7C),
                                               ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                              SizedBox(width: 4.w),
+                                              Text(
+                                                "$displayCity, $displayProvince",
+                                                style: TextFontStyle
+                                                    .textStyle14IbmPlexSansW400
+                                                    .copyWith(
+                                                      fontSize: 12.sp,
+                                                      color: const Color(
+                                                        0xFF797A7C,
+                                                      ),
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 24.h),
-
-                    // Before You Submit Box
-                    Text(
-                      "Before You Submit",
-                      style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
-                        fontSize: 15.sp,
-                      ),
-                    ),
-                    SizedBox(height: 10.h),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(16.w),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFEFBF0),
-                        borderRadius: BorderRadius.circular(12.r),
-                        border: Border.all(
-                          color: const Color(0xFFFDE68A),
-                          width: 1.0,
                         ),
-                      ),
-                      child: Column(
-                        children: [
-                          _buildBulletPoint(
-                            "Your listing will be reviewed by our team",
+                        SizedBox(height: 24.h),
+
+                        // Before You Submit Box
+                        Text(
+                          "Before You Submit",
+                          style: TextFontStyle.textStyle16IbmPlexSansW600
+                              .copyWith(fontSize: 15.sp),
+                        ),
+                        SizedBox(height: 10.h),
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(16.w),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFEFBF0),
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(
+                              color: const Color(0xFFFDE68A),
+                              width: 1.0,
+                            ),
                           ),
-                          _buildBulletPoint(
-                            "Review usually takes up to 24 hours",
+                          child: Column(
+                            children: [
+                              _buildBulletPoint(
+                                "Your listing will be reviewed by our team",
+                              ),
+                              _buildBulletPoint(
+                                "Review usually takes up to 24 hours",
+                              ),
+                              _buildBulletPoint(
+                                "You'll be notified once approved",
+                              ),
+                              _buildBulletPoint(
+                                "Approved listings become visible to all users",
+                              ),
+                              _buildBulletPoint(
+                                "You can edit or remove your listing later",
+                              ),
+                            ],
                           ),
-                          _buildBulletPoint("You'll be notified once approved"),
-                          _buildBulletPoint(
-                            "Approved listings become visible to all users",
-                          ),
-                          _buildBulletPoint(
-                            "You can edit or remove your listing later",
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            // Submit Button
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-              child: BuySellButton(
-                text: "Submit Listing",
-                isSubmit: true,
-                onTap: () {
-                  NavigationService.navigateTo(
-                    Routes.buySellDetails,
-                    arguments: model,
-                  );
-                },
-              ),
-            ),
-          ],
+                // Submit Button
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 16.h,
+                  ),
+                  child: ValueListenableBuilder<bool>(
+                    valueListenable: buyAndSellPostCreateRxObj.isLoading,
+                    builder: (context, isLoading, child) {
+                      return BuySellButton(
+                        text: isLoading ? "Submitting..." : "Submit Listing",
+                        isSubmit: true,
+                        onTap: isLoading
+                            ? () {}
+                            : () {
+                                buyAndSellPostCreateRxObj
+                                    .createPost(categorySlug: "buy-sell")
+                                    .then((res) {
+                                      NavigationService.navigateTo(
+                                        Routes.buySellSuccess,
+                                        arguments: widget.model,
+                                      );
+                                    })
+                                    .catchError((e) {
+                                      // Optionally show toast or let rx handle error
+                                    });
+                              },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

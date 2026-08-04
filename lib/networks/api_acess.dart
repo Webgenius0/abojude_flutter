@@ -4,6 +4,10 @@ import 'package:abojude_flutter/features/auth/register/data/rx_register_verify_o
 import 'package:abojude_flutter/features/auth/register/model/register_verify_otp_model.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/rx_create_buy_and_sell_category/rx.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_category_post_create_model.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/rx_buy_and_sell_get_post_draft/rx.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_get_post_draft_model.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/buy_and_sell_create_listing/rx.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_post_create_model.dart';
 import 'package:abojude_flutter/features/auth/login/data/rx_login/rx.dart';
 import 'package:abojude_flutter/features/auth/login/model/login_model.dart';
 import 'package:abojude_flutter/features/auth/login/data/rx_logout/rx.dart';
@@ -223,6 +227,20 @@ CreateBuyAndSellCategoryRx createBuyAndSellCategoryRxObj = CreateBuyAndSellCateg
   empty: BuyAndSellCategoryPostCreateModel(),
   dataFetcher: BehaviorSubject<BuyAndSellCategoryPostCreateModel>(),
 );
+
+// // ------------- Get Buy and Sell Post Draft Api Access -----------------//
+BuyAndSellGetPostDraftRx buyAndSellGetPostDraftRxObj = BuyAndSellGetPostDraftRx(
+  empty: BuyAndSellGetPostDraftModel(),
+  dataFetcher: BehaviorSubject<BuyAndSellGetPostDraftModel>(),
+);
+
+// // ------------- Create Buy and Sell Post Api Access -----------------//
+BuyAndSellPostCreateRx buyAndSellPostCreateRxObj = BuyAndSellPostCreateRx(
+  empty: BuyAndSellPostCreateModel(),
+  dataFetcher: BehaviorSubject<BuyAndSellPostCreateModel>(),
+);
+
+
 
 
 // //_________________Update Password Api Access ______________________//
