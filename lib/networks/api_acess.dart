@@ -225,8 +225,6 @@ CreateBuyAndSellCategoryRx createBuyAndSellCategoryRxObj = CreateBuyAndSellCateg
 );
 
 
-
-
 // //_________________Update Password Api Access ______________________//
 // UpdatePasswordRx updatePasswordRxObj =
 //     UpdatePasswordRx(empty: {}, dataFetcher: BehaviorSubject<Map>());
