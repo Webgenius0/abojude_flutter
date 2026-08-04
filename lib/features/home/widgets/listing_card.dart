@@ -8,7 +8,7 @@ import 'package:abojude_flutter/features/explore_deatils_screen/business_screen.
 import 'package:abojude_flutter/features/explore_deatils_screen/job_screen.dart';
 import 'package:abojude_flutter/features/explore_deatils_screen/services_screen.dart';
 import 'package:abojude_flutter/features/home/presentation/product_details_screen.dart';
-import 'package:abojude_flutter/features/home/model/recent_post_list_model.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 
 class ListingCard extends StatefulWidget {
   final dynamic item;
@@ -221,10 +221,18 @@ class _ListingCardState extends State<ListingCard> {
                         if (item is Map) {
                           item['isFavorite'] =
                               !(item['isFavorite'] as bool? ?? false);
-                        } else if (item is Datum) {
-                          item.isWish = !(item.isWish ?? false);
+                        } else {
+                          try {
+                            (item as dynamic).isWish =
+                                !((item as dynamic).isWish ?? false);
+                          } catch (_) {}
                         }
                       });
+
+                      if (postId != null) {
+                        saveWishesRxObj.save(postId: postId);
+                      }
+
                       widget.onFavoriteToggle?.call();
                     },
                     child: Container(
