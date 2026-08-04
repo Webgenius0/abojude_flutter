@@ -195,6 +195,11 @@ final class Endpoints {
 
 
   static String chatList() => "/v1/auth/conversations";
+  static String getMyList({
+    int page = 1,
+    int perPage = 10,
+  }) =>
+      "/v1/auth/posts?page=$page&per_page=$perPage";
   static String wishesList() => "/v1/auth/wishes";
   static String saveWishe() => "/v1/auth/wishes";
   static String postDetails(int postId) =>
