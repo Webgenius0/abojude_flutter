@@ -27,7 +27,12 @@ class _BuySellStep1PhotosScreenState extends State<BuySellStep1PhotosScreen> {
       ToastUtil.showShortToast("You can only add up to 5 photos.");
       return;
     }
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? image = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 70,
+      maxWidth: 1440,
+      maxHeight: 1440,
+    );
     if (image != null) {
       setState(() {
         _model.images.add(File(image.path));

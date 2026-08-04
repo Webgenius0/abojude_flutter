@@ -4,8 +4,15 @@ import 'package:abojude_flutter/features/auth/register/data/rx_register_verify_o
 import 'package:abojude_flutter/features/auth/register/model/register_verify_otp_model.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/rx_create_buy_and_sell_category/rx.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_category_post_create_model.dart';
+<<<<<<< HEAD
 import 'package:abojude_flutter/features/create_listing/jobs_create/data/rx_job_create/rx.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/model/job_post_create_model.dart';
+=======
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/rx_buy_and_sell_get_post_draft/rx.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_get_post_draft_model.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/buy_and_sell_create_listing/rx.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_post_create_model.dart';
+>>>>>>> 84a94ed43beb15f8f02080089aa757d68af1cee4
 import 'package:abojude_flutter/features/auth/login/data/rx_login/rx.dart';
 import 'package:abojude_flutter/features/auth/login/model/login_model.dart';
 import 'package:abojude_flutter/features/auth/login/data/rx_logout/rx.dart';
@@ -31,6 +38,11 @@ import 'package:abojude_flutter/features/home/model/get_explore_model.dart';
 import 'package:abojude_flutter/features/home/data/rx_all_porducaosn_deatils_api/rx.dart';
 import 'package:abojude_flutter/features/home/model/get_post_details_model.dart';
 import 'package:abojude_flutter/features/profile/data/rx_change_password/rx.dart';
+import 'package:abojude_flutter/features/profile/data/rx_my_listing_api/rx.dart';
+import 'package:abojude_flutter/features/profile/data/rx_my_whises_list_api/rx.dart';
+import 'package:abojude_flutter/features/profile/data/rx_save_wishes_api/rx.dart';
+import 'package:abojude_flutter/features/profile/model/my_listing_model.dart';
+import 'package:abojude_flutter/features/profile/model/wishes_save_model.dart';
 import 'package:abojude_flutter/features/profile/model/change_password_model.dart';
 import 'package:abojude_flutter/features/auth/set_new_password/data/rx_set_new_password/rx.dart';
 import 'package:abojude_flutter/features/auth/set_new_password/model/set_new_password_model.dart'
@@ -40,6 +52,7 @@ import 'package:abojude_flutter/features/profile/model/get_profile_model.dart';
 import 'package:abojude_flutter/features/profile/data/get_notification_setting/rx.dart';
 import 'package:abojude_flutter/features/profile/model/get_notification_setting_model.dart';
 import 'package:abojude_flutter/features/profile/data/update_notification_setting/rx.dart';
+import 'package:abojude_flutter/features/profile/model/get_wishes_list_model.dart';
 import 'package:abojude_flutter/features/profile/model/update_notification_setting_model.dart';
 import 'package:abojude_flutter/features/profile/data/rx_block_user_list/rx.dart';
 import 'package:abojude_flutter/features/profile/model/block_user_list_model.dart';
@@ -226,6 +239,7 @@ CreateBuyAndSellCategoryRx createBuyAndSellCategoryRxObj = CreateBuyAndSellCateg
   dataFetcher: BehaviorSubject<BuyAndSellCategoryPostCreateModel>(),
 );
 
+<<<<<<< HEAD
 // // ------------- Create Job Api Access -----------------//
 CreateJobRx createJobRxObj = CreateJobRx(
   empty: JobPostCreateModel(),
@@ -233,6 +247,22 @@ CreateJobRx createJobRxObj = CreateJobRx(
 );
 
 
+=======
+// // ------------- Get Buy and Sell Post Draft Api Access -----------------//
+BuyAndSellGetPostDraftRx buyAndSellGetPostDraftRxObj = BuyAndSellGetPostDraftRx(
+  empty: BuyAndSellGetPostDraftModel(),
+  dataFetcher: BehaviorSubject<BuyAndSellGetPostDraftModel>(),
+);
+
+// // ------------- Create Buy and Sell Post Api Access -----------------//
+BuyAndSellPostCreateRx buyAndSellPostCreateRxObj = BuyAndSellPostCreateRx(
+  empty: BuyAndSellPostCreateModel(),
+  dataFetcher: BehaviorSubject<BuyAndSellPostCreateModel>(),
+);
+
+
+
+>>>>>>> 84a94ed43beb15f8f02080089aa757d68af1cee4
 
 // //_________________Update Password Api Access ______________________//
 // UpdatePasswordRx updatePasswordRxObj =
@@ -316,6 +346,21 @@ GetExploreRx getExploreRxObj = GetExploreRx(
 GetPostDetailsRx getPostDetailsRxObj = GetPostDetailsRx(
   empty: GetPostDetailsModel(),
   dataFetcher: BehaviorSubject<GetPostDetailsModel>(),
+);
+
+GetWishesListRx getWishesListRxObj = GetWishesListRx(
+  empty: GetWishListModel(),
+  dataFetcher: BehaviorSubject<GetWishListModel>(),
+);
+
+GetMyListRx getMyListRxObj = GetMyListRx(
+  empty: GetMyListingModel(),
+  dataFetcher: BehaviorSubject<GetMyListingModel>(),
+);
+
+SaveWishesRx saveWishesRxObj = SaveWishesRx(
+  empty: GetWhiesSavetModel(),
+  dataFetcher: BehaviorSubject<GetWhiesSavetModel>(),
 );
 
 // FilterListRx studentDesignListRxObj = FilterListRx(

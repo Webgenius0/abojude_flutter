@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -180,15 +181,13 @@ class _ExploreScreenState extends State<ExploreScreen>
                     }
 
                     final rawItems = snapshot.data?.data ?? [];
-                    final List<Listing> listings =
-                        rawItems.map((d) => Listing.fromDatum(d)).toList();
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildResultCount(listings.length),
+                        _buildResultCount(rawItems.length),
                         Expanded(
-                          child: _buildListingsGrid(listings),
+                          child: _buildListingsGrid(rawItems),
                         ),
                       ],
                     );
@@ -373,8 +372,8 @@ class _ExploreScreenState extends State<ExploreScreen>
     );
   }
 
-  Widget _buildListingsGrid(List<Listing> listings) {
-    if (listings.isEmpty) {
+  Widget _buildListingsGrid(List<Datum> rawItems) {
+    if (rawItems.isEmpty) {
       return Center(
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -410,9 +409,10 @@ class _ExploreScreenState extends State<ExploreScreen>
         crossAxisSpacing: 12,
         childAspectRatio: 0.72,
       ),
-      itemCount: listings.length,
+      itemCount: rawItems.length,
       itemBuilder: (context, index) {
-        final item = listings[index];
+        final datum = rawItems[index];
+        final item = Listing.fromDatum(datum);
         final double start = (index * 0.05).clamp(0.0, 0.7);
         final double end = (start + 0.3).clamp(0.3, 1.0);
 
@@ -440,7 +440,6 @@ class _ExploreScreenState extends State<ExploreScreen>
             child: GestureDetector(
               onTap: () {
                 final category = item.category;
-
                 final int? postId = int.tryParse(item.id);
 
                 if (category.toLowerCase().contains('buy') ||
@@ -460,8 +459,11 @@ class _ExploreScreenState extends State<ExploreScreen>
                 listing: item,
                 onFavoriteToggle: () {
                   setState(() {
-                    item.isFavorited = !item.isFavorited;
+                    datum.isWish = !(datum.isWish ?? false);
                   });
+                  if (datum.id != null) {
+                    saveWishesRxObj.save(postId: datum.id!);
+                  }
                 },
               ),
             ),
@@ -615,10 +617,11 @@ class _ListingCard extends StatelessWidget {
           top: 8,
           right: 8,
           child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: onFavoriteToggle,
             child: Container(
-              width: 30,
-              height: 30,
+              width: 30.w,
+              height: 30.h,
               decoration: BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
@@ -663,8 +666,8 @@ class _ListingCard extends StatelessWidget {
             ],
             Text(
               listing.title,
-              style: const TextStyle(
-                fontSize: 13,
+              style:   TextStyle(
+                fontSize: 13.sp,
                 fontWeight: FontWeight.w600,
                 color: Color(0xFF111827),
                 height: 1.3,
@@ -675,34 +678,34 @@ class _ListingCard extends StatelessWidget {
             const SizedBox(height: 6),
             if (listing.category.isNotEmpty)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                padding:   EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF3F4F6),
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(6.r),
                 ),
                 child: Text(
                   listing.category,
-                  style: const TextStyle(
-                    fontSize: 11,
+                  style:   TextStyle(
+                    fontSize: 11.sp,
                     color: Color(0xFF374151),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
-            const SizedBox(height: 6),
+              SizedBox(height: 6.h),
             Row(
               children: [
-                const Icon(
+                  Icon(
                   Icons.location_on_outlined,
-                  size: 12,
+                  size: 12.sp,
                   color: Color(0xFF9CA3AF),
                 ),
-                const SizedBox(width: 3),
+                  SizedBox(width: 3.w),
                 Expanded(
                   child: Text(
                     listing.location,
-                    style: const TextStyle(
-                      fontSize: 11,
+                    style:   TextStyle(
+                      fontSize: 11.sp,
                       color: Color(0xFF6B7280),
                     ),
                     overflow: TextOverflow.ellipsis,

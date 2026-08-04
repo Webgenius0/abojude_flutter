@@ -1010,12 +1010,18 @@ class _BusinessScreenState extends State<BusinessScreen> {
           child: ElevatedButton.icon(
             onPressed: () {
               Get.to(
-                () => MessageScreen(
+                    () => MessageScreen(
                   chat: ChatMessage(
                     id: details?.id?.toString() ?? '1',
                     name: name,
                     initials: name.trim().isNotEmpty
-                        ? name.trim().split(RegExp(r'\s+')).take(2).map((e) => e[0]).join().toUpperCase()
+                        ? name
+                        .trim()
+                        .split(RegExp(r'\s+'))
+                        .take(2)
+                        .map((e) => e[0])
+                        .join()
+                        .toUpperCase()
                         : 'SK',
                     lastMessage: 'Inquiry regarding business listing',
                     time: 'Just now',
@@ -1025,7 +1031,12 @@ class _BusinessScreenState extends State<BusinessScreen> {
                 ),
               );
             },
-            icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
+            icon: Image.asset(
+              'assets/icons/message-02.png',
+              width: 20.w,
+              height: 20.h,
+              color: Colors.white, // Remove this if your PNG already has the desired color
+            ),
             label: Text(
               'Message',
               style: TextStyle(

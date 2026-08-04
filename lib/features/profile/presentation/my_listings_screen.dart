@@ -1,29 +1,10 @@
+import 'package:abojude_flutter/features/profile/model/my_listing_model.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-// Listing Model
-class UserListing {
-  final String id;
-  final String title;
-  final String imageUrl;
-  final String status; // "Pending", "Active", "Featured", "Expired"
-  final String dateInfo;
-  final int views;
-  final int favorites;
-  final int messages;
-
-  UserListing({
-    required this.id,
-    required this.title,
-    required this.imageUrl,
-    required this.status,
-    required this.dateInfo,
-    required this.views,
-    required this.favorites,
-    required this.messages,
-  });
-}
+import 'package:shimmer/shimmer.dart';
 
 class MyListingsScreen extends StatefulWidget {
   const MyListingsScreen({super.key});
@@ -34,65 +15,37 @@ class MyListingsScreen extends StatefulWidget {
 
 class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
-  final List<UserListing> _allListings = [
-    UserListing(
-      id: '1',
-      title: "iPhone 14 Pro Max - 256GB Deep Purple",
-      imageUrl: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&auto=format&fit=crop&q=80",
-      status: "Pending",
-      dateInfo: "Submitted Jun 18, 2026",
-      views: 0,
-      favorites: 0,
-      messages: 0,
-    ),
-    UserListing(
-      id: '2',
-      title: "iPhone 14 Pro Max - 256GB Deep Purple",
-      imageUrl: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&auto=format&fit=crop&q=80",
-      status: "Active",
-      dateInfo: "2 day ago",
-      views: 120,
-      favorites: 120,
-      messages: 120,
-    ),
-    UserListing(
-      id: '3',
-      title: "iPhone 14 Pro Max - 256GB Deep Purple",
-      imageUrl: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&auto=format&fit=crop&q=80",
-      status: "Featured",
-      dateInfo: "12 day ago",
-      views: 120,
-      favorites: 120,
-      messages: 120,
-    ),
-    UserListing(
-      id: '4',
-      title: "iPhone 14 Pro Max - 256GB Deep Purple",
-      imageUrl: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&auto=format&fit=crop&q=80",
-      status: "Expired",
-      dateInfo: "1 month ago",
-      views: 120,
-      favorites: 120,
-      messages: 120,
-    ),
-  ];
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+
+    // Initial fetch from API
+    getMyListRxObj.getMyList(isRefresh: true);
+
+    // Add scroll listener for Lazy Loading (pagination)
+    _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
-  List<UserListing> _getListingsByStatus(String status) {
-    if (status == 'All') return _allListings;
-    return _allListings.where((l) => l.status.toLowerCase() == status.toLowerCase()).toList();
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      getMyListRxObj.fetchMoreData();
+    }
+  }
+
+  List<Post> _filterPostsByStatus(List<Post> posts, String status) {
+    if (status == 'All') return posts;
+    return posts.where((p) => (p.status ?? '').toLowerCase() == status.toLowerCase()).toList();
   }
 
   @override
@@ -106,7 +59,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.05),
+                color: Colors.grey.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),
@@ -167,34 +120,106 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
         ),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            // 1. Stats Summary Panel
-            _buildStatsSummaryPanel(),
+        child: ValueListenableBuilder<bool>(
+          valueListenable: getMyListRxObj.isLoading,
+          builder: (context, isLoading, _) {
+            return StreamBuilder<GetMyListingModel>(
+              stream: getMyListRxObj.getMyListData,
+              builder: (context, snapshot) {
+                final model = snapshot.data;
+                final data = model?.data;
+                final List<Post> posts = data?.posts ?? [];
 
-            // 2. Custom Selectable Tabs
-            _buildCustomTabBar(),
+                if (isLoading && posts.isEmpty) {
+                  return Column(
+                    children: [
+                      _buildStatsSummaryPanel(data, 0),
+                      _buildCustomTabBar(
+                        allCount: 0,
+                        pendingCount: 0,
+                        activeCount: 0,
+                        expiredCount: 0,
+                      ),
+                      Expanded(child: _buildShimmerList()),
+                    ],
+                  );
+                }
 
-            // 3. Tab Views list
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _buildListingsList('All'),
-                  _buildListingsList('Pending'),
-                  _buildListingsList('Active'),
-                  _buildListingsList('Expired'),
-                ],
-              ),
-            ),
-          ],
+                final int pendingCount = posts.where((l) => (l.status ?? '').toLowerCase() == 'pending').length;
+                final int activeCount = posts.where((l) => (l.status ?? '').toLowerCase() == 'active').length;
+                final int expiredCount = posts.where((l) => (l.status ?? '').toLowerCase() == 'expired').length;
+
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    await getMyListRxObj.getMyList(isRefresh: true);
+                  },
+                  color: const Color(0xFF0F3D7A),
+                  child: Column(
+                    children: [
+                      // 1. Stats Summary Panel
+                      _buildStatsSummaryPanel(data, posts.length),
+
+                      // 2. Custom Selectable Tabs
+                      _buildCustomTabBar(
+                        allCount: data?.totalPost ?? posts.length,
+                        pendingCount: pendingCount,
+                        activeCount: activeCount,
+                        expiredCount: expiredCount,
+                      ),
+
+                      // 3. Tab Views list with Lazy Loading
+                      Expanded(
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: [
+                            _buildListingsList(posts, 'All'),
+                            _buildListingsList(posts, 'Pending'),
+                            _buildListingsList(posts, 'Active'),
+                            _buildListingsList(posts, 'Expired'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
         ),
       ),
     );
   }
 
+  // Shimmer loading list placeholder
+  Widget _buildShimmerList() {
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+      itemCount: 4,
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            margin: EdgeInsets.only(bottom: 16.h),
+            height: 130.h,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   // Statistics summaries (Listings, Views, Favorites, Messages)
-  Widget _buildStatsSummaryPanel() {
+  Widget _buildStatsSummaryPanel(Data? data, int postCount) {
+    final String listingsVal = (data?.totalPost ?? postCount).toString().padLeft(2, '0');
+    final String viewsVal = (data?.totalView ?? 0).toString().padLeft(2, '0');
+    final String wishesVal = (data?.totalWish ?? 0).toString().padLeft(2, '0');
+    final String messagesVal = (data?.totalMessage ?? 0).toString().padLeft(2, '0');
+
     return Container(
       width: double.infinity,
       color: const Color(0xFFF8F9FA),
@@ -202,10 +227,10 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildStatItem('09', 'Listings', const Color(0xFF0F3D7A)),
-          _buildStatItem('80', 'View', const Color(0xFF2B8A3E)),
-          _buildStatItem('45', 'Favorites', const Color(0xFFE03131)),
-          _buildStatItem('35', 'Message', const Color(0xFFF0A020)),
+          _buildStatItem(listingsVal, 'Listings', const Color(0xFF0F3D7A)),
+          _buildStatItem(viewsVal, 'View', const Color(0xFF2B8A3E)),
+          _buildStatItem(wishesVal, 'Favorites', const Color(0xFFE03131)),
+          _buildStatItem(messagesVal, 'Message', const Color(0xFFF0A020)),
         ],
       ),
     );
@@ -235,8 +260,13 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
     );
   }
 
-  // Custom Tabs matching the look and feel of Image 1
-  Widget _buildCustomTabBar() {
+  // Custom Tabs matching design
+  Widget _buildCustomTabBar({
+    required int allCount,
+    required int pendingCount,
+    required int activeCount,
+    required int expiredCount,
+  }) {
     return Container(
       color: Colors.white,
       width: double.infinity,
@@ -250,20 +280,11 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
         labelStyle: GoogleFonts.inter(fontSize: 14.sp, fontWeight: FontWeight.bold),
         unselectedLabelStyle: GoogleFonts.inter(fontSize: 14.sp, fontWeight: FontWeight.w500),
         tabs: [
-          _buildTabWithBadge('All', 9),
-          _buildTabWithBadge('Pending', 2),
-          _buildTabWithBadge('Active', 6),
-          _buildTab('Expired'),
+          _buildTabWithBadge('All', allCount),
+          _buildTabWithBadge('Pending', pendingCount),
+          _buildTabWithBadge('Active', activeCount),
+          _buildTabWithBadge('Expired', expiredCount),
         ],
-      ),
-    );
-  }
-
-  Tab _buildTab(String label) {
-    return Tab(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 4.w),
-        child: Text(label),
       ),
     );
   }
@@ -277,8 +298,8 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
           SizedBox(width: 6.w),
           Container(
             padding: EdgeInsets.all(4.r),
-            decoration: BoxDecoration(
-              color: const Color(0xFFE9ECEF),
+            decoration: const BoxDecoration(
+              color: Color(0xFFE9ECEF),
               shape: BoxShape.circle,
             ),
             constraints: BoxConstraints(minWidth: 18.w, minHeight: 18.h),
@@ -298,33 +319,257 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
     );
   }
 
-  // Listing item list builder
-  Widget _buildListingsList(String filterStatus) {
-    final listings = _getListingsByStatus(filterStatus);
+  // Listing item list builder with lazy loading support
+  Widget _buildListingsList(List<Post> posts, String filterStatus) {
+    final filteredPosts = _filterPostsByStatus(posts, filterStatus);
 
-    if (listings.isEmpty) {
-      return Center(
-        child: Text(
-          'No listings found in $filterStatus',
-          style: TextStyle(color: Colors.grey[400]),
+    if (filteredPosts.isEmpty) {
+      return SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: SizedBox(
+          height: 300.h,
+          child: Center(
+            child: Text(
+              'No listings found in $filterStatus',
+              style: TextStyle(color: Colors.grey[400]),
+            ),
+          ),
         ),
       );
     }
 
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-      itemCount: listings.length,
-      itemBuilder: (context, index) {
-        final listing = listings[index];
+    return ValueListenableBuilder<bool>(
+      valueListenable: getMyListRxObj.isLoadingMore,
+      builder: (context, isLoadingMore, _) {
+        final int itemCount = filteredPosts.length + (isLoadingMore ? 1 : 0);
 
-        return _buildListingCard(listing);
+        return ListView.builder(
+          controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          itemCount: itemCount,
+          itemBuilder: (context, index) {
+            if (index == filteredPosts.length) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.h),
+                child: const Center(
+                  child: CircularProgressIndicator(color: Color(0xFF0F3D7A)),
+                ),
+              );
+            }
+
+            final post = filteredPosts[index];
+            return _buildListingCard(post);
+          },
+        );
       },
     );
   }
 
-  Widget _buildListingCard(UserListing listing) {
-    final bool isPending = listing.status == 'Pending';
+  void _showDeleteConfirmationDialog(Post post) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24.r),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 10,
+          child: Padding(
+            padding: EdgeInsets.all(20.r),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Top Icon Badge
+                Container(
+                  width: 64.r,
+                  height: 64.r,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFFEE2E2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Container(
+                      width: 46.r,
+                      height: 46.r,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFFCA5A5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.delete_forever_rounded,
+                        color: const Color(0xFFDC2626),
+                        size: 26.sp,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.h),
+
+                // Title
+                Text(
+                  'Delete Listing?',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.inter(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF111827),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+
+                // Description
+                Text(
+                  'Are you sure you want to delete this listing? This action cannot be undone.',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.inter(
+                    fontSize: 13.sp,
+                    color: const Color(0xFF6B7280),
+                    height: 1.4,
+                  ),
+                ),
+                SizedBox(height: 16.h),
+
+                // Listing preview box with CachedNetworkImage
+                Container(
+                  padding: EdgeInsets.all(10.r),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF9FAFB),
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(color: const Color(0xFFE5E7EB)),
+                  ),
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(6.r),
+                        child: (post.thumbnail != null && post.thumbnail!.isNotEmpty)
+                            ? CachedNetworkImage(
+                                imageUrl: post.thumbnail!,
+                                width: 40.w,
+                                height: 40.h,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => Shimmer.fromColors(
+                                  baseColor: Colors.grey[300]!,
+                                  highlightColor: Colors.grey[100]!,
+                                  child: Container(color: Colors.white),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  width: 40.w,
+                                  height: 40.h,
+                                  color: const Color(0xFFE5E7EB),
+                                  child: Icon(Icons.phone_android, size: 20.sp, color: Colors.grey),
+                                ),
+                              )
+                            : Container(
+                                width: 40.w,
+                                height: 40.h,
+                                color: const Color(0xFFE5E7EB),
+                                child: Icon(Icons.phone_android, size: 20.sp, color: Colors.grey),
+                              ),
+                      ),
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        child: Text(
+                          post.title ?? 'Listing Item',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.inter(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF374151),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 24.h),
+
+                // Actions row
+                Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 44.h,
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: const Color(0xFFF3F4F6),
+                            side: BorderSide.none,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                          ),
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text(
+                            'Cancel',
+                            style: GoogleFonts.inter(
+                              color: const Color(0xFF374151),
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: SizedBox(
+                        height: 44.h,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFDC2626),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _deleteListing(post);
+                          },
+                          child: Text(
+                            'Delete',
+                            style: GoogleFonts.inter(
+                              color: Colors.white,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _deleteListing(Post post) {
+    if (post.id != null) {
+      getMyListRxObj.deletePostLocally(post.id!);
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Listing deleted successfully',
+          style: GoogleFonts.inter(fontSize: 14.sp),
+        ),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.black87,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  Widget _buildListingCard(Post post) {
+    final String status = post.status ?? 'Active';
+    final bool isPending = status.toLowerCase() == 'pending';
 
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
@@ -337,7 +582,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.015),
+            color: Colors.black.withValues(alpha: 0.015),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -380,20 +625,31 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Thumbnail image
+                // Thumbnail image with CachedNetworkImage & Shimmer
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.r),
                   child: Container(
                     width: 76.w,
                     height: 76.h,
                     color: const Color(0xFFF8F9FA),
-                    child: Image.network(
-                      listing.imageUrl,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Icon(Icons.phone_android, color: Colors.grey);
-                      },
-                    ),
+                    child: (post.thumbnail != null && post.thumbnail!.isNotEmpty)
+                        ? CachedNetworkImage(
+                            imageUrl: post.thumbnail!,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(color: Colors.white),
+                            ),
+                            errorWidget: (context, url, error) => const Icon(
+                              Icons.phone_android,
+                              color: Colors.grey,
+                            ),
+                          )
+                        : const Icon(
+                            Icons.phone_android,
+                            color: Colors.grey,
+                          ),
                   ),
                 ),
                 SizedBox(width: 14.w),
@@ -404,7 +660,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        listing.title,
+                        post.title ?? '',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.inter(
@@ -416,14 +672,18 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
                       SizedBox(height: 8.h),
                       Row(
                         children: [
-                          _buildStatusTag(listing.status),
+                          _buildStatusTag(status),
                           SizedBox(width: 8.w),
-                          Text(
-                            listing.dateInfo,
-                            style: GoogleFonts.inter(
-                              color: Colors.grey[400],
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w400,
+                          Expanded(
+                            child: Text(
+                              post.timeAgo ?? post.submitDate ?? '',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.inter(
+                                color: Colors.grey[400],
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ),
                         ],
@@ -436,16 +696,46 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
                 Container(
                   width: 32.r,
                   height: 32.r,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF1F3F5),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF1F3F5),
                     shape: BoxShape.circle,
                   ),
-                  child: Center(
-                    child: IconButton(
-                      icon: Icon(Icons.more_vert, color: Colors.black87, size: 16.sp),
-                      onPressed: () {},
-                      padding: EdgeInsets.zero,
+                  child: PopupMenuButton<String>(
+                    padding: EdgeInsets.zero,
+                    icon: Icon(Icons.more_vert, color: Colors.black87, size: 16.sp),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
+                    color: Colors.white,
+                    surfaceTintColor: Colors.white,
+                    onSelected: (value) {
+                      if (value == 'delete') {
+                        _showDeleteConfirmationDialog(post);
+                      }
+                    },
+                    itemBuilder: (BuildContext context) => [
+                      PopupMenuItem<String>(
+                        value: 'delete',
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.delete_outline_rounded,
+                              color: Colors.red,
+                              size: 18.sp,
+                            ),
+                            SizedBox(width: 8.w),
+                            Text(
+                              'Delete',
+                              style: GoogleFonts.inter(
+                                color: Colors.red,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -459,11 +749,11 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
             child: Row(
               children: [
-                _buildMetricItem(Icons.remove_red_eye_outlined, listing.views),
+                _buildMetricItem(Icons.remove_red_eye_outlined, post.totalView ?? 0),
                 SizedBox(width: 24.w),
-                _buildMetricItem(Icons.favorite_border_rounded, listing.favorites),
+                _buildMetricItem(Icons.favorite_border_rounded, post.totalWish ?? 0),
                 SizedBox(width: 24.w),
-                _buildMetricItem(Icons.chat_bubble_outline_rounded, listing.messages),
+                _buildMetricItem(Icons.chat_bubble_outline_rounded, post.totalMessage ?? 0),
               ],
             ),
           ),
@@ -476,16 +766,18 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
     Color bg = const Color(0xFFE9ECEF);
     Color fg = const Color(0xFF495057);
 
-    if (status == 'Pending') {
+    final String lowerStatus = status.toLowerCase();
+
+    if (lowerStatus == 'pending') {
       bg = const Color(0xFFFFF3CD);
       fg = const Color(0xFF856404);
-    } else if (status == 'Active') {
+    } else if (lowerStatus == 'active') {
       bg = const Color(0xFFD4EDDA);
       fg = const Color(0xFF155724);
-    } else if (status == 'Featured') {
+    } else if (lowerStatus == 'featured') {
       bg = const Color(0xFFF0A020);
       fg = Colors.white;
-    } else if (status == 'Expired') {
+    } else if (lowerStatus == 'expired') {
       bg = const Color(0xFFF8D7DA);
       fg = const Color(0xFF721C24);
     }
@@ -499,7 +791,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (status == 'Featured') ...[
+          if (lowerStatus == 'featured') ...[
             Icon(Icons.star, color: Colors.white, size: 10.sp),
             SizedBox(width: 3.w),
           ],
