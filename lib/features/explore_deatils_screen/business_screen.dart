@@ -1,15 +1,21 @@
-import 'package:abojude_flutter/features/message_screeen/message_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:abojude_flutter/features/home/presentation/report_screen.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
+import 'package:abojude_flutter/features/home/presentation/report_screen.dart';
+import 'package:abojude_flutter/features/message_screeen/message_screen.dart';
+import 'package:abojude_flutter/features/home/model/get_post_details_model.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 import '../message_screeen/message_screeen_list.dart';
 
 class BusinessScreen extends StatefulWidget {
-  const BusinessScreen({super.key});
+  final int? postId;
+
+  const BusinessScreen({super.key, this.postId});
 
   @override
   State<BusinessScreen> createState() => _BusinessScreenState();
@@ -18,24 +24,49 @@ class BusinessScreen extends StatefulWidget {
 class _BusinessScreenState extends State<BusinessScreen> {
   bool _isFavorited = false;
   bool _hoursExpanded = true;
+  bool _isLoading = false;
 
-  // Mock data for related listings
-  final List<Map<String, dynamic>> _relatedListings = [
-    {
-      'title': 'Halal Meat Shop',
-      'category': 'Business',
-      'location': 'Toronto, Manitoba',
-      'imageUrl': 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=200',
-      'isFavorited': false,
-    },
-    {
-      'title': 'Shop Vancouver',
-      'category': 'Business',
-      'location': 'Toronto, Manitoba',
-      'imageUrl': 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=200',
-      'isFavorited': false,
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    if (widget.postId != null) {
+      _fetchPostDetails(widget.postId!);
+    }
+  }
+
+  Future<void> _fetchPostDetails(int id) async {
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
+    try {
+      await getPostDetailsRxObj.getPostDetailsRx(id);
+    } catch (_) {
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  String? _formatImageUrl(String? rawUrl) {
+    if (rawUrl == null || rawUrl.trim().isEmpty) return null;
+    String url = rawUrl.trim();
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+
+    const String baseDomain = "https://abojude.thesyndicates.team";
+    url = url.replaceAll('/./', '/').replaceAll('/../', '/');
+    if (!url.toLowerCase().contains('storage')) {
+      final cleanPath = url.startsWith('/') ? url : '/$url';
+      return '$baseDomain/storage$cleanPath';
+    } else {
+      final cleanPath = url.startsWith('/') ? url : '/$url';
+      return '$baseDomain$cleanPath';
+    }
+  }
 
   // Contact launching helpers
   Future<void> _launchPhone(String phone) async {
@@ -79,27 +110,28 @@ class _BusinessScreenState extends State<BusinessScreen> {
         backgroundColor: Colors.white,
         elevation: 0.5,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios,
             color: Colors.black54,
-            size: 20,
+            size: 20.sp,
           ),
           onPressed: () => Get.back(),
         ),
-        title: const Text(
+        title: Text(
           'Listing Details',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 16,
+            fontSize: 16.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(
               _isFavorited ? Icons.favorite : Icons.favorite_border,
               color: _isFavorited ? Colors.red : Colors.black54,
-              size: 20,
+              size: 20.sp,
             ),
             onPressed: () => setState(() => _isFavorited = !_isFavorited),
           ),
@@ -111,7 +143,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
             ),
             onPressed: () {
               Share.share(
-                'Check out Halal Butcher Shop - Vancouver: https://alnour.ca',
+                'Check out business listing: https://example.com',
               );
             },
           ),
@@ -124,7 +156,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
             onPressed: () {
               Get.to(
                 () => const ReportScreen(
-                  targetName: 'Halal Butcher Shop - Vancouver',
+                  targetName: 'Business Listing',
                   isReportUser: false,
                 ),
               );
@@ -132,185 +164,321 @@ class _BusinessScreenState extends State<BusinessScreen> {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 90),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      body: widget.postId != null
+          ? StreamBuilder<GetPostDetailsModel>(
+              stream: getPostDetailsRxObj.getPostDetailsData,
+              builder: (context, snapshot) {
+                if (_isLoading ||
+                    snapshot.connectionState == ConnectionState.waiting) {
+                  return _buildShimmerDetails();
+                }
+
+                final details = snapshot.data?.data;
+                return RefreshIndicator(
+                  onRefresh: () => _fetchPostDetails(widget.postId!),
+                  color: const Color(0xFF1B2D6B),
+                  child: Stack(
+                    children: [
+                      SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: EdgeInsets.only(bottom: 90.h),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildCoverAndLogo(details),
+                            _buildHeaderDetails(details),
+                            _buildAboutSection(details),
+                            _buildBusinessHours(),
+                            _buildSellerCard(details),
+                            _buildContactInfo(details),
+                            _buildPhotosGallery(details),
+                            _buildRelatedListings(details?.relatedPosts),
+                          ],
+                        ),
+                      ),
+                      _buildBottomActionBar(details),
+                    ],
+                  ),
+                );
+              },
+            )
+          : Stack(
               children: [
-                _buildCoverAndLogo(),
-                _buildHeaderDetails(),
-                _buildAboutSection(),
-                _buildBusinessHours(),
-                _buildSellerCard(),
-                _buildContactInfo(),
-                _buildPhotosGallery(),
-                _buildRelatedListings(),
+                SingleChildScrollView(
+                  padding: EdgeInsets.only(bottom: 90.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildCoverAndLogo(null),
+                      _buildHeaderDetails(null),
+                      _buildAboutSection(null),
+                      _buildBusinessHours(),
+                      _buildSellerCard(null),
+                      _buildContactInfo(null),
+                      _buildPhotosGallery(null),
+                      _buildRelatedListings(null),
+                    ],
+                  ),
+                ),
+                _buildBottomActionBar(null),
               ],
             ),
-          ),
-          _buildBottomActionBar(),
-        ],
-      ),
     );
   }
 
-  Widget _buildCoverAndLogo() {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        // Cover Image
-        SizedBox(
-          height: 200,
-          width: double.infinity,
-          child: Image.network(
-            'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=800',
-            fit: BoxFit.cover,
-            loadingBuilder: (_, child, progress) {
-              if (progress == null) return child;
-              return Container(color: Colors.grey[200]);
-            },
-          ),
-        ),
-        // Featured Listing Badge
-        Positioned(
-          top: 12,
-          left: 12,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF59E0B),
-              borderRadius: BorderRadius.circular(6),
+  Widget _buildShimmerDetails() {
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(16.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              height: 200.h,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12.r),
+              ),
             ),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
+          ),
+          SizedBox(height: 16.h),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.star, color: Colors.white, size: 12),
-                SizedBox(width: 4),
-                Text(
-                  'Featured Listing',
-                  style: TextStyle(
+                Container(
+                  width: 80.w,
+                  height: 20.h,
+                  decoration: BoxDecoration(
                     color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Container(
+                  width: 220.w,
+                  height: 22.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Container(
+                  width: 150.w,
+                  height: 14.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4.r),
                   ),
                 ),
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCoverAndLogo(PostDetailsData? details) {
+    final formattedCover = _formatImageUrl(details?.thumbnail ?? (details?.images?.isNotEmpty == true ? details!.images!.first : null));
+    final isFeatured = details?.isFeatured ?? false;
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        // Cover Image
+        SizedBox(
+          height: 200.h,
+          width: double.infinity,
+          child: formattedCover != null && formattedCover.isNotEmpty
+              ? CachedNetworkImage(
+                  imageUrl: formattedCover,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(color: Colors.white),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.grey[200],
+                    child: Icon(Icons.storefront, size: 48.r, color: Colors.grey[400]),
+                  ),
+                )
+              : Container(
+                  color: Colors.grey[200],
+                  child: Center(
+                    child: Icon(Icons.storefront, size: 48.r, color: Colors.grey[400]),
+                  ),
+                ),
         ),
+        // Featured Listing Badge
+        if (isFeatured)
+          Positioned(
+            top: 12.h,
+            left: 12.w,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF59E0B),
+                borderRadius: BorderRadius.circular(6.r),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.star, color: Colors.white, size: 12.sp),
+                  SizedBox(width: 4.w),
+                  Text(
+                    'Featured Listing',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         // Overlapping Logo Card
         Positioned(
-          bottom: -35,
-          left: 16,
+          bottom: -35.h,
+          left: 16.w,
           child: Container(
-            width: 80,
-            height: 80,
+            width: 75.r,
+            height: 75.r,
             decoration: BoxDecoration(
-              color: const Color(0xFFFFEBD5),
-              borderRadius: BorderRadius.circular(16),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r),
               border: Border.all(color: Colors.white, width: 3),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
               ],
             ),
-            padding: const EdgeInsets.all(8),
-            child: Image.network(
-              'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=200',
-              fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => const Center(
-                child: Icon(Icons.store, color: Colors.orange, size: 36),
-              ),
-            ),
+            padding: EdgeInsets.all(6.w),
+            child: formattedCover != null && formattedCover.isNotEmpty
+                ? CachedNetworkImage(
+                    imageUrl: formattedCover,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(color: Colors.grey[200]),
+                    errorWidget: (context, url, err) => const Center(
+                      child: Icon(Icons.store, color: Colors.orange, size: 36),
+                    ),
+                  )
+                : const Center(
+                    child: Icon(Icons.store, color: Colors.orange, size: 36),
+                  ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildHeaderDetails() {
+  Widget _buildHeaderDetails(PostDetailsData? details) {
+    final category = details?.categoryName ?? 'Business';
+    final title = details?.title ?? 'Business Listing';
+    final location = (details?.city != null || details?.province != null)
+        ? "${details?.city ?? ''}${details?.city != null && details?.province != null ? ', ' : ''}${details?.province ?? ''}"
+        : 'Toronto, Manitoba';
+    final timeAgo = details?.timeAgo ?? '';
+
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 50, 16, 12),
+      padding: EdgeInsets.fromLTRB(16.w, 48.h, 16.w, 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Food & Grocery Badge
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFEBD5),
-                  borderRadius: BorderRadius.circular(6),
+                  color: const Color(0xFFEFF6FF),
+                  borderRadius: BorderRadius.circular(6.r),
                 ),
-                child: const Text(
-                  'Food & Grocery',
+                child: Text(
+                  category,
                   style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFFD97706),
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF2563EB),
                   ),
                 ),
               ),
-              // Business Directory Category
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEFF6FF),
-                  borderRadius: BorderRadius.circular(6),
+                  color: const Color(0xFFECFDF5),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
-                child: const Text(
-                  'Business Directory',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF2563EB),
-                  ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 6.r,
+                      height: 6.r,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF10B981),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    SizedBox(width: 6.w),
+                    Text(
+                      'Open Now',
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF059669),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          const Text(
-            'Halal Butcher Shop - Vancouver',
+          SizedBox(height: 12.h),
+          Text(
+            title,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 20.sp,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.location_on_outlined,
-                size: 14,
-                color: Colors.grey,
+                size: 14.sp,
+                color: Colors.grey[600],
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4.w),
               Text(
-                'Toronto, Manitoba',
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                location,
+                style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
               ),
-              const SizedBox(width: 16),
-              const Icon(Icons.access_time, size: 14, color: Colors.grey),
-              const SizedBox(width: 4),
-              Text(
-                '5 hours ago',
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-              ),
+              if (timeAgo.isNotEmpty) ...[
+                SizedBox(width: 16.w),
+                Icon(
+                  Icons.access_time,
+                  size: 14.sp,
+                  color: Colors.grey[600],
+                ),
+                SizedBox(width: 4.w),
+                Text(
+                  timeAgo,
+                  style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
+                ),
+              ],
             ],
           ),
         ],
@@ -318,26 +486,29 @@ class _BusinessScreenState extends State<BusinessScreen> {
     );
   }
 
-  Widget _buildAboutSection() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+  Widget _buildAboutSection(PostDetailsData? details) {
+    final description = details?.description ??
+        'Welcome to our business. We offer high-quality products and professional services to meet all your needs. Visit us or get in touch for inquiries.';
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'About',
+            'About Business',
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 15.sp,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
           ),
-          SizedBox(height: 6),
+          SizedBox(height: 6.h),
           Text(
-            'Premium halal butcher shop serving the Toronto community since 2015. Fresh daily cuts of beef, lamb, and poultry. Certified halal. Custom cuts available. Home delivery available for orders over \$50.',
+            description,
             style: TextStyle(
-              fontSize: 13,
-              color: Color(0xFF4B5563),
+              fontSize: 13.sp,
+              color: const Color(0xFF4B5563),
               height: 1.4,
             ),
           ),
@@ -347,20 +518,34 @@ class _BusinessScreenState extends State<BusinessScreen> {
   }
 
   Widget _buildBusinessHours() {
+    final hours = [
+      {'day': 'Monday', 'time': '9:00 AM - 8:00 PM'},
+      {'day': 'Tuesday', 'time': '9:00 AM - 8:00 PM'},
+      {'day': 'Wednesday', 'time': '9:00 AM - 8:00 PM'},
+      {'day': 'Thursday', 'time': '9:00 AM - 8:00 PM'},
+      {'day': 'Friday', 'time': '9:00 AM - 8:00 PM'},
+      {'day': 'Saturday', 'time': '10:00 AM - 6:00 PM'},
+      {'day': 'Sunday', 'time': 'Closed'},
+    ];
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GestureDetector(
-            onTap: () => setState(() => _hoursExpanded = !_hoursExpanded),
+            onTap: () {
+              setState(() {
+                _hoursExpanded = !_hoursExpanded;
+              });
+            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Business Hours',
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 15.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
@@ -369,154 +554,158 @@ class _BusinessScreenState extends State<BusinessScreen> {
                   _hoursExpanded
                       ? Icons.keyboard_arrow_up
                       : Icons.keyboard_arrow_down,
-                  color: Colors.black54,
-                  size: 20,
+                  color: Colors.grey[600],
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 8),
-          if (_hoursExpanded)
+          if (_hoursExpanded) ...[
+            SizedBox(height: 8.h),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFFE5E7EB)),
-                borderRadius: BorderRadius.circular(12),
+                color: const Color(0xFFF9FAFB),
+                borderRadius: BorderRadius.circular(10.r),
               ),
-              child: const Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Monday – Friday',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Color(0xFF4B5563),
+              child: Column(
+                children: hours.map((h) {
+                  final isToday = h['day'] == 'Thursday';
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 4.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          h['day']!,
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight:
+                                isToday ? FontWeight.bold : FontWeight.normal,
+                            color: isToday
+                                ? const Color(0xFF1B2D6B)
+                                : const Color(0xFF374151),
+                          ),
                         ),
-                      ),
-                      Text(
-                        '9:00 AM – 6:00 PM',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF10B981),
+                        Text(
+                          h['time']!,
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight:
+                                isToday ? FontWeight.bold : FontWeight.normal,
+                            color: isToday
+                                ? const Color(0xFF1B2D6B)
+                                : const Color(0xFF6B7280),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Saturday',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Color(0xFF4B5563),
-                        ),
-                      ),
-                      Text(
-                        '10:00 AM – 4:00 PM',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF10B981),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Sunday',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Color(0xFF4B5563),
-                        ),
-                      ),
-                      Text(
-                        'Closed',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF6B7280),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  );
+                }).toList(),
               ),
             ),
+          ],
         ],
       ),
     );
   }
 
-  Widget _buildSellerCard() {
+  Widget _buildSellerCard(PostDetailsData? details) {
+    final name = details?.user?.name ?? 'Business Manager';
+    final avatar = _formatImageUrl(details?.user?.avatar);
+    final location = (details?.city != null || details?.province != null)
+        ? "${details?.city ?? ''}${details?.city != null && details?.province != null ? ', ' : ''}${details?.province ?? ''}"
+        : 'Toronto, Ontario';
+
+    final initials = name.trim().isNotEmpty
+        ? name.trim().split(RegExp(r'\s+')).take(2).map((e) => e[0]).join().toUpperCase()
+        : 'BM';
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Seller',
+          Text(
+            'Business Owner',
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 15.sp,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
               border: Border.all(color: const Color(0xFFE5E7EB)),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
             ),
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: const Color(0xFF1B2D6B),
-                  child: const Text(
-                    'SA',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
+                if (avatar != null && avatar.isNotEmpty)
+                  CachedNetworkImage(
+                    imageUrl: avatar,
+                    imageBuilder: (context, provider) => Container(
+                      width: 40.r,
+                      height: 40.r,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(image: provider, fit: BoxFit.cover),
+                      ),
+                    ),
+                    placeholder: (context, url) => Container(
+                      width: 40.r,
+                      height: 40.r,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFE5E7EB),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    errorWidget: (context, url, err) => CircleAvatar(
+                      radius: 20.r,
+                      backgroundColor: const Color(0xFF1B2D6B),
+                      child: Text(
+                        initials,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  CircleAvatar(
+                    radius: 20.r,
+                    backgroundColor: const Color(0xFF1B2D6B),
+                    child: Text(
+                      initials,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                const Expanded(
+                SizedBox(width: 12.w),
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Sarah Ahmed',
+                        name,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
                         ),
                       ),
-                      SizedBox(height: 2),
+                      SizedBox(height: 2.h),
                       Text(
-                        'Toronto, Ontario',
+                        location,
                         style: TextStyle(
-                          fontSize: 12,
-                          color: Color(0xFF6B7280),
-                        ),
-                      ),
-                      SizedBox(height: 2),
-                      Text(
-                        'Member since 2023',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Color(0xFF9CA3AF),
+                          fontSize: 12.sp,
+                          color: const Color(0xFF6B7280),
                         ),
                       ),
                     ],
@@ -530,83 +719,81 @@ class _BusinessScreenState extends State<BusinessScreen> {
     );
   }
 
-  Widget _buildContactInfo() {
+  Widget _buildContactInfo(PostDetailsData? details) {
+    final phone = details?.phone ?? details?.user?.phone ?? '+1-416-555-1234';
+    final whatsapp = details?.whatsapp ?? phone;
+    final email = details?.email ?? details?.user?.email ?? 'contact@business.com';
+    final website = details?.website ?? 'https://example.com';
+    final location = (details?.city != null || details?.province != null)
+        ? "${details?.city ?? ''}${details?.city != null && details?.province != null ? ', ' : ''}${details?.province ?? ''}"
+        : 'Toronto, Ontario';
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Contact Information',
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 15.sp,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 8),
-          SafeArea(
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFFE5E7EB)),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                children: [
-                  _buildContactTile(
-                    icon: Icons.phone_outlined,
-                    title: 'Phone',
-                    value: '+1-416-555-1234',
-                    onTap: () => _launchPhone('+1-416-555-1234'),
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: Color(0xFFE5E7EB),
-                  ),
-                  _buildContactTile(
-                    icon: Icons.chat_bubble_outline,
-                    title: "What's app number",
-                    value: '+1-416-555-1234',
-                    onTap: () => _launchWhatsApp('+1-416-555-1234'),
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: Color(0xFFE5E7EB),
-                  ),
-                  _buildContactTile(
-                    icon: Icons.email_outlined,
-                    title: 'Email',
-                    value: 'alnour@example.com',
-                    onTap: () => _launchEmail('alnour@example.com'),
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: Color(0xFFE5E7EB),
-                  ),
-                  _buildContactTile(
-                    icon: Icons.language,
-                    title: 'Website',
-                    value: 'https://alnour.ca',
-                    onTap: () => _launchUrl('https://alnour.ca'),
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: Color(0xFFE5E7EB),
-                  ),
-                  _buildContactTile(
-                    icon: Icons.location_on_outlined,
-                    title: 'Address',
-                    value: 'Scarborough, Ontario',
-                    onTap: () => _launchUrl(
-                      'https://maps.google.com/?q=Scarborough,Ontario',
-                    ),
-                  ),
-                ],
-              ),
+          SizedBox(height: 8.h),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFFE5E7EB)),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Column(
+              children: [
+                _buildContactTile(
+                  icon: Icons.call_outlined,
+                  iconColor: const Color(0xFF059669),
+                  bgColor: const Color(0xFFECFDF5),
+                  title: 'Phone',
+                  value: phone,
+                  onTap: () => _launchPhone(phone),
+                ),
+                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                _buildContactTile(
+                  icon: Icons.chat_bubble_outline_outlined,
+                  iconColor: const Color(0xFF10B981),
+                  bgColor: const Color(0xFFECFDF5),
+                  title: "What's app number",
+                  value: whatsapp,
+                  onTap: () => _launchWhatsApp(whatsapp),
+                ),
+                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                _buildContactTile(
+                  icon: Icons.mail_outline,
+                  iconColor: const Color(0xFF2563EB),
+                  bgColor: const Color(0xFFEFF6FF),
+                  title: 'Email',
+                  value: email,
+                  onTap: () => _launchEmail(email),
+                ),
+                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                _buildContactTile(
+                  icon: Icons.language_outlined,
+                  iconColor: const Color(0xFF7C3AED),
+                  bgColor: const Color(0xFFF5F3FF),
+                  title: 'Website',
+                  value: website,
+                  onTap: () => _launchUrl(website),
+                ),
+                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                _buildContactTile(
+                  icon: Icons.location_on_outlined,
+                  iconColor: const Color(0xFFEA580C),
+                  bgColor: const Color(0xFFFFF7ED),
+                  title: 'Address',
+                  value: location,
+                  onTap: () => _launchUrl('https://maps.google.com/?q=$location'),
+                ),
+              ],
             ),
           ),
         ],
@@ -616,6 +803,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
 
   Widget _buildContactTile({
     required IconData icon,
+    required Color iconColor,
+    required Color bgColor,
     required String title,
     required String value,
     required VoidCallback onTap,
@@ -623,34 +812,34 @@ class _BusinessScreenState extends State<BusinessScreen> {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                color: const Color(0xFFF3F4F6),
-                borderRadius: BorderRadius.circular(8),
+                color: bgColor,
+                shape: BoxShape.circle,
               ),
-              child: Icon(icon, size: 16, color: const Color(0xFF1B2D6B)),
+              child: Icon(icon, size: 18.sp, color: iconColor),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: Color(0xFF9CA3AF),
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      color: const Color(0xFF9CA3AF),
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  SizedBox(height: 2.h),
                   Text(
                     value,
-                    style: const TextStyle(
-                      fontSize: 13,
+                    style: TextStyle(
+                      fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
                       color: Colors.black87,
                     ),
@@ -664,43 +853,40 @@ class _BusinessScreenState extends State<BusinessScreen> {
     );
   }
 
-  Widget _buildPhotosGallery() {
-    final images = [
-      'https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=200',
-      'https://images.unsplash.com/photo-1544025162-d76694265947?w=200',
-      'https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=200',
-      'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=200',
-      'https://images.unsplash.com/photo-1546964124-0cce460f38ef?w=200',
-    ];
+  Widget _buildPhotosGallery(PostDetailsData? details) {
+    final images = details?.images?.map((img) => _formatImageUrl(img) ?? img).whereType<String>().toList() ?? [];
+    if (images.isEmpty) return const SizedBox.shrink();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Photos Gallery',
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 15.sp,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 8.h),
           SizedBox(
-            height: 90,
+            height: 100.h,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: images.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 8),
+              separatorBuilder: (context, index) => SizedBox(width: 8.w),
               itemBuilder: (context, index) {
                 return ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    images[index],
-                    width: 90,
-                    height: 90,
-                    fit: BoxFit.cover,
+                  borderRadius: BorderRadius.circular(10.r),
+                  child: SizedBox(
+                    width: 130.w,
+                    height: 100.h,
+                    child: CachedNetworkImage(
+                      imageUrl: images[index],
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 );
               },
@@ -711,40 +897,87 @@ class _BusinessScreenState extends State<BusinessScreen> {
     );
   }
 
-  Widget _buildRelatedListings() {
+  Widget _buildRelatedListings(List<RelatedPost>? relatedPosts) {
+    if (relatedPosts == null || relatedPosts.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Related Listings',
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 15.sp,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12.h),
           SizedBox(
-            height: 220,
+            height: 220.h,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              itemCount: _relatedListings.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              itemCount: relatedPosts.length,
+              separatorBuilder: (context, index) => SizedBox(width: 12.w),
               itemBuilder: (context, index) {
-                final item = _relatedListings[index];
-                return _buildRelatedCard(
-                  title: item['title'],
-                  category: item['category'],
-                  location: item['location'],
-                  imageUrl: item['imageUrl'],
-                  isFavorited: item['isFavorited'],
-                  onFavoriteToggle: () {
-                    setState(() {
-                      item['isFavorited'] = !item['isFavorited'];
-                    });
-                  },
+                final item = relatedPosts[index];
+                final formattedThumb = _formatImageUrl(item.thumbnail);
+
+                return Container(
+                  width: 160.w,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: const Color(0xFFE5E7EB)),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(12.r),
+                        ),
+                        child: SizedBox(
+                          height: 100.h,
+                          width: double.infinity,
+                          child: formattedThumb != null
+                              ? CachedNetworkImage(
+                                  imageUrl: formattedThumb,
+                                  fit: BoxFit.cover,
+                                )
+                              : Container(color: Colors.grey[200]),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.title ?? '',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              item.categoryName ?? '',
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
@@ -754,179 +987,59 @@ class _BusinessScreenState extends State<BusinessScreen> {
     );
   }
 
-  Widget _buildRelatedCard({
-    required String title,
-    required String category,
-    required String location,
-    required String imageUrl,
-    required bool isFavorited,
-    required VoidCallback onFavoriteToggle,
-  }) {
-    return SafeArea(
-      child: Container(
-        width: 158.w,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: const Color(0xFFE5E7EB)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(12),
-                  ),
-                  child: Image.network(
-                    imageUrl,
-                    height: 100,
-                    width: 158,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: GestureDetector(
-                    onTap: onFavoriteToggle,
-                    child: Container(
-                      width: 26,
-                      height: 26,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 2,
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        isFavorited ? Icons.favorite : Icons.favorite_border,
-                        size: 14,
-                        color: isFavorited ? Colors.red : Colors.grey,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(8.0.sp),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 6.h),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 6.w,
-                        vertical: 2.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF3F4F6),
-                        borderRadius: BorderRadius.circular(4.r),
-                      ),
-                      child: Text(
-                        category,
-                        style: TextStyle(fontSize: 9.sp, color: const Color(0xFF4B5563)),
-                      ),
-                    ),
-                    SizedBox(height: 6.h),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          size: 10.sp,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 6.h),
-                        Expanded(
-                          child: Text(
-                            location,
-                            style: const TextStyle(fontSize: 9, color: Colors.grey),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget _buildBottomActionBar(PostDetailsData? details) {
+    final name = details?.user?.name ?? 'Sara Khali';
 
-  Widget _buildBottomActionBar() {
     return Positioned(
       bottom: 0,
       left: 0,
       right: 0,
       child: SafeArea(
         child: Container(
-          color: Colors.white,
-          padding:   EdgeInsets.symmetric(horizontal: 16.h, vertical: 16.w),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1B2D6B),
-              minimumSize: const Size(double.infinity, 48),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.r),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 10,
+                offset: const Offset(0, -2),
               ),
-              elevation: 0,
-            ),
+            ],
+          ),
+          child: ElevatedButton.icon(
             onPressed: () {
               Get.to(
-                    () => MessageScreen(
+                () => MessageScreen(
                   chat: ChatMessage(
-                    id: 'sarah_ahmed',
-                    name: 'Sarah Ahmed',
-                    initials: 'SA',
-                    lastMessage:
-                    'Hi, is the Samsung Galaxy S24 Ultra still available?',
+                    id: details?.id?.toString() ?? '1',
+                    name: name,
+                    initials: name.trim().isNotEmpty
+                        ? name.trim().split(RegExp(r'\s+')).take(2).map((e) => e[0]).join().toUpperCase()
+                        : 'SK',
+                    lastMessage: 'Inquiry regarding business listing',
                     time: 'Just now',
                     isOnline: true,
+                    avatarUrl: _formatImageUrl(details?.user?.avatar),
                   ),
                 ),
               );
             },
-            child:   Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-               Image.asset('assets/icons/message-02.png',height: 30.h,),
-                SizedBox(width: 10.w),
-                Text(
-                  'Send Message',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+            icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
+            label: Text(
+              'Message',
+              style: TextStyle(
+                fontSize: 15.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1B2D6B),
+              minimumSize: Size(double.infinity, 48.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r),
+              ),
             ),
           ),
         ),

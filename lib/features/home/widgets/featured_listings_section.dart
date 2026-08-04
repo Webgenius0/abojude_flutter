@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:abojude_flutter/features/home/model/get_featured_listings_model.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 import 'listing_card.dart';
 
 class FeaturedListingsSection extends StatefulWidget {
-  final List<Map<String, dynamic>> featuredItems;
-  final Function(Map<String, dynamic> item)? onFavoriteToggle;
+  final Function(Datum item)? onFavoriteToggle;
 
   const FeaturedListingsSection({
     super.key,
-    required this.featuredItems,
     this.onFavoriteToggle,
   });
 
   @override
-  State<FeaturedListingsSection> createState() => _FeaturedListingsSectionState();
+  State<FeaturedListingsSection> createState() =>
+      _FeaturedListingsSectionState();
 }
 
 class _FeaturedListingsSectionState extends State<FeaturedListingsSection> {
@@ -22,41 +24,87 @@ class _FeaturedListingsSectionState extends State<FeaturedListingsSection> {
 
   @override
   Widget build(BuildContext context) {
-    
-    final int count = _showAllFeatured
-        ? widget.featuredItems.length
-        : (widget.featuredItems.length > 3
-            ? 3
-            : widget.featuredItems.length);
+    return StreamBuilder<GetFeaturedListingsModel>(
+      stream: getFeaturedListingsRxObj.getFeaturedListingsData,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            !snapshot.hasData) {
+          return _buildShimmerLoading();
+        }
 
+        final featuredModel = snapshot.data;
+        final items = featuredModel?.data ?? [];
+
+        if (items.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        final bool canToggle = items.length > 3;
+        final int count = _showAllFeatured
+            ? items.length
+            : (items.length > 3 ? 3 : items.length);
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildSectionTitle(
+              'Featured Listings',
+              seeAllText: _showAllFeatured ? 'See Less' : 'See All',
+              onTapSeeAll: canToggle
+                  ? () {
+                      setState(() {
+                        _showAllFeatured = !_showAllFeatured;
+                      });
+                    }
+                  : null,
+            ),
+            SizedBox(
+              height: 230,
+              child: ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                scrollDirection: Axis.horizontal,
+                itemCount: count,
+                separatorBuilder: (_, _) => const SizedBox(width: 12),
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  return ListingCard(
+                    item: item,
+                    onFavoriteToggle: () {
+                      widget.onFavoriteToggle?.call(item);
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildShimmerLoading() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle(
-          'Featured Listings',
-          seeAllText: _showAllFeatured ? 'See Less' : 'See All',
-          onTapSeeAll: () {
-            setState(() {
-              _showAllFeatured = !_showAllFeatured;
-            });
-          },
-        ),
+        _buildSectionTitle('Featured Listings'),
         SizedBox(
           height: 230,
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            scrollDirection: Axis.horizontal,
-            itemCount: count,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (context, index) {
-              final item = widget.featuredItems[index];
-              return ListingCard(
-                item: item,
-                onFavoriteToggle: () {
-                  widget.onFavoriteToggle?.call(item);
-                },
-              );
-            },
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              scrollDirection: Axis.horizontal,
+              itemCount: 4,
+              separatorBuilder: (_, _) => const SizedBox(width: 12),
+              itemBuilder: (context, index) => Container(
+                width: 165,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
           ),
         ),
       ],

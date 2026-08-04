@@ -248,6 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _filteredRecentItems = List.from(_recentItems);
     getCategoryListRxObj.getCategoryListRx();
     getRecentPostListRxObj.getRecentPostListRx();
+    getFeaturedListingsRxObj.getFeaturedListingsRx();
   }
 
   void _applyFilters() {
@@ -377,7 +378,6 @@ class _HomeScreenState extends State<HomeScreen> {
               _buildBannerCarousel(),
               const SizedBox(height: 20),
               FeaturedListingsSection(
-                featuredItems: _filteredFeaturedItems,
                 onFavoriteToggle: (item) {
                   setState(() {});
                 },

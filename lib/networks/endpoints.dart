@@ -91,6 +91,65 @@ final class Endpoints {
   static String getRecentPostList() => "/v1/posts/recent";
   // -------------------GetRecentPostList end-------------------
 
+  // ------------------- GetFeaturedListings start-------------------
+  static String getFeaturedListings({
+    int page = 1,
+    int perPage = 10,
+  }) =>
+      "/v1/posts/featured?page=$page&per_page=$perPage";
+  // -------------------GetFeaturedListings end-------------------
+
+  // ------------------- ExploreList start-------------------
+  static String exploreList({
+    List<String>? categorySlugs,
+    String? province,
+    String? city,
+    int? minPrice,
+    int? maxPrice,
+    String? sortBy,
+    String? search,
+    int page = 1,
+    int perPage = 10,
+  }) {
+    final params = <String>[];
+
+    if (categorySlugs != null && categorySlugs.isNotEmpty) {
+      for (final slug in categorySlugs) {
+        params.add("category_slug=$slug");
+      }
+    }
+
+    if (province != null && province.isNotEmpty) {
+      params.add("province=$province");
+    }
+
+    if (city != null && city.isNotEmpty) {
+      params.add("city=$city");
+    }
+
+    if (minPrice != null) {
+      params.add("min_price=$minPrice");
+    }
+
+    if (maxPrice != null) {
+      params.add("max_price=$maxPrice");
+    }
+
+    if (sortBy != null && sortBy.isNotEmpty) {
+      params.add("sort_by=$sortBy");
+    }
+
+    if (search != null && search.isNotEmpty) {
+      params.add("search=$search");
+    }
+
+    params.add("page=$page");
+    params.add("per_page=$perPage");
+
+    return "/v1/posts?${params.join("&")}";
+  }
+  // -------------------ExploreList end-------------------
+
   // ------------------- GetProfile start-------------------
   static String getProfile() => "/v1/auth/profile";
   // -------------------GetProfile end-------------------
@@ -131,4 +190,11 @@ final class Endpoints {
   static String createBuyAndSellCategory() => "/v1/auth/post/draft";
  // -------------------Create buy and sell category list end-----------------
 
+
+///____________________________ferdaus hossan sojib_______________________///
+
+
+  static String chatList() => "/v1/auth/conversations";
+  static String postDetails(int postId) =>
+      "/v1/post/details?post_id=$postId";
 }

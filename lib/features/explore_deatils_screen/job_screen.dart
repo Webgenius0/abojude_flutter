@@ -3,12 +3,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:abojude_flutter/features/home/presentation/report_screen.dart';
 import 'package:abojude_flutter/features/message_screeen/message_screen.dart';
+import 'package:abojude_flutter/features/home/model/get_post_details_model.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 import '../message_screeen/message_screeen_list.dart';
 
 class JobScreen extends StatefulWidget {
-  const JobScreen({super.key});
+  final int? postId;
+
+  const JobScreen({super.key, this.postId});
 
   @override
   State<JobScreen> createState() => _JobScreenState();
@@ -17,29 +24,49 @@ class JobScreen extends StatefulWidget {
 class _JobScreenState extends State<JobScreen> {
   bool _isFavorited = false;
   int _currentImageIndex = 0;
+  bool _isLoading = false;
 
-  final List<String> _coverImages = [
-    'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800',
-    'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800',
-    'https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=800',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    if (widget.postId != null) {
+      _fetchPostDetails(widget.postId!);
+    }
+  }
 
-  final List<Map<String, dynamic>> _relatedListings = [
-    {
-      'title': 'Shop Vancouver',
-      'category': 'Business',
-      'location': 'Toronto, Manitoba',
-      'imageUrl': 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=200',
-      'isFavorited': false,
-    },
-    {
-      'title': 'Shop Vancouver',
-      'category': 'Business',
-      'location': 'Toronto, Manitoba',
-      'imageUrl': 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=200',
-      'isFavorited': false,
-    },
-  ];
+  Future<void> _fetchPostDetails(int id) async {
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
+    try {
+      await getPostDetailsRxObj.getPostDetailsRx(id);
+    } catch (_) {
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  String? _formatImageUrl(String? rawUrl) {
+    if (rawUrl == null || rawUrl.trim().isEmpty) return null;
+    String url = rawUrl.trim();
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+
+    const String baseDomain = "https://abojude.thesyndicates.team";
+    url = url.replaceAll('/./', '/').replaceAll('/../', '/');
+    if (!url.toLowerCase().contains('storage')) {
+      final cleanPath = url.startsWith('/') ? url : '/$url';
+      return '$baseDomain/storage$cleanPath';
+    } else {
+      final cleanPath = url.startsWith('/') ? url : '/$url';
+      return '$baseDomain$cleanPath';
+    }
+  }
 
   // Contact launching helpers
   Future<void> _launchPhone(String phone) async {
@@ -77,6 +104,8 @@ class _JobScreenState extends State<JobScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    print('____________ProdudId________${widget.postId}');
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -116,7 +145,7 @@ class _JobScreenState extends State<JobScreen> {
             ),
             onPressed: () {
               Share.share(
-                'Check out Senior Flutter Developer position: https://example.com',
+                'Check out position: https://example.com',
               );
             },
           ),
@@ -129,7 +158,7 @@ class _JobScreenState extends State<JobScreen> {
             onPressed: () {
               Get.to(
                 () => const ReportScreen(
-                  targetName: 'Senior Flutter Developer position',
+                  targetName: 'Listing Position',
                   isReportUser: false,
                 ),
               );
@@ -137,30 +166,151 @@ class _JobScreenState extends State<JobScreen> {
           ),
         ],
       ),
-      body: Stack(
+      body: widget.postId != null
+          ? StreamBuilder<GetPostDetailsModel>(
+              stream: getPostDetailsRxObj.getPostDetailsData,
+              builder: (context, snapshot) {
+                if (_isLoading ||
+                    snapshot.connectionState == ConnectionState.waiting) {
+                  return _buildShimmerDetails();
+                }
+
+                final details = snapshot.data?.data;
+                return RefreshIndicator(
+                  onRefresh: () => _fetchPostDetails(widget.postId!),
+                  color: const Color(0xFF1B2D6B),
+                  child: Stack(
+                    children: [
+                      SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: EdgeInsets.only(bottom: 90.h),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildCoverImage(details),
+                            _buildHeaderDetails(details),
+                            _buildDescription(details),
+                            _buildJobSpecifications(details),
+                            _buildSellerCard(details),
+                            _buildContactInfo(details),
+                            _buildRelatedListings(details?.relatedPosts),
+                          ],
+                        ),
+                      ),
+                      _buildBottomActionBar(details),
+                    ],
+                  ),
+                );
+              },
+            )
+          : Stack(
+              children: [
+                SingleChildScrollView(
+                  padding: EdgeInsets.only(bottom: 90.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildCoverImage(null),
+                      _buildHeaderDetails(null),
+                      _buildDescription(null),
+                      _buildJobSpecifications(null),
+                      _buildSellerCard(null),
+                      _buildContactInfo(null),
+                      _buildRelatedListings(null),
+                    ],
+                  ),
+                ),
+                _buildBottomActionBar(null),
+              ],
+            ),
+    );
+  }
+
+  Widget _buildShimmerDetails() {
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(16.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SingleChildScrollView(
-            padding: EdgeInsets.only(bottom: 90.h),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              height: 220.h,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+            ),
+          ),
+          SizedBox(height: 16.h),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildCoverImage(),
-                _buildHeaderDetails(),
-                _buildDescription(),
-                _buildJobSpecifications(),
-                _buildSellerCard(),
-                _buildContactInfo(),
-                _buildRelatedListings(),
+                Container(
+                  width: 80.w,
+                  height: 20.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Container(
+                  width: 220.w,
+                  height: 22.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Container(
+                  width: 150.w,
+                  height: 14.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
+                ),
               ],
             ),
           ),
-          _buildBottomActionBar(),
         ],
       ),
     );
   }
 
-  Widget _buildCoverImage() {
+  Widget _buildCoverImage(PostDetailsData? details) {
+    List<String> coverList = [];
+    if (details?.images != null && details!.images!.isNotEmpty) {
+      coverList = details.images!
+          .map((img) => _formatImageUrl(img) ?? img)
+          .toList();
+    } else if (details?.thumbnail != null && details!.thumbnail!.isNotEmpty) {
+      final formatted = _formatImageUrl(details.thumbnail);
+      if (formatted != null) coverList = [formatted];
+    }
+
+    if (coverList.isEmpty) {
+      return Container(
+        height: 180.h,
+        width: double.infinity,
+        color: Colors.grey[200],
+        child: Center(
+          child: Icon(
+            Icons.image_not_supported_outlined,
+            size: 48.r,
+            color: Colors.grey[400],
+          ),
+        ),
+      );
+    }
+
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -168,20 +318,26 @@ class _JobScreenState extends State<JobScreen> {
           height: 220.h,
           width: double.infinity,
           child: PageView.builder(
-            itemCount: _coverImages.length,
+            itemCount: coverList.length,
             onPageChanged: (index) {
               setState(() {
                 _currentImageIndex = index;
               });
             },
             itemBuilder: (context, index) {
-              return Image.network(
-                _coverImages[index],
+              final imgUrl = coverList[index];
+              return CachedNetworkImage(
+                imageUrl: imgUrl,
                 fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Container(color: Colors.grey[200]);
-                },
+                placeholder: (context, url) => Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(color: Colors.white),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  color: Colors.grey[200],
+                  child: Icon(Icons.image, size: 48.r, color: Colors.grey[400]),
+                ),
               );
             },
           ),
@@ -191,7 +347,7 @@ class _JobScreenState extends State<JobScreen> {
           bottom: 12.h,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(_coverImages.length, (index) {
+            children: List.generate(coverList.length, (index) {
               return Container(
                 width: 8.w,
                 height: 8.h,
@@ -200,7 +356,7 @@ class _JobScreenState extends State<JobScreen> {
                   shape: BoxShape.circle,
                   color: _currentImageIndex == index
                       ? Colors.white
-                      : Colors.white.withOpacity(0.5),
+                      : Colors.white.withValues(alpha: 0.5),
                 ),
               );
             }),
@@ -210,31 +366,44 @@ class _JobScreenState extends State<JobScreen> {
     );
   }
 
-  Widget _buildHeaderDetails() {
+  Widget _buildHeaderDetails(PostDetailsData? details) {
+    final category = details?.categoryName ?? 'Jobs';
+    final title = details?.title ?? 'Senior Flutter Developer';
+    final location = (details?.city != null || details?.province != null)
+        ? "${details?.city ?? ''}${details?.city != null && details?.province != null ? ', ' : ''}${details?.province ?? ''}"
+        : 'Toronto, Manitoba';
+    final timeAgo = details?.timeAgo ?? '12 hours ago';
+
+    String? priceStr;
+    if (details?.price != null && details!.price!.isNotEmpty) {
+      priceStr = details.price!.startsWith('£') || details.price!.startsWith('\$')
+          ? details.price!
+          : '£${details.price}';
+    }
+
     return Padding(
       padding: EdgeInsets.all(16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // "Jobs" badge
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
             decoration: BoxDecoration(
-              color: const Color(0xFFFEF3C7), // light amber background
+              color: const Color(0xFFFEF3C7),
               borderRadius: BorderRadius.circular(6.r),
             ),
             child: Text(
-              'Jobs',
+              category,
               style: TextStyle(
                 fontSize: 11.sp,
                 fontWeight: FontWeight.w700,
-                color: const Color(0xFFD97706), // amber text
+                color: const Color(0xFFD97706),
               ),
             ),
           ),
           SizedBox(height: 12.h),
           Text(
-            'Senior Flutter Developer',
+            title,
             style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
@@ -251,7 +420,7 @@ class _JobScreenState extends State<JobScreen> {
               ),
               SizedBox(width: 4.w),
               Text(
-                'Toronto, Manitoba',
+                location,
                 style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
               ),
               SizedBox(width: 16.w),
@@ -262,46 +431,50 @@ class _JobScreenState extends State<JobScreen> {
               ),
               SizedBox(width: 4.w),
               Text(
-                '12 hours ago',
+                timeAgo,
                 style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
               ),
             ],
           ),
-          SizedBox(height: 12.h),
-          // Salary Indicator Badge
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-            decoration: BoxDecoration(
-              color: const Color(0xFFECFDF5), // light green
-              border: Border.all(color: const Color(0xFFA7F3D0)),
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.payments_outlined,
-                  size: 16.sp,
-                  color: const Color(0xFF059669),
-                ),
-                SizedBox(width: 6.w),
-                Text(
-                  '\$90,000 - \$120,000 / year',
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w600,
+          if (priceStr != null) ...[
+            SizedBox(height: 12.h),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+              decoration: BoxDecoration(
+                color: const Color(0xFFECFDF5),
+                border: Border.all(color: const Color(0xFFA7F3D0)),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.payments_outlined,
+                    size: 16.sp,
                     color: const Color(0xFF059669),
                   ),
-                ),
-              ],
+                  SizedBox(width: 6.w),
+                  Text(
+                    priceStr,
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF059669),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
   }
 
-  Widget _buildDescription() {
+  Widget _buildDescription(PostDetailsData? details) {
+    final description = details?.description ??
+        'We are looking for a Senior Flutter Developer to join our team in building premium, high-performance mobile applications. The ideal candidate has experience with state management, custom animations, responsive UI layouts, and REST API integration.';
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
@@ -317,7 +490,7 @@ class _JobScreenState extends State<JobScreen> {
           ),
           SizedBox(height: 6.h),
           Text(
-            'We are looking for a Senior Flutter Developer to join our team in building premium, high-performance mobile applications. The ideal candidate has experience with state management (GetX/Bloc), custom animations, responsive UI layouts, and REST API integration. Collaborative environment, competitive salary, and flexible hours.',
+            description,
             style: TextStyle(
               fontSize: 13.sp,
               color: const Color(0xFF4B5563),
@@ -329,8 +502,14 @@ class _JobScreenState extends State<JobScreen> {
     );
   }
 
-  Widget _buildJobSpecifications() {
-    final specs = ['Full-Time', 'Remote / Hybrid', '3+ Years Exp', 'Flutter & Dart'];
+  Widget _buildJobSpecifications(PostDetailsData? details) {
+    List<String> specs = ['Full-Time', 'Remote / Hybrid', '3+ Years Exp', 'Flutter & Dart'];
+    if (details?.specifications != null && details!.specifications!.isNotEmpty) {
+      specs = details.specifications!.entries
+          .map((e) => "${e.key}: ${e.value}")
+          .toList();
+    }
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
@@ -359,7 +538,7 @@ class _JobScreenState extends State<JobScreen> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFEFF6FF), // light blue background
+        color: const Color(0xFFEFF6FF),
         border: Border.all(color: const Color(0xFFDBEAFE)),
         borderRadius: BorderRadius.circular(20.r),
       ),
@@ -385,7 +564,17 @@ class _JobScreenState extends State<JobScreen> {
     );
   }
 
-  Widget _buildSellerCard() {
+  Widget _buildSellerCard(PostDetailsData? details) {
+    final name = details?.user?.name ?? 'Sarah Ahmed';
+    final avatar = _formatImageUrl(details?.user?.avatar);
+    final location = (details?.city != null || details?.province != null)
+        ? "${details?.city ?? ''}${details?.city != null && details?.province != null ? ', ' : ''}${details?.province ?? ''}"
+        : 'Toronto, Ontario';
+
+    final initials = name.trim().isNotEmpty
+        ? name.trim().split(RegExp(r'\s+')).take(2).map((e) => e[0]).join().toUpperCase()
+        : 'SA';
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
@@ -408,25 +597,58 @@ class _JobScreenState extends State<JobScreen> {
             ),
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 20.r,
-                  backgroundColor: const Color(0xFF1B2D6B),
-                  child: Text(
-                    'SA',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.bold,
+                if (avatar != null && avatar.isNotEmpty)
+                  CachedNetworkImage(
+                    imageUrl: avatar,
+                    imageBuilder: (context, provider) => Container(
+                      width: 40.r,
+                      height: 40.r,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(image: provider, fit: BoxFit.cover),
+                      ),
+                    ),
+                    placeholder: (context, url) => Container(
+                      width: 40.r,
+                      height: 40.r,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFE5E7EB),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    errorWidget: (context, url, err) => CircleAvatar(
+                      radius: 20.r,
+                      backgroundColor: const Color(0xFF1B2D6B),
+                      child: Text(
+                        initials,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  CircleAvatar(
+                    radius: 20.r,
+                    backgroundColor: const Color(0xFF1B2D6B),
+                    child: Text(
+                      initials,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
                 SizedBox(width: 12.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Sarah Ahmed',
+                        name,
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
@@ -435,18 +657,10 @@ class _JobScreenState extends State<JobScreen> {
                       ),
                       SizedBox(height: 2.h),
                       Text(
-                        'Toronto, Ontario',
+                        location,
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: const Color(0xFF6B7280),
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-                      Text(
-                        'Member since 2023',
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          color: const Color(0xFF9CA3AF),
                         ),
                       ),
                     ],
@@ -460,7 +674,14 @@ class _JobScreenState extends State<JobScreen> {
     );
   }
 
-  Widget _buildContactInfo() {
+  Widget _buildContactInfo(PostDetailsData? details) {
+    final phone = details?.phone ?? details?.user?.phone ?? '+1-416-555-1234';
+    final whatsapp = details?.whatsapp ?? phone;
+    final email = details?.email ?? details?.user?.email ?? 'recruiting@example.com';
+    final location = (details?.city != null || details?.province != null)
+        ? "${details?.city ?? ''}${details?.city != null && details?.province != null ? ', ' : ''}${details?.province ?? ''}"
+        : 'Downtown Toronto, Ontario';
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
@@ -487,8 +708,8 @@ class _JobScreenState extends State<JobScreen> {
                   iconColor: const Color(0xFF059669),
                   bgColor: const Color(0xFFECFDF5),
                   title: 'Phone',
-                  value: '+1-416-555-1234',
-                  onTap: () => _launchPhone('+1-416-555-1234'),
+                  value: phone,
+                  onTap: () => _launchPhone(phone),
                 ),
                 const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
                 _buildContactTile(
@@ -496,8 +717,8 @@ class _JobScreenState extends State<JobScreen> {
                   iconColor: const Color(0xFF10B981),
                   bgColor: const Color(0xFFECFDF5),
                   title: "What's app number",
-                  value: '+1-416-555-1234',
-                  onTap: () => _launchWhatsApp('+1-416-555-1234'),
+                  value: whatsapp,
+                  onTap: () => _launchWhatsApp(whatsapp),
                 ),
                 const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
                 _buildContactTile(
@@ -505,8 +726,8 @@ class _JobScreenState extends State<JobScreen> {
                   iconColor: const Color(0xFF2563EB),
                   bgColor: const Color(0xFFEFF6FF),
                   title: 'Email',
-                  value: 'recruiting@example.com',
-                  onTap: () => _launchEmail('recruiting@example.com'),
+                  value: email,
+                  onTap: () => _launchEmail(email),
                 ),
                 const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
                 _buildContactTile(
@@ -514,8 +735,8 @@ class _JobScreenState extends State<JobScreen> {
                   iconColor: const Color(0xFFEA580C),
                   bgColor: const Color(0xFFFFF7ED),
                   title: 'Address',
-                  value: 'Downtown Toronto, Ontario',
-                  onTap: () => _launchUrl('https://maps.google.com/?q=DowntownToronto,Ontario'),
+                  value: location,
+                  onTap: () => _launchUrl('https://maps.google.com/?q=$location'),
                 ),
               ],
             ),
@@ -577,7 +798,11 @@ class _JobScreenState extends State<JobScreen> {
     );
   }
 
-  Widget _buildRelatedListings() {
+  Widget _buildRelatedListings(List<RelatedPost>? relatedPosts) {
+    if (relatedPosts == null || relatedPosts.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
@@ -596,21 +821,64 @@ class _JobScreenState extends State<JobScreen> {
             height: 220.h,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              itemCount: _relatedListings.length,
+              itemCount: relatedPosts.length,
               separatorBuilder: (context, index) => SizedBox(width: 12.w),
               itemBuilder: (context, index) {
-                final item = _relatedListings[index];
-                return _buildRelatedCard(
-                  title: item['title'],
-                  category: item['category'],
-                  location: item['location'],
-                  imageUrl: item['imageUrl'],
-                  isFavorited: item['isFavorited'],
-                  onFavoriteToggle: () {
-                    setState(() {
-                      item['isFavorited'] = !item['isFavorited'];
-                    });
-                  },
+                final item = relatedPosts[index];
+                final formattedThumb = _formatImageUrl(item.thumbnail);
+
+                return Container(
+                  width: 160.w,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: const Color(0xFFE5E7EB)),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(12.r),
+                        ),
+                        child: SizedBox(
+                          height: 100.h,
+                          width: double.infinity,
+                          child: formattedThumb != null
+                              ? CachedNetworkImage(
+                                  imageUrl: formattedThumb,
+                                  fit: BoxFit.cover,
+                                )
+                              : Container(color: Colors.grey[200]),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.title ?? '',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              item.categoryName ?? '',
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
@@ -620,205 +888,59 @@ class _JobScreenState extends State<JobScreen> {
     );
   }
 
-  Widget _buildRelatedCard({
-    required String title,
-    required String category,
-    required String location,
-    required String imageUrl,
-    required bool isFavorited,
-    required VoidCallback onFavoriteToggle,
-  }) {
-    return SafeArea(
-      child: Container(
-        width: 158.w,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: const Color(0xFFE5E7EB)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(12.r),
-                  ),
-                  child: Image.network(
-                    imageUrl,
-                    height: 100.h,
-                    width: 158.w,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Positioned(
-                  bottom: 6.h,
-                  left: 8.w,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.4),
-                      borderRadius: BorderRadius.circular(4.r),
-                    ),
-                    child: Text(
-                      '4 days ago',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 8.sp,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 8.h,
-                  right: 8.w,
-                  child: GestureDetector(
-                    onTap: onFavoriteToggle,
-                    child: Container(
-                      width: 26.w,
-                      height: 26.h,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 2,
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        isFavorited ? Icons.favorite : Icons.favorite_border,
-                        size: 14.sp,
-                        color: isFavorited ? Colors.red : Colors.grey,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(8.0.r),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 6.h),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 6.w,
-                        vertical: 2.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF3F4F6),
-                        borderRadius: BorderRadius.circular(4.r),
-                      ),
-                      child: Text(
-                        category,
-                        style: TextStyle(fontSize: 9.sp, color: const Color(0xFF4B5563)),
-                      ),
-                    ),
-                    SizedBox(height: 6.h),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          size: 10.sp,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(width: 4.w),
-                        Expanded(
-                          child: Text(
-                            location,
-                            style: TextStyle(fontSize: 9.sp, color: Colors.grey),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget _buildBottomActionBar(PostDetailsData? details) {
+    final name = details?.user?.name ?? 'Sara Khali';
 
-  Widget _buildBottomActionBar() {
     return Positioned(
       bottom: 0,
       left: 0,
       right: 0,
       child: SafeArea(
         child: Container(
-          color: Colors.white,
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1B2D6B),
-              minimumSize: Size(double.infinity, 48.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.r),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 10,
+                offset: const Offset(0, -2),
               ),
-              elevation: 0,
-            ),
+            ],
+          ),
+          child: ElevatedButton.icon(
             onPressed: () {
               Get.to(
                 () => MessageScreen(
                   chat: ChatMessage(
-                    id: 'sarah_ahmed',
-                    name: 'Sarah Ahmed',
-                    initials: 'SA',
-                    lastMessage:
-                        'Hi, is the Samsung Galaxy S24 Ultra still available?',
+                    id: details?.id?.toString() ?? '1',
+                    name: name,
+                    initials: name.trim().isNotEmpty
+                        ? name.trim().split(RegExp(r'\s+')).take(2).map((e) => e[0]).join().toUpperCase()
+                        : 'SK',
+                    lastMessage: 'Inquiry regarding listing',
                     time: 'Just now',
                     isOnline: true,
+                    avatarUrl: _formatImageUrl(details?.user?.avatar),
                   ),
                 ),
               );
             },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/icons/message-02.png',
-                  height: 30.h,
-                  errorBuilder: (context, error, stackTrace) => Icon(
-                    Icons.chat_bubble_outline,
-                    color: Colors.white,
-                    size: 20.sp,
-                  ),
-                ),
-                SizedBox(width: 10.w),
-                Text(
-                  'Send Message',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+            icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
+            label: Text(
+              'Message',
+              style: TextStyle(
+                fontSize: 15.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1B2D6B),
+              minimumSize: Size(double.infinity, 48.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r),
+              ),
             ),
           ),
         ),

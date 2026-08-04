@@ -1,12 +1,14 @@
-import 'package:abojude_flutter/features/explore_deatils_screen/business_screen.dart';
-import 'package:abojude_flutter/features/home/presentation/product_details_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-
-import '../../explore_deatils_screen/job_screen.dart';
-import '../../explore_deatils_screen/services_screen.dart';
+import 'package:abojude_flutter/features/explore_deatils_screen/business_screen.dart';
+import 'package:abojude_flutter/features/explore_deatils_screen/job_screen.dart';
+import 'package:abojude_flutter/features/explore_deatils_screen/services_screen.dart';
+import 'package:abojude_flutter/features/home/presentation/product_details_screen.dart';
+import 'package:abojude_flutter/features/home/model/get_explore_model.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 import '../widgets/filter_screeen.dart';
 
 // ─── Data Models ────────────────────────────────────────────────────────────
@@ -35,93 +37,25 @@ class Listing {
     this.isFeatured = false,
     this.isFavorited = false,
   });
+
+  factory Listing.fromDatum(Datum datum) {
+    return Listing(
+      id: datum.id?.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),
+      title: datum.title ?? '',
+      price: datum.price != null && datum.price.toString().isNotEmpty
+          ? (datum.price.toString().startsWith('£') || datum.price.toString().startsWith('\$')
+              ? datum.price.toString()
+              : '£${datum.price}')
+          : null,
+      category: datum.categoryName ?? '',
+      location: "${datum.city ?? ''}${datum.city != null && datum.province != null ? ', ' : ''}${datum.province ?? ''}",
+      timeAgo: datum.timeAgo ?? '',
+      imageUrl: datum.thumbnail ?? '',
+      isFeatured: datum.isFeatured ?? false,
+      isFavorited: datum.isWish ?? false,
+    );
+  }
 }
-
-// ─── Sample Data ─────────────────────────────────────────────────────────────
-
-final List<Listing> _allListings = [
-  Listing(
-    id: '1',
-    title: 'Samsung Galaxy S24 Ultra Excelle...',
-    price: '\$1,199',
-    category: 'Buy & Sell',
-    location: 'Toronto, Manitoba',
-    timeAgo: '5 day ago',
-    imageUrl:
-        'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400',
-    isFeatured: false,
-  ),
-  Listing(
-    id: '2',
-    title: 'Shop Vancouver',
-    category: 'Business',
-    location: 'Toronto, Manitoba',
-    timeAgo: '5 day ago',
-    imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
-    isFeatured: false,
-  ),
-  Listing(
-    id: '3',
-    title: 'Restaurant Manager Needed',
-    category: 'Jobs',
-    location: 'Toronto, Manitoba',
-    timeAgo: '3 minutes ago',
-    imageUrl:
-        'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400',
-    isFeatured: false,
-  ),
-  Listing(
-    id: '4',
-    title: 'Professional Cleaning Services',
-    category: 'Services',
-    location: 'Toronto, Manitoba',
-    timeAgo: '21 hours ago',
-    imageUrl:
-        'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400',
-    isFeatured: true,
-  ),
-  Listing(
-    id: '5',
-    title: 'Halal Butcher Shop Vancouver',
-    category: 'Business',
-    location: 'Vancouver, BC',
-    timeAgo: '4 day ago',
-    imageUrl:
-        'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400',
-    isFeatured: true,
-  ),
-  Listing(
-    id: '6',
-    title: 'iPhone 15 Pro Max - Like New',
-    price: '\$999',
-    category: 'Buy & Sell',
-    location: 'Calgary, Alberta',
-    timeAgo: '1 hour ago',
-    imageUrl:
-        'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400',
-    isFeatured: false,
-  ),
-  Listing(
-    id: '7',
-    title: 'Software Developer Needed',
-    category: 'Jobs',
-    location: 'Toronto, Ontario',
-    timeAgo: '2 hours ago',
-    imageUrl:
-        'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400',
-    isFeatured: true,
-  ),
-  Listing(
-    id: '8',
-    title: 'Furniture - Sofa Set',
-    price: '\$450',
-    category: 'Buy & Sell',
-    location: 'Ottawa, Ontario',
-    timeAgo: '3 days ago',
-    imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400',
-    isFeatured: false,
-  ),
-];
 
 // ─── Explore Screen ───────────────────────────────────────────────────────────
 
@@ -132,91 +66,137 @@ class ExploreScreen extends StatefulWidget {
   State<ExploreScreen> createState() => _ExploreScreenState();
 }
 
-class _ExploreScreenState extends State<ExploreScreen> {
+class _ExploreScreenState extends State<ExploreScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animController;
   ListingCategory _selectedCategory = ListingCategory.all;
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  List<Listing> _listings = List.from(_allListings);
+  FilterOptions _activeFilters = FilterOptions();
+  bool _isLoading = true;
+
   static const Color navyBlue = Color(0xFF1B2D6B);
+
   @override
   void initState() {
     super.initState();
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    );
     _searchController.addListener(_onSearchChanged);
+    _fetchExploreList();
+  }
+
+  Future<void> _fetchExploreList() async {
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
+
+    List<String>? categorySlugs;
+    if (_selectedCategory == ListingCategory.buyAndSell) {
+      categorySlugs = ['buy-and-sell'];
+    } else if (_selectedCategory == ListingCategory.business) {
+      categorySlugs = ['business'];
+    } else if (_selectedCategory == ListingCategory.jobs) {
+      categorySlugs = ['jobs'];
+    } else if (_selectedCategory == ListingCategory.services) {
+      categorySlugs = ['services'];
+    } else if (_activeFilters.category != 'All' && _activeFilters.category.isNotEmpty) {
+      categorySlugs = [_activeFilters.category.toLowerCase().replaceAll(' ', '-').replaceAll('&', 'and')];
+    }
+
+    try {
+      await getExploreRxObj.getExploreRx(
+        categorySlugs: categorySlugs,
+        province: _activeFilters.province,
+        city: _activeFilters.city,
+        minPrice: _activeFilters.minPrice?.toInt(),
+        maxPrice: _activeFilters.maxPrice?.toInt(),
+        sortBy: _activeFilters.sortBy != 'Featured' ? _activeFilters.sortBy : null,
+        search: _searchQuery.isNotEmpty ? _searchQuery : null,
+      );
+    } catch (_) {
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        _animController.forward(from: 0.0);
+      }
+    }
   }
 
   @override
   void dispose() {
+    _animController.dispose();
     _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     super.dispose();
   }
 
   void _onSearchChanged() {
-    setState(() {
-      _searchQuery = _searchController.text.toLowerCase();
-      _applyFilters();
-    });
-  }
-
-  void _applyFilters() {
-    _listings = _allListings.where((listing) {
-      final matchesSearch =
-          _searchQuery.isEmpty ||
-          listing.title.toLowerCase().contains(_searchQuery) ||
-          listing.category.toLowerCase().contains(_searchQuery) ||
-          listing.location.toLowerCase().contains(_searchQuery);
-
-      final matchesCategory =
-          _selectedCategory == ListingCategory.all ||
-          (_selectedCategory == ListingCategory.buyAndSell &&
-              listing.category == 'Buy & Sell') ||
-          (_selectedCategory == ListingCategory.jobs &&
-              listing.category == 'Jobs') ||
-          (_selectedCategory == ListingCategory.business &&
-              listing.category == 'Business') ||
-          (_selectedCategory == ListingCategory.services &&
-              listing.category == 'Services');
-
-      return matchesSearch && matchesCategory;
-    }).toList();
+    final query = _searchController.text.toLowerCase().trim();
+    if (_searchQuery != query) {
+      setState(() {
+        _searchQuery = query;
+      });
+      _fetchExploreList();
+    }
   }
 
   void _selectCategory(ListingCategory category) {
-    setState(() {
-      _selectedCategory = category;
-      _applyFilters();
-    });
+    if (_selectedCategory != category) {
+      setState(() {
+        _selectedCategory = category;
+      });
+      _fetchExploreList();
+    }
   }
 
-  void _toggleFavorite(String id) {
-    setState(() {
-      final index = _listings.indexWhere((l) => l.id == id);
-      if (index != -1) {
-        _listings[index].isFavorited = !_listings[index].isFavorited;
-        // Also update in allListings
-        final allIndex = _allListings.indexWhere((l) => l.id == id);
-        if (allIndex != -1) {
-          _allListings[allIndex].isFavorited = _listings[index].isFavorited;
-        }
-      }
-    });
-  }
-
-  FilterOptions _activeFilters = FilterOptions();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            _buildSearchBar(),
-            _buildCategoryTabs(),
-            _buildResultCount(),
-            Expanded(child: _buildListingsGrid()),
-          ],
+        child: RefreshIndicator(
+          onRefresh: _fetchExploreList,
+          color: navyBlue,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              _buildSearchBar(),
+              _buildCategoryTabs(),
+              Expanded(
+                child: StreamBuilder<GetExploreModel>(
+                  stream: getExploreRxObj.getExploreData,
+                  builder: (context, snapshot) {
+                    if (_isLoading ||
+                        snapshot.connectionState == ConnectionState.waiting) {
+                      return _buildShimmerGrid();
+                    }
+
+                    final rawItems = snapshot.data?.data ?? [];
+                    final List<Listing> listings =
+                        rawItems.map((d) => Listing.fromDatum(d)).toList();
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildResultCount(listings.length),
+                        Expanded(
+                          child: _buildListingsGrid(listings),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -277,7 +257,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
               ),
             ),
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           GestureDetector(
             onTap: () {
               showFilterBottomSheet(
@@ -286,8 +266,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 onApply: (filters) {
                   setState(() {
                     _activeFilters = filters;
-                    _applyFilters(); // your existing filter method
                   });
+                  _fetchExploreList();
                 },
               );
             },
@@ -295,7 +275,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
               width: 46,
               height: 46,
               decoration: BoxDecoration(
-                color:  navyBlue,
+                color: navyBlue,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(Icons.tune, color: Colors.white, size: 20),
@@ -325,7 +305,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
             padding: const EdgeInsets.only(right: 8),
             child: GestureDetector(
               onTap: () {
-                _selectCategory(cat.$1); // Only keep category selection
+                _selectCategory(cat.$1);
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
@@ -334,14 +314,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: isSelected
-                      ? const Color(0xFF1A56DB)
-                      : Colors.transparent,
+                  color: isSelected ? navyBlue : Colors.transparent,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: isSelected
-                        ? const Color(0xFF1A56DB)
-                        : const Color(0xFFD1D5DB),
+                    color: isSelected ? navyBlue : const Color(0xFFD1D5DB),
                   ),
                 ),
                 child: Text(
@@ -360,42 +336,20 @@ class _ExploreScreenState extends State<ExploreScreen> {
     );
   }
 
-  Widget _buildResultCount() {
+  Widget _buildResultCount(int count) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
       child: Text(
-        '${_listings.length} listing found',
+        '$count ${count == 1 ? 'listing' : 'listings'} found',
         style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
       ),
     );
   }
 
-  Widget _buildListingsGrid() {
-    if (_listings.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.search_off, size: 60, color: Colors.grey[300]),
-            const SizedBox(height: 12),
-            Text(
-              'No listings found',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[500],
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              'Try a different search or category',
-              style: TextStyle(fontSize: 13, color: Colors.grey[400]),
-            ),
-          ],
-        ),
-      );
-    }
+  Widget _buildShimmerGrid() {
     return GridView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -403,49 +357,147 @@ class _ExploreScreenState extends State<ExploreScreen> {
         crossAxisSpacing: 12,
         childAspectRatio: 0.72,
       ),
-      itemCount: _listings.length,
+      itemCount: 6,
       itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            final category = _listings[index].category;
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
-            switch (category) {
-              case 'Buy & Sell':
-                Get.to(() => const ProductDetailsScreen());
-                break;
+  Widget _buildListingsGrid(List<Listing> listings) {
+    if (listings.isEmpty) {
+      return Center(
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.search_off, size: 60, color: Colors.grey[300]),
+              const SizedBox(height: 12),
+              Text(
+                'No listings found',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[500],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Try a different search or category',
+                style: TextStyle(fontSize: 13, color: Colors.grey[400]),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    return GridView.builder(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+        childAspectRatio: 0.72,
+      ),
+      itemCount: listings.length,
+      itemBuilder: (context, index) {
+        final item = listings[index];
+        final double start = (index * 0.05).clamp(0.0, 0.7);
+        final double end = (start + 0.3).clamp(0.3, 1.0);
 
-              case 'Business':
-                Get.to(() => const BusinessScreen());
-                break;
+        final fadeAnim = Tween<double>(begin: 0.0, end: 1.0).animate(
+          CurvedAnimation(
+            parent: _animController,
+            curve: Interval(start, end, curve: Curves.easeOut),
+          ),
+        );
 
-              case 'Jobs':
-                Get.to(() => const JobScreen());
-                break;
+        final slideAnim = Tween<Offset>(
+          begin: const Offset(0.0, 0.15),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: _animController,
+            curve: Interval(start, end, curve: Curves.easeOutCubic),
+          ),
+        );
 
-              case 'Services':
-                Get.to(() => const ServicesScreen());
-                break;
+        return FadeTransition(
+          opacity: fadeAnim,
+          child: SlideTransition(
+            position: slideAnim,
+            child: GestureDetector(
+              onTap: () {
+                final category = item.category;
 
-              default:
-                Get.to(() => const BusinessScreen());
-            }
-          },
-          child: _ListingCard(
-            listing: _listings[index],
-            onFavoriteToggle: () => _toggleFavorite(_listings[index].id),
+                final int? postId = int.tryParse(item.id);
+
+                if (category.toLowerCase().contains('buy') ||
+                    category.toLowerCase().contains('sell')) {
+                  Get.to(() => ProductDetailsScreen(postId: postId));
+                } else if (category.toLowerCase().contains('business')) {
+                  Get.to(() => BusinessScreen(postId: postId));
+                } else if (category.toLowerCase().contains('job')) {
+                  Get.to(() => JobScreen(postId: postId));
+                } else if (category.toLowerCase().contains('service')) {
+                  Get.to(() => const ServicesScreen());
+                } else {
+                  Get.to(() => BusinessScreen(postId: postId));
+                }
+              },
+              child: _ListingCard(
+                listing: item,
+                onFavoriteToggle: () {
+                  setState(() {
+                    item.isFavorited = !item.isFavorited;
+                  });
+                },
+              ),
+            ),
           ),
         );
       },
     );
   }
 }
-// ─── Listing Card ─────────────────────────────────────────────────────────────
+
+// ─── Listing Card Widget with CachedNetworkImage ───────────────────────────────
 
 class _ListingCard extends StatelessWidget {
   final Listing listing;
   final VoidCallback onFavoriteToggle;
 
-  const _ListingCard({required this.listing, required this.onFavoriteToggle});
+  const _ListingCard({
+    required this.listing,
+    required this.onFavoriteToggle,
+  });
+
+  String? _formatImageUrl(String? rawUrl) {
+    if (rawUrl == null || rawUrl.trim().isEmpty) return null;
+    String url = rawUrl.trim();
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+
+    const String baseDomain = "https://abojude.thesyndicates.team";
+    url = url.replaceAll('/./', '/').replaceAll('/../', '/');
+    if (!url.toLowerCase().contains('storage')) {
+      final cleanPath = url.startsWith('/') ? url : '/$url';
+      return '$baseDomain/storage$cleanPath';
+    } else {
+      final cleanPath = url.startsWith('/') ? url : '/$url';
+      return '$baseDomain$cleanPath';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -455,7 +507,7 @@ class _ListingCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.07),
+            color: Colors.black.withValues(alpha: 0.07),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -463,12 +515,17 @@ class _ListingCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [_buildImage(), _buildDetails()],
+        children: [
+          _buildImage(),
+          _buildDetails(),
+        ],
       ),
     );
   }
 
   Widget _buildImage() {
+    final formattedUrl = _formatImageUrl(listing.imageUrl);
+
     return Stack(
       children: [
         ClipRRect(
@@ -476,49 +533,55 @@ class _ListingCard extends StatelessWidget {
           child: SizedBox(
             height: 130,
             width: double.infinity,
-            child: Image.network(
-              listing.imageUrl,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                color: const Color(0xFFE5E7EB),
-                child: const Icon(
-                  Icons.image_not_supported,
-                  color: Colors.grey,
-                  size: 36,
-                ),
-              ),
-              loadingBuilder: (context, child, progress) {
-                if (progress == null) return child;
-                return Container(
-                  color: const Color(0xFFE5E7EB),
-                  child: const Center(
-                    child: CircularProgressIndicator(strokeWidth: 2),
+            child: formattedUrl != null && formattedUrl.isNotEmpty
+                ? CachedNetworkImage(
+                    imageUrl: formattedUrl,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(color: Colors.white),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      color: const Color(0xFFE5E7EB),
+                      child: const Icon(
+                        Icons.image_not_supported,
+                        color: Colors.grey,
+                        size: 36,
+                      ),
+                    ),
+                  )
+                : Container(
+                    color: const Color(0xFFE5E7EB),
+                    child: const Icon(
+                      Icons.image_not_supported,
+                      color: Colors.grey,
+                      size: 36,
+                    ),
                   ),
-                );
-              },
-            ),
           ),
         ),
         // Time badge
-        Positioned(
-          bottom: 8,
-          left: 8,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.55),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Text(
-              listing.timeAgo,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 10,
-                fontWeight: FontWeight.w500,
+        if (listing.timeAgo.isNotEmpty)
+          Positioned(
+            bottom: 8,
+            left: 8,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+              decoration: BoxDecoration(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                listing.timeAgo,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
-        ),
         // Featured badge
         if (listing.isFeatured)
           Positioned(
@@ -561,7 +624,7 @@ class _ListingCard extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 4,
                   ),
                 ],
@@ -610,21 +673,22 @@ class _ListingCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 6),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3F4F6),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Text(
-                listing.category,
-                style: const TextStyle(
-                  fontSize: 11,
-                  color: Color(0xFF374151),
-                  fontWeight: FontWeight.w500,
+            if (listing.category.isNotEmpty)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F4F6),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  listing.category,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFF374151),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
             const SizedBox(height: 6),
             Row(
               children: [
