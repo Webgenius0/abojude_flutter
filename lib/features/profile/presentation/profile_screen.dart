@@ -19,6 +19,9 @@ import 'language_screen.dart';
 import 'blocked_users_screen.dart';
 import 'notification_settings_screen.dart';
 import 'contact_us_screen.dart';
+import 'package:abojude_flutter/features/profile/presentation/guest_user_profile.dart';
+import 'package:abojude_flutter/helpers/di.dart';
+import 'package:abojude_flutter/constants/app_constants.dart';
 import 'about_wasel_canada_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -32,7 +35,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    getProfileRxObj.getProfile();
+    final bool isGuest = appData.read(kKeyIsExploring) ?? false;
+    if (!isGuest) {
+      getProfileRxObj.getProfile();
+    }
   }
 
   String _getInitials(String name) {
@@ -86,6 +92,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isGuest = appData.read(kKeyIsExploring) ?? false;
+    if (isGuest) {
+      return const GuestUserProfile();
+    }
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
       body: SafeArea(
@@ -265,9 +275,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   icon: Icons.person_outline_rounded,
                   title: 'Edit Profile',
                   onTap: () {
-                    Get.to(() => EditProfileScreen(
-                          profileData: getProfileRxObj.getProfileData.valueOrNull?.data,
-                        ));
+                    Get.to(
+                      () => EditProfileScreen(
+                        profileData:
+                            getProfileRxObj.getProfileData.valueOrNull?.data,
+                      ),
+                    );
                   },
                 ),
                 _buildDivider(),
