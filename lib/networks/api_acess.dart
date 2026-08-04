@@ -5,6 +5,8 @@ import 'package:abojude_flutter/features/auth/register/model/register_verify_otp
 import 'package:abojude_flutter/features/auth/login/data/rx_login/rx.dart';
 import 'package:abojude_flutter/features/auth/login/model/login_model.dart';
 import 'package:abojude_flutter/features/auth/login/data/rx_logout/rx.dart';
+import 'package:abojude_flutter/features/message_screeen/data/rx.dart';
+import 'package:abojude_flutter/features/message_screeen/model/get_all_mesage_list_model.dart';
 import 'package:abojude_flutter/features/profile/data/rx_delete_account/rx.dart';
 import 'package:abojude_flutter/features/auth/forget_password/data/rx_forget_password/rx.dart';
 import 'package:abojude_flutter/features/auth/forget_password/model/forget_password_model.dart';
@@ -18,6 +20,12 @@ import 'package:abojude_flutter/features/home/data/rx_get_category_list/rx.dart'
 import 'package:abojude_flutter/features/home/model/get_category_list_model.dart';
 import 'package:abojude_flutter/features/home/data/rx_recent_post_list/rx.dart';
 import 'package:abojude_flutter/features/home/model/recent_post_list_model.dart';
+import 'package:abojude_flutter/features/home/data/rx_featured_listings_api/rx.dart';
+import 'package:abojude_flutter/features/home/model/get_featured_listings_model.dart';
+import 'package:abojude_flutter/features/home/data/rx_expoler_api/rx.dart';
+import 'package:abojude_flutter/features/home/model/get_explore_model.dart';
+import 'package:abojude_flutter/features/home/data/rx_all_porducaosn_deatils_api/rx.dart';
+import 'package:abojude_flutter/features/home/model/get_post_details_model.dart';
 import 'package:abojude_flutter/features/profile/data/rx_change_password/rx.dart';
 import 'package:abojude_flutter/features/profile/model/change_password_model.dart';
 import 'package:abojude_flutter/features/auth/set_new_password/data/rx_set_new_password/rx.dart';
@@ -271,11 +279,29 @@ TermsAndConditionRx privacyPolicyRxObj = TermsAndConditionRx(
 //   dataFetcher: BehaviorSubject<MentorDetailsModel>(),
 // );
 
-// //___________________ Filter List Api Access ______________________//
-// FilterListRx filterListRxObj = FilterListRx(
-//   empty: FilterListModel(),
-//   dataFetcher: BehaviorSubject<FilterListModel>.seeded(FilterListModel()),
-// );
+// //___________________  chat List Api Access ______________________//
+GetAllChatListRx chatListRxObj = GetAllChatListRx(
+  empty: GetMessageListModel(),
+  dataFetcher: BehaviorSubject<GetMessageListModel>.seeded(GetMessageListModel()),
+);
+
+// //___________________  Featured Listings Api Access ______________________//
+GetFeaturedListingsRx getFeaturedListingsRxObj = GetFeaturedListingsRx(
+  empty: GetFeaturedListingsModel(),
+  dataFetcher: BehaviorSubject<GetFeaturedListingsModel>(),
+);
+
+// //___________________  Explore Api Access ______________________//
+GetExploreRx getExploreRxObj = GetExploreRx(
+  empty: GetExploreModel(),
+  dataFetcher: BehaviorSubject<GetExploreModel>(),
+);
+
+// //___________________  Post Details Api Access ______________________//
+GetPostDetailsRx getPostDetailsRxObj = GetPostDetailsRx(
+  empty: GetPostDetailsModel(),
+  dataFetcher: BehaviorSubject<GetPostDetailsModel>(),
+);
 
 // FilterListRx studentDesignListRxObj = FilterListRx(
 //   empty: FilterListModel(),
