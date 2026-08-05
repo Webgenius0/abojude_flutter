@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
-import 'package:abojude_flutter/helpers/toast.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/services_create/widgets/service_listing_model.dart';
@@ -179,7 +178,7 @@ class ServiceSuccessScreen extends StatelessWidget {
                   // View My Listings Button
                   GestureDetector(
                     onTap: () {
-                      ToastUtil.showShortToast("My Listings coming soon!");
+                      NavigationService.navigateTo(Routes.myListingsScreen);
                     },
                     child: Container(
                       width: double.infinity,

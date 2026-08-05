@@ -202,9 +202,7 @@ class _BuySellSuccessScreenState extends State<BuySellSuccessScreen> {
                   // View My Listings Button
                   GestureDetector(
                     onTap: () {
-                      NavigationService.navigateToUntilReplacement(
-                        Routes.myListingsScreen,
-                      );
+                      NavigationService.navigateTo(Routes.myListingsScreen);
                     },
                     child: Container(
                       width: double.infinity,
