@@ -97,9 +97,7 @@ class ServiceStep5ReviewScreen extends StatelessWidget {
                                           begin: Alignment.bottomCenter,
                                           end: Alignment.topCenter,
                                           colors: [
-                                            Color(
-                                              0x99000000,
-                                            ), // 60% opacity black
+                                            Color(0x99000000),
                                             Colors.transparent,
                                           ],
                                         ),
@@ -153,7 +151,6 @@ class ServiceStep5ReviewScreen extends StatelessWidget {
                                         ),
                                   ),
                                   SizedBox(height: 12.h),
-
                                   // Badges
                                   Row(
                                     children: [

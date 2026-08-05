@@ -208,14 +208,14 @@ class _BuySellSuccessScreenState extends State<BuySellSuccessScreen> {
                       width: double.infinity,
                       height: 52.h,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF3F4F6),
+                        color: Color(0xFFF3F4F6),
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Center(
                         child: Text(
                           "View My Listings",
                           style: TextFontStyle.textStyle16InterW600.copyWith(
-                            color: const Color(0xFF4B5563),
+                            color: Color(0xFF4B5563),
                             fontSize: 15.sp,
                           ),
                         ),
