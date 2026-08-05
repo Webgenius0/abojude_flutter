@@ -7,6 +7,8 @@ import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/services_create/widgets/service_listing_model.dart';
 import 'package:abojude_flutter/features/create_listing/services_create/widgets/service_step_header.dart';
 import 'package:abojude_flutter/features/create_listing/services_create/widgets/service_button.dart';
+import 'package:abojude_flutter/helpers/toast.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 
 class ServiceStep5ReviewScreen extends StatelessWidget {
   final ServiceListingModel model;
@@ -38,164 +40,173 @@ class ServiceStep5ReviewScreen extends StatelessWidget {
                     SizedBox(height: 24.h),
 
                     // Preview Listing Card
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16.r),
-                        border: Border.all(
-                          color: const Color(0xFFEFF4FC),
-                          width: 1.5,
-                        ),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x04000000),
-                            blurRadius: 10,
-                            offset: Offset(0, 4),
+                    GestureDetector(
+                      onTap: () {
+                        NavigationService.navigateTo(
+                          Routes.serviceDetails,
+                          arguments: model,
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16.r),
+                          border: Border.all(
+                            color: const Color(0xFFEFF4FC),
+                            width: 1.5,
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Thumbnail Image Area
-                          if (imageFile != null)
-                            Stack(
-                              children: [
-                                Container(
-                                  height: 200.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(16.r),
-                                    ),
-                                    image: DecorationImage(
-                                      image: FileImage(imageFile),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                // Click to see public view overlay banner
-                                Positioned(
-                                  bottom: 0,
-                                  left: 0,
-                                  right: 0,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16.w,
-                                      vertical: 10.h,
-                                    ),
-                                    decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.bottomCenter,
-                                        end: Alignment.topCenter,
-                                        colors: [
-                                          Color(0x99000000), // 60% opacity black
-                                          Colors.transparent,
-                                        ],
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "Click to See Public View",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          else
-                            Container(
-                              height: 180.h,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF3F4F6),
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(16.r),
-                                ),
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  Icons.image_not_supported_outlined,
-                                  color: const Color(0xFF9CA3AF),
-                                  size: 40.w,
-                                ),
-                              ),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x04000000),
+                              blurRadius: 10,
+                              offset: Offset(0, 4),
                             ),
-
-                          // Text Content details
-                          Padding(
-                            padding: EdgeInsets.all(16.w),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Title
-                                Text(
-                                  model.title,
-                                  style: TextFontStyle
-                                      .textStyle22IbmPlexSansW600
-                                      .copyWith(
-                                        color: AppColor.c2E3227,
-                                        fontSize: 18.sp,
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Thumbnail Image Area
+                            if (imageFile != null)
+                              Stack(
+                                children: [
+                                  Container(
+                                    height: 200.h,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(16.r),
                                       ),
-                                ),
-                                SizedBox(height: 12.h),
-
-                                // Badges
-                                Row(
-                                  children: [
-                                    // Category Badge
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 12.w,
-                                        vertical: 6.h,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFF3F4F6),
-                                        borderRadius: BorderRadius.circular(
-                                          6.r,
-                                        ),
-                                      ),
-                                      child: Text(
-                                        "Service",
-                                        style: TextFontStyle
-                                            .textStyle14IbmPlexSansW400
-                                            .copyWith(
-                                              fontSize: 12.sp,
-                                              color: const Color(0xFF4B5563),
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                                      image: DecorationImage(
+                                        image: FileImage(imageFile),
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
-                                    SizedBox(width: 12.w),
-                                    // Location Badge
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.location_on_outlined,
-                                          size: 16.w,
-                                          color: const Color(0xFF797A7C),
+                                  ),
+                                  // Click to see public view overlay banner
+                                  Positioned(
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16.w,
+                                        vertical: 10.h,
+                                      ),
+                                      decoration: const BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.bottomCenter,
+                                          end: Alignment.topCenter,
+                                          colors: [
+                                            Color(0x99000000),
+                                            Colors.transparent,
+                                          ],
                                         ),
-                                        SizedBox(width: 4.w),
-                                        Text(
-                                          "${model.city}, ${model.province}",
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          "Click to See Public View",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            else
+                              Container(
+                                height: 180.h,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF3F4F6),
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(16.r),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    Icons.image_not_supported_outlined,
+                                    color: const Color(0xFF9CA3AF),
+                                    size: 40.w,
+                                  ),
+                                ),
+                              ),
+
+                            // Text Content details
+                            Padding(
+                              padding: EdgeInsets.all(16.w),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Title
+                                  Text(
+                                    model.title,
+                                    style: TextFontStyle
+                                        .textStyle22IbmPlexSansW600
+                                        .copyWith(
+                                          color: AppColor.c2E3227,
+                                          fontSize: 18.sp,
+                                        ),
+                                  ),
+                                  SizedBox(height: 12.h),
+                                  // Badges
+                                  Row(
+                                    children: [
+                                      // Category Badge
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 12.w,
+                                          vertical: 6.h,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFF3F4F6),
+                                          borderRadius: BorderRadius.circular(
+                                            6.r,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          "Service",
                                           style: TextFontStyle
                                               .textStyle14IbmPlexSansW400
                                               .copyWith(
                                                 fontSize: 12.sp,
-                                                color: const Color(0xFF797A7C),
+                                                color: const Color(0xFF4B5563),
+                                                fontWeight: FontWeight.w500,
                                               ),
                                         ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                      ),
+                                      SizedBox(width: 12.w),
+                                      // Location Badge
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.location_on_outlined,
+                                            size: 16.w,
+                                            color: const Color(0xFF797A7C),
+                                          ),
+                                          SizedBox(width: 4.w),
+                                          Text(
+                                            "${model.city}, ${model.province}",
+                                            style: TextFontStyle
+                                                .textStyle14IbmPlexSansW400
+                                                .copyWith(
+                                                  fontSize: 12.sp,
+                                                  color: const Color(
+                                                    0xFF797A7C,
+                                                  ),
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(height: 24.h),
@@ -244,13 +255,29 @@ class ServiceStep5ReviewScreen extends StatelessWidget {
             // Submit Button
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-              child: ServiceButton(
-                text: "Submit Listing",
-                isSubmit: true,
-                onTap: () {
-                  NavigationService.navigateTo(
-                    Routes.serviceDetails,
-                    arguments: model,
+              child: ValueListenableBuilder<bool>(
+                valueListenable: createListingAfterDraftRxObj.isLoading,
+                builder: (context, isLoading, child) {
+                  return ServiceButton(
+                    text: isLoading ? "Submitting..." : "Submit Listing",
+                    isSubmit: true,
+                    onTap: isLoading
+                        ? () {}
+                        : () {
+                            createListingAfterDraftRxObj
+                                .createPost()
+                                .then((res) {
+                                  NavigationService.navigateTo(
+                                    Routes.serviceSuccess,
+                                    arguments: model,
+                                  );
+                                })
+                                .catchError((e) {
+                                  ToastUtil.showShortToast(
+                                    "Failed to submit listing.",
+                                  );
+                                });
+                          },
                   );
                 },
               ),

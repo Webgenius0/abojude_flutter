@@ -49,6 +49,7 @@ final class Endpoints {
 
   //......................ABu essa start..............................
   static String jobCreate() => "/v1/auth/post/draft";
+  static String serviceCreate() => "/v1/auth/post/draft";
 
   //......................ABu essa end..............................
 

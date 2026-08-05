@@ -9,6 +9,7 @@ import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/services_create/widgets/service_listing_model.dart';
 import 'package:abojude_flutter/features/create_listing/services_create/widgets/service_step_header.dart';
 import 'package:abojude_flutter/features/create_listing/services_create/widgets/service_button.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 
 class ServiceStep4ContactScreen extends StatefulWidget {
   final ServiceListingModel model;
@@ -168,29 +169,61 @@ class _ServiceStep4ContactScreenState extends State<ServiceStep4ContactScreen> {
               // Continue Button
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-                child: ServiceButton(
-                  text: "Continue",
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      final phone = _phoneController.text.trim();
-                      final whatsapp = _whatsAppController.text.trim();
-                      final email = _emailController.text.trim();
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: createServiceRxObj.isLoading,
+                  builder: (context, isLoading, child) {
+                    return ServiceButton(
+                      text: isLoading ? "Submitting..." : "Continue",
+                      onTap: isLoading
+                          ? () {}
+                          : () {
+                              if (_formKey.currentState!.validate()) {
+                                final phone = _phoneController.text.trim();
+                                final whatsapp = _whatsAppController.text.trim();
+                                final email = _emailController.text.trim();
 
-                      if (phone.isEmpty && whatsapp.isEmpty && email.isEmpty && !_enableInAppChat) {
-                        ToastUtil.showShortToast("Please provide or enable at least one contact method.");
-                        return;
-                      }
+                                if (phone.isEmpty && whatsapp.isEmpty && email.isEmpty && !_enableInAppChat) {
+                                  ToastUtil.showShortToast("Please provide or enable at least one contact method.");
+                                  return;
+                                }
 
-                      widget.model.phoneNumber = phone;
-                      widget.model.whatsAppNumber = whatsapp;
-                      widget.model.emailAddress = email;
-                      widget.model.enableInAppChat = _enableInAppChat;
+                                widget.model.phoneNumber = phone;
+                                widget.model.whatsAppNumber = whatsapp;
+                                widget.model.emailAddress = email;
+                                widget.model.enableInAppChat = _enableInAppChat;
 
-                      NavigationService.navigateTo(
-                        Routes.serviceStep5Review,
-                        arguments: widget.model,
-                      );
-                    }
+                                createServiceRxObj
+                                    .createService(
+                                      categoryId: 4,
+                                      title: widget.model.title,
+                                      description: widget.model.description,
+                                      serviceArea: widget.model.serviceAreas,
+                                      province: widget.model.province,
+                                      city: widget.model.city,
+                                      address: widget.model.address,
+                                      phone: phone,
+                                      whatsapp: whatsapp,
+                                      email: email,
+                                      isAppChat: _enableInAppChat ? 1 : 0,
+                                      photos: widget.model.images,
+                                    )
+                                    .then((res) {
+                                      ToastUtil.showShortToast(
+                                        res.message ?? "Listing drafted successfully",
+                                      );
+                                      NavigationService.navigateTo(
+                                        Routes.serviceStep5Review,
+                                        arguments: widget.model,
+                                      );
+                                    })
+                                    .catchError((e) {
+                                      ToastUtil.showShortToast(
+                                        "Failed to create draft listing.",
+                                      );
+                                    });
+                              }
+                            },
+                    );
                   },
                 ),
               ),
