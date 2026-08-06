@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names, unnecessary_string_interpolations
 
-// const String url = "https://abojude.thesyndicates.team/api";
-const String url = "https://ruthie-gastroenterological-bee.ngrok-free.dev/api";
+const String url = "https://abojude.thesyndicates.team/api";
+//const String url = "https://ruthie-gastroenterological-bee.ngrok-free.dev/api";
 const String imageUrl = "${url}";
 
 final class NetworkConstants {
@@ -12,7 +12,7 @@ final class NetworkConstants {
   static const ACCEPT_LANGUAGE_VALUE = "pt";
   static const APP_KEY_VALUE = String.fromEnvironment("APP_KEY_VALUE");
   static const ACCEPT_TYPE = "application/json";
-  static const AUTHORIZATION = "Authorization"; 
+  static const AUTHORIZATION = "Authorization";
   static const CONTENT_TYPE = "content-Type";
 }
 
@@ -109,6 +109,9 @@ final class Endpoints {
 
     return "/v1/posts?${params.join("&")}";
   }
+
+  static String adsList() => "/v1/ads";
+
   // -------------------ExploreList end-------------------
 
   // ------------------- GetProfile start-------------------
@@ -166,13 +169,8 @@ final class Endpoints {
   static String getConversationMessages(int conversationId) =>
       "/v1/auth/conversations/messages?conversation_id=$conversationId";
 
-  static String getMyList({
-    int page = 1,
-    int perPage = 10,
-  }) =>
+  static String getMyList({int page = 1, int perPage = 10}) =>
       "/v1/auth/posts?page=$page&per_page=$perPage";
- 
-
 
   static String postDetails(int postId) => "/v1/post/details?post_id=$postId";
 
@@ -182,8 +180,4 @@ final class Endpoints {
 
   // static String postDetails(int postId) =>
   //     "/v1/post/details?post_id=$postId";
-
-
-
-
 }
