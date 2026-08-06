@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:abojude_flutter/helpers/navigation_service.dart';
-import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/business_directory_create/widgets/business_listing_model.dart';
 import 'package:abojude_flutter/features/create_listing/business_directory_create/widgets/business_contact_item.dart';
@@ -347,57 +345,6 @@ class BusinessDetailsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-            ),
-
-            // --- Bottom Floating Bar ---
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x0A000000),
-                    blurRadius: 10,
-                    offset: Offset(0, -4),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        NavigationService.navigateTo(
-                          Routes.businessSuccess,
-                          arguments: model,
-                        );
-                      },
-                      child: Container(
-                        height: 52.h,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1D3B71),
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.chat_bubble_outline_rounded,
-                              color: Colors.white,
-                              size: 20.w,
-                            ),
-                            SizedBox(width: 8.w),
-                            Text(
-                              "Send Message",
-                              style: TextFontStyle.textStyle15InterW600White,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
           ],
