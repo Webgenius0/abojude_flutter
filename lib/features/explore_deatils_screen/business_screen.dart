@@ -110,11 +110,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
         backgroundColor: Colors.white,
         elevation: 0.5,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black54,
-            size: 20.sp,
-          ),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.black54, size: 20.sp),
           onPressed: () => Get.back(),
         ),
         title: Text(
@@ -142,9 +138,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
               size: 20,
             ),
             onPressed: () {
-              Share.share(
-                'Check out business listing: https://example.com',
-              );
+              Share.share('Check out business listing: https://example.com');
             },
           ),
           IconButton(
@@ -286,7 +280,10 @@ class _BusinessScreenState extends State<BusinessScreen> {
   }
 
   Widget _buildCoverAndLogo(PostDetailsData? details) {
-    final formattedCover = _formatImageUrl(details?.thumbnail ?? (details?.images?.isNotEmpty == true ? details!.images!.first : null));
+    final formattedCover = _formatImageUrl(
+      details?.thumbnail ??
+          (details?.images?.isNotEmpty == true ? details!.images!.first : null),
+    );
     final isFeatured = details?.isFeatured ?? false;
 
     return Stack(
@@ -307,13 +304,21 @@ class _BusinessScreenState extends State<BusinessScreen> {
                   ),
                   errorWidget: (context, url, error) => Container(
                     color: Colors.grey[200],
-                    child: Icon(Icons.storefront, size: 48.r, color: Colors.grey[400]),
+                    child: Icon(
+                      Icons.storefront,
+                      size: 48.r,
+                      color: Colors.grey[400],
+                    ),
                   ),
                 )
               : Container(
                   color: Colors.grey[200],
                   child: Center(
-                    child: Icon(Icons.storefront, size: 48.r, color: Colors.grey[400]),
+                    child: Icon(
+                      Icons.storefront,
+                      size: 48.r,
+                      color: Colors.grey[400],
+                    ),
                   ),
                 ),
         ),
@@ -369,7 +374,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                 ? CachedNetworkImage(
                     imageUrl: formattedCover,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(color: Colors.grey[200]),
+                    placeholder: (context, url) =>
+                        Container(color: Colors.grey[200]),
                     errorWidget: (context, url, err) => const Center(
                       child: Icon(Icons.store, color: Colors.orange, size: 36),
                     ),
@@ -468,11 +474,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
               ),
               if (timeAgo.isNotEmpty) ...[
                 SizedBox(width: 16.w),
-                Icon(
-                  Icons.access_time,
-                  size: 14.sp,
-                  color: Colors.grey[600],
-                ),
+                Icon(Icons.access_time, size: 14.sp, color: Colors.grey[600]),
                 SizedBox(width: 4.w),
                 Text(
                   timeAgo,
@@ -487,7 +489,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
   }
 
   Widget _buildAboutSection(PostDetailsData? details) {
-    final description = details?.description ??
+    final description =
+        details?.description ??
         'Welcome to our business. We offer high-quality products and professional services to meet all your needs. Visit us or get in touch for inquiries.';
 
     return Padding(
@@ -579,8 +582,9 @@ class _BusinessScreenState extends State<BusinessScreen> {
                           h['day']!,
                           style: TextStyle(
                             fontSize: 13.sp,
-                            fontWeight:
-                                isToday ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: isToday
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                             color: isToday
                                 ? const Color(0xFF1B2D6B)
                                 : const Color(0xFF374151),
@@ -590,8 +594,9 @@ class _BusinessScreenState extends State<BusinessScreen> {
                           h['time']!,
                           style: TextStyle(
                             fontSize: 13.sp,
-                            fontWeight:
-                                isToday ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: isToday
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                             color: isToday
                                 ? const Color(0xFF1B2D6B)
                                 : const Color(0xFF6B7280),
@@ -617,7 +622,13 @@ class _BusinessScreenState extends State<BusinessScreen> {
         : 'Toronto, Ontario';
 
     final initials = name.trim().isNotEmpty
-        ? name.trim().split(RegExp(r'\s+')).take(2).map((e) => e[0]).join().toUpperCase()
+        ? name
+              .trim()
+              .split(RegExp(r'\s+'))
+              .take(2)
+              .map((e) => e[0])
+              .join()
+              .toUpperCase()
         : 'BM';
 
     return Padding(
@@ -650,7 +661,10 @@ class _BusinessScreenState extends State<BusinessScreen> {
                       height: 40.r,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        image: DecorationImage(image: provider, fit: BoxFit.cover),
+                        image: DecorationImage(
+                          image: provider,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     placeholder: (context, url) => Container(
@@ -722,7 +736,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
   Widget _buildContactInfo(PostDetailsData? details) {
     final phone = details?.phone ?? details?.user?.phone ?? '+1-416-555-1234';
     final whatsapp = details?.whatsapp ?? phone;
-    final email = details?.email ?? details?.user?.email ?? 'contact@business.com';
+    final email =
+        details?.email ?? details?.user?.email ?? 'contact@business.com';
     final website = details?.website ?? 'https://example.com';
     final location = (details?.city != null || details?.province != null)
         ? "${details?.city ?? ''}${details?.city != null && details?.province != null ? ', ' : ''}${details?.province ?? ''}"
@@ -757,7 +772,11 @@ class _BusinessScreenState extends State<BusinessScreen> {
                   value: phone,
                   onTap: () => _launchPhone(phone),
                 ),
-                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Color(0xFFE5E7EB),
+                ),
                 _buildContactTile(
                   icon: Icons.chat_bubble_outline_outlined,
                   iconColor: const Color(0xFF10B981),
@@ -766,7 +785,11 @@ class _BusinessScreenState extends State<BusinessScreen> {
                   value: whatsapp,
                   onTap: () => _launchWhatsApp(whatsapp),
                 ),
-                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Color(0xFFE5E7EB),
+                ),
                 _buildContactTile(
                   icon: Icons.mail_outline,
                   iconColor: const Color(0xFF2563EB),
@@ -775,7 +798,11 @@ class _BusinessScreenState extends State<BusinessScreen> {
                   value: email,
                   onTap: () => _launchEmail(email),
                 ),
-                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Color(0xFFE5E7EB),
+                ),
                 _buildContactTile(
                   icon: Icons.language_outlined,
                   iconColor: const Color(0xFF7C3AED),
@@ -784,14 +811,19 @@ class _BusinessScreenState extends State<BusinessScreen> {
                   value: website,
                   onTap: () => _launchUrl(website),
                 ),
-                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Color(0xFFE5E7EB),
+                ),
                 _buildContactTile(
                   icon: Icons.location_on_outlined,
                   iconColor: const Color(0xFFEA580C),
                   bgColor: const Color(0xFFFFF7ED),
                   title: 'Address',
                   value: location,
-                  onTap: () => _launchUrl('https://maps.google.com/?q=$location'),
+                  onTap: () =>
+                      _launchUrl('https://maps.google.com/?q=$location'),
                 ),
               ],
             ),
@@ -817,10 +849,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
           children: [
             Container(
               padding: EdgeInsets.all(8.w),
-              decoration: BoxDecoration(
-                color: bgColor,
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
               child: Icon(icon, size: 18.sp, color: iconColor),
             ),
             SizedBox(width: 12.w),
@@ -854,7 +883,12 @@ class _BusinessScreenState extends State<BusinessScreen> {
   }
 
   Widget _buildPhotosGallery(PostDetailsData? details) {
-    final images = details?.images?.map((img) => _formatImageUrl(img) ?? img).whereType<String>().toList() ?? [];
+    final images =
+        details?.images
+            ?.map((img) => _formatImageUrl(img) ?? img)
+            .whereType<String>()
+            .toList() ??
+        [];
     if (images.isEmpty) return const SizedBox.shrink();
 
     return Padding(
@@ -1012,16 +1046,19 @@ class _BusinessScreenState extends State<BusinessScreen> {
               Get.to(
                 () => MessageScreen(
                   chat: ChatMessage(
-                    id: details?.userId?.toString() ?? details?.id?.toString() ?? '1',
+                    id:
+                        details?.userId?.toString() ??
+                        details?.id?.toString() ??
+                        '1',
                     name: name,
                     initials: name.trim().isNotEmpty
                         ? name
-                        .trim()
-                        .split(RegExp(r'\s+'))
-                        .take(2)
-                        .map((e) => e[0])
-                        .join()
-                        .toUpperCase()
+                              .trim()
+                              .split(RegExp(r'\s+'))
+                              .take(2)
+                              .map((e) => e[0])
+                              .join()
+                              .toUpperCase()
                         : 'SK',
                     lastMessage: 'Inquiry regarding business listing',
                     time: 'Just now',
@@ -1036,7 +1073,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
               'assets/icons/message-02.png',
               width: 20.w,
               height: 20.h,
-              color: Colors.white, // Remove this if your PNG already has the desired color
+              color: Colors
+                  .white, // Remove this if your PNG already has the desired color
             ),
             label: Text(
               'Message',
