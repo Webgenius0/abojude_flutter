@@ -47,11 +47,12 @@ final class Endpoints {
   static String getCategoryList() => "/v1/categories";
   static String getRecentPostList() => "/v1/posts/recent";
 
-  //......................ABu essa start..............................
+  //......................start..............................
   static String jobCreate() => "/v1/auth/post/draft";
   static String serviceCreate() => "/v1/auth/post/draft";
+  static String businessDirectoryCreate() => "/v1/auth/post/draft";
 
-  //......................ABu essa end..............................
+  //......................end..............................
 
   // ------------------- GetFeaturedListings start-------------------
   static String getFeaturedListings({int page = 1, int perPage = 10}) =>

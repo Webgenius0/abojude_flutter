@@ -10,6 +10,8 @@ import 'package:abojude_flutter/features/create_listing/jobs_create/data/rx_job_
 import 'package:abojude_flutter/features/create_listing/jobs_create/model/job_post_create_model.dart';
 import 'package:abojude_flutter/features/create_listing/services_create/data/rx_service_create/rx.dart';
 import 'package:abojude_flutter/features/create_listing/services_create/model/service_post_create_model.dart';
+import 'package:abojude_flutter/features/create_listing/business_directory_create/data/rx_business_create/rx.dart';
+import 'package:abojude_flutter/features/create_listing/business_directory_create/model/business_post_create_model.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/rx_buy_and_sell_get_post_draft/rx.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_get_post_draft_model.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/create_listing_after_draft/rx.dart';
@@ -253,6 +255,12 @@ CreateJobRx createJobRxObj = CreateJobRx(
 CreateServiceRx createServiceRxObj = CreateServiceRx(
   empty: ServicePostCreateModel(),
   dataFetcher: BehaviorSubject<ServicePostCreateModel>(),
+);
+
+// // ------------- Create Business Api Access -----------------//
+CreateBusinessRx createBusinessRxObj = CreateBusinessRx(
+  empty: BusinessPostCreateModel(),
+  dataFetcher: BehaviorSubject<BusinessPostCreateModel>(),
 );
 
 // // ------------- Get Buy and Sell Post Draft Api Access -----------------//
