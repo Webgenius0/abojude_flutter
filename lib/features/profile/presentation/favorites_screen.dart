@@ -1,3 +1,5 @@
+import 'package:abojude_flutter/helpers/all_routes.dart';
+import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -73,7 +75,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
       Get.to(() => BusinessScreen(postId: postId));
     } else if (category.toLowerCase() == 'jobs' ||
         category.toLowerCase() == 'job') {
-      Get.to(() => JobScreen(postId: postId));
+      Get.to(() => NavigationService.navigateTo(Routes.jobStep1Photos));
     } else if (category.toLowerCase() == 'services' ||
         category.toLowerCase() == 'service') {
       Get.to(() => const ServicesScreen());

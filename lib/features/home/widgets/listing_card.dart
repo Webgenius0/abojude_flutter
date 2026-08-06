@@ -1,11 +1,11 @@
+import 'package:abojude_flutter/helpers/all_routes.dart';
+import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:abojude_flutter/features/explore_deatils_screen/business_screen.dart';
-import 'package:abojude_flutter/features/explore_deatils_screen/job_screen.dart';
 import 'package:abojude_flutter/features/explore_deatils_screen/services_screen.dart';
 import 'package:abojude_flutter/features/home/presentation/product_details_screen.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
@@ -92,7 +92,8 @@ class _ListingCardState extends State<ListingCard> {
         } else if (category == 'Business') {
           Get.to(() => BusinessScreen(postId: postId));
         } else if (category == 'Jobs') {
-          Get.to(() => JobScreen(postId: postId));
+
+          NavigationService.navigateTo(Routes.jobStep1Photos);
         } else if (category == 'Services') {
           Get.to(() => const ServicesScreen());
         } else {
