@@ -12,7 +12,11 @@ import 'package:abojude_flutter/features/auth/login/data/rx_login/rx.dart';
 import 'package:abojude_flutter/features/auth/login/model/login_model.dart';
 import 'package:abojude_flutter/features/auth/login/data/rx_logout/rx.dart';
 import 'package:abojude_flutter/features/message_screeen/data/rx.dart';
+import 'package:abojude_flutter/features/message_screeen/data/rx_message_all_resposn_api/rx.dart';
+import 'package:abojude_flutter/features/message_screeen/data/rx_sent_message/rx.dart';
 import 'package:abojude_flutter/features/message_screeen/model/get_all_mesage_list_model.dart';
+import 'package:abojude_flutter/features/message_screeen/model/get_all_message_resposn_model.dart';
+import 'package:abojude_flutter/features/message_screeen/model/post_sent_model.dart';
 import 'package:abojude_flutter/features/profile/data/rx_delete_account/rx.dart';
 import 'package:abojude_flutter/features/auth/forget_password/data/rx_forget_password/rx.dart';
 import 'package:abojude_flutter/features/auth/forget_password/model/forget_password_model.dart';
@@ -343,9 +347,19 @@ GetMyListRx getMyListRxObj = GetMyListRx(
   dataFetcher: BehaviorSubject<GetMyListingModel>(),
 );
 
+GetAllMessageRx getAllMessageRxObj = GetAllMessageRx(
+  empty: GetAllMessageResponseModel(),
+  dataFetcher: BehaviorSubject<GetAllMessageResponseModel>(),
+);
+
 SaveWishesRx saveWishesRxObj = SaveWishesRx(
   empty: GetWhiesSavetModel(),
   dataFetcher: BehaviorSubject<GetWhiesSavetModel>(),
+);
+
+PostSentMessageRx postSentMessageRxObj = PostSentMessageRx(
+  empty: PostSentMessageModel(),
+  dataFetcher: BehaviorSubject<PostSentMessageModel>(),
 );
 
 // FilterListRx studentDesignListRxObj = FilterListRx(

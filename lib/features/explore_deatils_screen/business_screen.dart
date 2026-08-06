@@ -1010,9 +1010,9 @@ class _BusinessScreenState extends State<BusinessScreen> {
           child: ElevatedButton.icon(
             onPressed: () {
               Get.to(
-                    () => MessageScreen(
+                () => MessageScreen(
                   chat: ChatMessage(
-                    id: details?.id?.toString() ?? '1',
+                    id: details?.userId?.toString() ?? details?.id?.toString() ?? '1',
                     name: name,
                     initials: name.trim().isNotEmpty
                         ? name
@@ -1028,6 +1028,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                     isOnline: true,
                     avatarUrl: _formatImageUrl(details?.user?.avatar),
                   ),
+                  conversation_id: details?.id,
                 ),
               );
             },

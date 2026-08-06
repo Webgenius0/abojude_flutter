@@ -434,7 +434,7 @@ class _MessagesScreenListState extends State<MessagesScreenList>
           },
           child: GestureDetector(
             onTap: () {
-              Get.to(() => MessageScreen(chat: chat));
+              Get.to(() => MessageScreen(chat: chat, conversation_id: int.tryParse(chat.id) ?? 0,));
             },
             child: _buildChatTile(chat),
           ),

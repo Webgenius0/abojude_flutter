@@ -1,4 +1,5 @@
 import 'package:abojude_flutter/features/profile/model/my_listing_model.dart';
+import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -100,18 +101,44 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
               Center(
                 child: Padding(
                   padding: EdgeInsets.only(right: 16.w),
-                  child: Container(
-                    width: 42.r,
-                    height: 42.r,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF0F3D7A),
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.add, color: Colors.white, size: 22.sp),
-                      onPressed: () {},
-                      padding: EdgeInsets.zero,
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Manual Refresh Button
+                      Container(
+                        width: 42.r,
+                        height: 42.r,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFF1F3F5),
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.refresh_rounded, color: const Color(0xFF0F3D7A), size: 22.sp),
+                          onPressed: () {
+                            getMyListRxObj.getMyList(isRefresh: true);
+                          },
+                          padding: EdgeInsets.zero,
+                          tooltip: 'Refresh Listings',
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      // Create Listing Button
+                      Container(
+                        width: 42.r,
+                        height: 42.r,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF0F3D7A),
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.add, color: Colors.white, size: 22.sp),
+                          onPressed: () {
+                            Navigator.pushNamed(context, Routes.createListingScreen);
+                          },
+                          padding: EdgeInsets.zero,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -149,38 +176,32 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
                 final int activeCount = posts.where((l) => (l.status ?? '').toLowerCase() == 'active').length;
                 final int expiredCount = posts.where((l) => (l.status ?? '').toLowerCase() == 'expired').length;
 
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    await getMyListRxObj.getMyList(isRefresh: true);
-                  },
-                  color: const Color(0xFF0F3D7A),
-                  child: Column(
-                    children: [
-                      // 1. Stats Summary Panel
-                      _buildStatsSummaryPanel(data, posts.length),
+                return Column(
+                  children: [
+                    // 1. Stats Summary Panel
+                    _buildStatsSummaryPanel(data, posts.length),
 
-                      // 2. Custom Selectable Tabs
-                      _buildCustomTabBar(
-                        allCount: data?.totalPost ?? posts.length,
-                        pendingCount: pendingCount,
-                        activeCount: activeCount,
-                        expiredCount: expiredCount,
-                      ),
+                    // 2. Custom Selectable Tabs
+                    _buildCustomTabBar(
+                      allCount: data?.totalPost ?? posts.length,
+                      pendingCount: pendingCount,
+                      activeCount: activeCount,
+                      expiredCount: expiredCount,
+                    ),
 
-                      // 3. Tab Views list with Lazy Loading
-                      Expanded(
-                        child: TabBarView(
-                          controller: _tabController,
-                          children: [
-                            _buildListingsList(posts, 'All'),
-                            _buildListingsList(posts, 'Pending'),
-                            _buildListingsList(posts, 'Active'),
-                            _buildListingsList(posts, 'Expired'),
-                          ],
-                        ),
+                    // 3. Tab Views list with Pull-To-Refresh & Lazy Loading
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          _buildListingsList(posts, 'All'),
+                          _buildListingsList(posts, 'Pending'),
+                          _buildListingsList(posts, 'Active'),
+                          _buildListingsList(posts, 'Expired'),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 );
               },
             );
@@ -319,50 +340,86 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
     );
   }
 
-  // Listing item list builder with lazy loading support
+  // Listing item list builder with lazy loading & Pull-To-Refresh support
   Widget _buildListingsList(List<Post> posts, String filterStatus) {
     final filteredPosts = _filterPostsByStatus(posts, filterStatus);
 
-    if (filteredPosts.isEmpty) {
-      return SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: SizedBox(
-          height: 300.h,
-          child: Center(
-            child: Text(
-              'No listings found in $filterStatus',
-              style: TextStyle(color: Colors.grey[400]),
-            ),
-          ),
-        ),
-      );
-    }
-
-    return ValueListenableBuilder<bool>(
-      valueListenable: getMyListRxObj.isLoadingMore,
-      builder: (context, isLoadingMore, _) {
-        final int itemCount = filteredPosts.length + (isLoadingMore ? 1 : 0);
-
-        return ListView.builder(
-          controller: _scrollController,
-          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-          itemCount: itemCount,
-          itemBuilder: (context, index) {
-            if (index == filteredPosts.length) {
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.h),
-                child: const Center(
-                  child: CircularProgressIndicator(color: Color(0xFF0F3D7A)),
-                ),
-              );
-            }
-
-            final post = filteredPosts[index];
-            return _buildListingCard(post);
-          },
-        );
+    return RefreshIndicator(
+      onRefresh: () async {
+        await getMyListRxObj.getMyList(isRefresh: true);
       },
+      color: const Color(0xFF0F3D7A),
+      backgroundColor: Colors.white,
+      child: filteredPosts.isEmpty
+          ? SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+              child: SizedBox(
+                height: 350.h,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.assignment_outlined,
+                        size: 48.sp,
+                        color: Colors.grey[300],
+                      ),
+                      SizedBox(height: 12.h),
+                      Text(
+                        'No listings found in $filterStatus',
+                        style: GoogleFonts.inter(
+                          color: Colors.grey[500],
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 6.h),
+                      Text(
+                        'Pull down to refresh',
+                        style: GoogleFonts.inter(
+                          color: Colors.grey[400],
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          : ValueListenableBuilder<bool>(
+              valueListenable: getMyListRxObj.isLoadingMore,
+              builder: (context, isLoadingMore, _) {
+                final int itemCount = filteredPosts.length + (isLoadingMore ? 1 : 0);
+
+                return NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollInfo) {
+                    if (scrollInfo.metrics.pixels >=
+                        scrollInfo.metrics.maxScrollExtent - 200) {
+                      getMyListRxObj.fetchMoreData();
+                    }
+                    return false;
+                  },
+                  child: ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                    itemCount: itemCount,
+                    itemBuilder: (context, index) {
+                      if (index == filteredPosts.length) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          child: const Center(
+                            child: CircularProgressIndicator(color: Color(0xFF0F3D7A)),
+                          ),
+                        );
+                      }
+
+                      final post = filteredPosts[index];
+                      return _buildListingCard(post);
+                    },
+                  ),
+                );
+              },
+            ),
     );
   }
 
@@ -471,7 +528,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
                       SizedBox(width: 10.w),
                       Expanded(
                         child: Text(
-                          post.title ?? 'Listing Item',
+                          post.displayTitle.isNotEmpty ? post.displayTitle : (post.title ?? 'Listing Item'),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.inter(
@@ -660,7 +717,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        post.title ?? '',
+                        post.displayTitle.isNotEmpty ? post.displayTitle : (post.title ?? ''),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.inter(

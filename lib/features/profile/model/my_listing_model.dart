@@ -112,6 +112,7 @@ class Post {
   int? totalWish;
   int? totalMessage;
   String? title;
+  String? businessName;
 
   Post({
     this.id,
@@ -123,7 +124,18 @@ class Post {
     this.totalWish,
     this.totalMessage,
     this.title,
+    this.businessName,
   });
+
+  String get displayTitle {
+    if (businessName != null && businessName!.trim().isNotEmpty) {
+      return businessName!;
+    }
+    if (title != null && title!.trim().isNotEmpty) {
+      return title!;
+    }
+    return '';
+  }
 
   Post copyWith({
     int? id,
@@ -135,6 +147,7 @@ class Post {
     int? totalWish,
     int? totalMessage,
     String? title,
+    String? businessName,
   }) =>
       Post(
         id: id ?? this.id,
@@ -146,6 +159,7 @@ class Post {
         totalWish: totalWish ?? this.totalWish,
         totalMessage: totalMessage ?? this.totalMessage,
         title: title ?? this.title,
+        businessName: businessName ?? this.businessName,
       );
 
   factory Post.fromRawJson(String str) => Post.fromJson(json.decode(str));
@@ -162,6 +176,7 @@ class Post {
     totalWish: json["total_wish"],
     totalMessage: json["total_message"],
     title: json["title"],
+    businessName: json["business_name"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -174,6 +189,7 @@ class Post {
     "total_wish": totalWish,
     "total_message": totalMessage,
     "title": title,
+    "business_name": businessName,
   };
 }
 

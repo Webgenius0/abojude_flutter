@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names, unnecessary_string_interpolations
 
-const String url = "https://abojude.thesyndicates.team/api";
+const String url = "https://ruthie-gastroenterological-bee.ngrok-free.dev/api";
 const String imageUrl = "${url}";
 
 final class NetworkConstants {
@@ -196,7 +196,9 @@ final class Endpoints {
   ///____________________________ferdaus hossan sojib_______________________///
 
   static String chatList() => "/v1/auth/conversations";
- 
+  static String getConversationMessages(int conversationId) =>
+      "/v1/auth/conversations/messages?conversation_id=$conversationId";
+
   static String getMyList({
     int page = 1,
     int perPage = 10,
@@ -207,7 +209,8 @@ final class Endpoints {
   static String postDetails(int postId) => "/v1/post/details?post_id=$postId";
  
   static String wishesList() => "/v1/auth/wishes";
+  static String sentMessage() => "/v1/auth/conversations/send";
   static String saveWishe() => "/v1/auth/wishes";
-  static String postDetails(int postId) =>
-      "/v1/post/details?post_id=$postId";
+  // static String postDetails(int postId) =>
+  //     "/v1/post/details?post_id=$postId";
 }
