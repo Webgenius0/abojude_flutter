@@ -5,6 +5,8 @@ import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/buy_sell_listing_model.dart';
+import 'package:abojude_flutter/features/profile/presentation/my_listings_screen.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_post_create_model.dart';
 
@@ -202,7 +204,12 @@ class _BuySellSuccessScreenState extends State<BuySellSuccessScreen> {
                   // View My Listings Button
                   GestureDetector(
                     onTap: () {
+
+                      Get.to(() => const MyListingsScreen());
+                      getMyListRxObj.getMyList(isRefresh: true);
+
                       NavigationService.navigateTo(Routes.myListingsScreen);
+
                     },
                     child: Container(
                       width: double.infinity,

@@ -5,6 +5,9 @@ import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/business_directory_create/widgets/business_listing_model.dart';
+import 'package:abojude_flutter/features/profile/presentation/my_listings_screen.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:get/get.dart';
 
 class BusinessSuccessScreen extends StatelessWidget {
   final BusinessListingModel model;
@@ -177,7 +180,12 @@ class BusinessSuccessScreen extends StatelessWidget {
                   // View My Listings Button
                   GestureDetector(
                     onTap: () {
+
+                      Get.to(() => const MyListingsScreen());
+                      getMyListRxObj.getMyList(isRefresh: true);
+
                       NavigationService.navigateTo(Routes.myListingsScreen);
+
                     },
                     child: Container(
                       width: double.infinity,

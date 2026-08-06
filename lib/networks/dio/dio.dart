@@ -13,6 +13,8 @@ import 'package:abojude_flutter/helpers/toast.dart';
 final class DioSingleton {
   static final DioSingleton _singleton = DioSingleton._internal();
   static CancelToken cancelToken = CancelToken();
+  static bool _isHandling401 = false;
+
   DioSingleton._internal();
 
   static DioSingleton get instance => _singleton;
@@ -25,10 +27,17 @@ final class DioSingleton {
       Logger(),
       InterceptorsWrapper(
         onError: (DioException e, handler) async {
-          if (e.response?.statusCode == 401) {
-            final bool isLoggedIn = appData.read(kKeyIsLoggedIn) ?? false;
-            if (isLoggedIn) {
-              // Clean dynamic/static data
+          final responseData = e.response?.data;
+          final bool is401 = e.response?.statusCode == 401 ||
+              (responseData is Map &&
+                  (responseData['code'] == 401 ||
+                      responseData['message'] == "Token is Expired"));
+
+          if (is401) {
+            if (!_isHandling401) {
+              _isHandling401 = true;
+
+              // Clean dynamic/static data and remove access token
               await totalDataClean();
               await appData.remove(kKeyAccessToken);
               DioSingleton.instance.create();
@@ -38,8 +47,10 @@ final class DioSingleton {
               // Redirect to welcome screen safely on the next frame
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (NavigationService.navigatorKey.currentState != null) {
-                  NavigationService.navigateToUntilReplacement(Routes.welcomeScreen);
+                  NavigationService.navigateToUntilReplacement(
+                      Routes.welcomeScreen);
                 }
+                _isHandling401 = false;
               });
             }
           }
@@ -95,7 +106,7 @@ final class DioSingleton {
         NetworkConstants.ACCEPT_LANGUAGE: countryCode,
         NetworkConstants.APP_KEY: NetworkConstants.APP_KEY_VALUE,
         NetworkConstants.AUTHORIZATION:
-            "Bearer ${appData.read(kKeyAccessToken)} ",
+            "Bearer ${appData.read(kKeyAccessToken)}",
       },
       connectTimeout: const Duration(milliseconds: 100000),
       receiveTimeout: const Duration(milliseconds: 100000),

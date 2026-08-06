@@ -804,11 +804,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
               Get.to(
                 () => MessageScreen(
                   chat: ChatMessage(
-                    id: 'sarah_ahmed',
-                    name: 'Sarah Ahmed',
-                    initials: 'SA',
-                    lastMessage:
-                        'Hi, is the Samsung Galaxy S24 Ultra still available?',
+                    id: '1',
+                    name: 'Seller',
+                    initials: 'S',
+                    lastMessage: 'Inquiry regarding service listing',
                     time: 'Just now',
                     isOnline: true,
                   ),
