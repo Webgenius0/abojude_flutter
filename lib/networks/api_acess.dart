@@ -1,12 +1,20 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:abojude_flutter/features/auth/register/data/rx_register/rx.dart';
 import 'package:abojude_flutter/features/auth/register/model/register_model.dart';
 import 'package:abojude_flutter/features/auth/register/data/rx_register_verify_otp/rx.dart';
 import 'package:abojude_flutter/features/auth/register/model/register_verify_otp_model.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/rx_create_buy_and_sell_category/rx.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_category_post_create_model.dart';
+import 'package:abojude_flutter/features/create_listing/jobs_create/data/rx_job_create/rx.dart';
+import 'package:abojude_flutter/features/create_listing/jobs_create/model/job_post_create_model.dart';
+import 'package:abojude_flutter/features/create_listing/services_create/data/rx_service_create/rx.dart';
+import 'package:abojude_flutter/features/create_listing/services_create/model/service_post_create_model.dart';
+import 'package:abojude_flutter/features/create_listing/business_directory_create/data/rx_business_create/rx.dart';
+import 'package:abojude_flutter/features/create_listing/business_directory_create/model/business_post_create_model.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/rx_buy_and_sell_get_post_draft/rx.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_get_post_draft_model.dart';
-import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/buy_and_sell_create_listing/rx.dart';
+import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/data/create_listing_after_draft/rx.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_post_create_model.dart';
 import 'package:abojude_flutter/features/auth/login/data/rx_login/rx.dart';
 import 'package:abojude_flutter/features/auth/login/model/login_model.dart';
@@ -124,10 +132,11 @@ GetNotificationSettingRx getNotificationSettingRxObj = GetNotificationSettingRx(
 );
 
 // // ------------- Update Notification Setting Api Access -----------------//
-UpdateNotificationSettingRx updateNotificationSettingRxObj = UpdateNotificationSettingRx(
-  empty: UpdateNotificationSettingsModel(),
-  dataFetcher: BehaviorSubject<UpdateNotificationSettingsModel>(),
-);
+UpdateNotificationSettingRx updateNotificationSettingRxObj =
+    UpdateNotificationSettingRx(
+      empty: UpdateNotificationSettingsModel(),
+      dataFetcher: BehaviorSubject<UpdateNotificationSettingsModel>(),
+    );
 
 // // ------------- Block User List Api Access -----------------//
 BlockUserListRx blockUserListRxObj = BlockUserListRx(
@@ -191,10 +200,11 @@ GetCityRx getCityRxObj = GetCityRx(
 );
 
 // // ------------- Select Location For Auth User Api Access -----------------//
-SelectLocationForAuthUserRx selectLocationForAuthUserRxObj = SelectLocationForAuthUserRx(
-  empty: SelectLocationForAuthUserModel(),
-  dataFetcher: BehaviorSubject<SelectLocationForAuthUserModel>(),
-);
+SelectLocationForAuthUserRx selectLocationForAuthUserRxObj =
+    SelectLocationForAuthUserRx(
+      empty: SelectLocationForAuthUserModel(),
+      dataFetcher: BehaviorSubject<SelectLocationForAuthUserModel>(),
+    );
 
 // // ------------- Select Location For Guest Api Access -----------------//
 SelectLocationForGuestRx selectLocationForGuestRxObj = SelectLocationForGuestRx(
@@ -233,9 +243,28 @@ TermsAndConditionRx privacyPolicyRxObj = TermsAndConditionRx(
 );
 
 // // ------------- Create Buy and Sell Category Api Access -----------------//
-CreateBuyAndSellCategoryRx createBuyAndSellCategoryRxObj = CreateBuyAndSellCategoryRx(
-  empty: BuyAndSellCategoryPostCreateModel(),
-  dataFetcher: BehaviorSubject<BuyAndSellCategoryPostCreateModel>(),
+CreateBuyAndSellCategoryRx createBuyAndSellCategoryRxObj =
+    CreateBuyAndSellCategoryRx(
+      empty: BuyAndSellCategoryPostCreateModel(),
+      dataFetcher: BehaviorSubject<BuyAndSellCategoryPostCreateModel>(),
+    );
+
+// // ------------- Create Job Api Access -----------------//
+CreateJobRx createJobRxObj = CreateJobRx(
+  empty: JobPostCreateModel(),
+  dataFetcher: BehaviorSubject<JobPostCreateModel>(),
+);
+
+// // ------------- Create Service Api Access -----------------//
+CreateServiceRx createServiceRxObj = CreateServiceRx(
+  empty: ServicePostCreateModel(),
+  dataFetcher: BehaviorSubject<ServicePostCreateModel>(),
+);
+
+// // ------------- Create Business Api Access -----------------//
+CreateBusinessRx createBusinessRxObj = CreateBusinessRx(
+  empty: BusinessPostCreateModel(),
+  dataFetcher: BehaviorSubject<BusinessPostCreateModel>(),
 );
 
 // // ------------- Get Buy and Sell Post Draft Api Access -----------------//
@@ -245,78 +274,18 @@ BuyAndSellGetPostDraftRx buyAndSellGetPostDraftRxObj = BuyAndSellGetPostDraftRx(
 );
 
 // // ------------- Create Buy and Sell Post Api Access -----------------//
-BuyAndSellPostCreateRx buyAndSellPostCreateRxObj = BuyAndSellPostCreateRx(
-  empty: BuyAndSellPostCreateModel(),
-  dataFetcher: BehaviorSubject<BuyAndSellPostCreateModel>(),
-);
-
-
-
-
-// //_________________Update Password Api Access ______________________//
-// UpdatePasswordRx updatePasswordRxObj =
-//     UpdatePasswordRx(empty: {}, dataFetcher: BehaviorSubject<Map>());
-
-// //_________________Privacy Policy Api Access ______________________//
-// PrivacyPolicyRx privacyPolicyRxObj = PrivacyPolicyRx(
-//   empty: PrivacyPolicyModel(),
-//   dataFetcher: BehaviorSubject<PrivacyPolicyModel>(),
-// );
-
-// //_________________Terms And Conditions Api Access ______________________//
-// TermsAndConditionsRx termsAndConditionsRxObj = TermsAndConditionsRx(
-//   empty: PrivacyPolicyModel(),
-//   dataFetcher: BehaviorSubject<PrivacyPolicyModel>(),
-// );
-
-// // ------------- Update Profile Api Access -----------------//
-// UpdateProfileRx updateProfileRxObj = UpdateProfileRx(
-//   empty: {},
-//   dataFetcher: BehaviorSubject<Map>(),
-// );
-
-
-
-// // ------------- Verify Register Otp Api Access -----------------//
-// VerifyRegisterOtpRx verifyRegisterOtpRxObj = VerifyRegisterOtpRx(
-//   empty: VerifyRegisterOtpModel(),
-//   dataFetcher: BehaviorSubject<VerifyRegisterOtpModel>(),
-// );
-
-// // ------------- Resend Register Otp Api Access -----------------//
-// ResendRegisterOtpRx resendRegisterOtpRxObj = ResendRegisterOtpRx(
-//   empty: ResendRegisterOtpModel(),
-//   dataFetcher: BehaviorSubject<ResendRegisterOtpModel>(),
-// );
-
-// // ------------- Login Api Access -----------------//
-// LoginRx loginRxObj = LoginRx(
-//   empty: LoginModel(),
-//   dataFetcher: BehaviorSubject<LoginModel>(),
-// );
-
-// //___________________ Forget Password Api Access ______________________//
-// ForgetPasswordRx forgetPasswordRxObj = ForgetPasswordRx(
-//   empty: ForgetPasswordModel(),
-//   dataFetcher: BehaviorSubject<ForgetPasswordModel>(),
-// );
-
-// //___________________ User Info Api Access ______________________//
-// UserInfoRx userInfoRxObj = UserInfoRx(
-//   empty: UserInfoModel(),
-//   dataFetcher: BehaviorSubject<UserInfoModel>(),
-// );
-
-// //___________________ Mentor Details Api Access ______________________//
-// MentorDetailsRx mentorDetailsRxObj = MentorDetailsRx(
-//   empty: MentorDetailsModel(),
-//   dataFetcher: BehaviorSubject<MentorDetailsModel>(),
-// );
+CreateListingAfterDraftRx createListingAfterDraftRxObj =
+    CreateListingAfterDraftRx(
+      empty: BuyAndSellPostCreateModel(),
+      dataFetcher: BehaviorSubject<BuyAndSellPostCreateModel>(),
+    );
 
 // //___________________  chat List Api Access ______________________//
 GetAllChatListRx chatListRxObj = GetAllChatListRx(
   empty: GetMessageListModel(),
-  dataFetcher: BehaviorSubject<GetMessageListModel>.seeded(GetMessageListModel()),
+  dataFetcher: BehaviorSubject<GetMessageListModel>.seeded(
+    GetMessageListModel(),
+  ),
 );
 
 // //___________________  Featured Listings Api Access ______________________//
@@ -356,6 +325,7 @@ SaveWishesRx saveWishesRxObj = SaveWishesRx(
   empty: GetWhiesSavetModel(),
   dataFetcher: BehaviorSubject<GetWhiesSavetModel>(),
 );
+
 
 PostSentMessageRx postSentMessageRxObj = PostSentMessageRx(
   empty: PostSentMessageModel(),
@@ -920,3 +890,5 @@ PostSentMessageRx postSentMessageRxObj = PostSentMessageRx(
 // //   empty: MarkAsPaidOrDeclineModel(),
 // //   dataFetcher: BehaviorSubject<MarkAsPaidOrDeclineModel>(),
 // // );
+
+

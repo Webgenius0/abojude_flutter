@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:abojude_flutter/helpers/navigation_service.dart';
-import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_listing_model.dart';
@@ -447,81 +445,80 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                 ),
               ),
             ),
-
             // --- Bottom Floating Bar ---
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x0A000000), // 4% opacity black
-                    blurRadius: 10,
-                    offset: Offset(0, -4),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  // Send Message Button
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        NavigationService.navigateTo(
-                          Routes.jobSuccess,
-                          arguments: widget.model,
-                        );
-                      },
-                      child: Container(
-                        height: 52.h,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1D3B71),
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.chat_bubble_outline_rounded,
-                              color: Colors.white,
-                              size: 20.w,
-                            ),
-                            SizedBox(width: 8.w),
-                            Text(
-                              "Send Message",
-                              style: TextFontStyle.textStyle16InterW600
-                                  .copyWith(
-                                    color: Colors.white,
-                                    fontSize: 15.sp,
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  // WhatsApp Circular Button
-                  Container(
-                    width: 52.h,
-                    height: 52.h,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEFFDF4),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: const Color(0xFFA7F3D0),
-                        width: 1,
-                      ),
-                    ),
-                    child: Icon(
-                      Icons.chat_bubble_outline,
-                      color: const Color(0xFF1B8E5A),
-                      size: 26.w,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // Container(
+            //   padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+            //   decoration: BoxDecoration(
+            //     color: Colors.white,
+            //     boxShadow: const [
+            //       BoxShadow(
+            //         color: Color(0x0A000000), // 4% opacity black
+            //         blurRadius: 10,
+            //         offset: Offset(0, -4),
+            //       ),
+            //     ],
+            //   ),
+            //   child: Row(
+            //     children: [
+            //       // Send Message Button
+            //       Expanded(
+            //         child: GestureDetector(
+            //           onTap: () {
+            //             // NavigationService.navigateTo(
+            //             //   Routes.jobSuccess,
+            //             //   arguments: widget.model,
+            //             // );
+            //           },
+            //           child: Container(
+            //             height: 52.h,
+            //             decoration: BoxDecoration(
+            //               color: const Color(0xFF1D3B71),
+            //               borderRadius: BorderRadius.circular(12.r),
+            //             ),
+            //             child: Row(
+            //               mainAxisAlignment: MainAxisAlignment.center,
+            //               children: [
+            //                 Icon(
+            //                   Icons.chat_bubble_outline_rounded,
+            //                   color: Colors.white,
+            //                   size: 20.w,
+            //                 ),
+            //                 SizedBox(width: 8.w),
+            //                 Text(
+            //                   "Send Message",
+            //                   style: TextFontStyle.textStyle16InterW600
+            //                       .copyWith(
+            //                         color: Colors.white,
+            //                         fontSize: 15.sp,
+            //                       ),
+            //                 ),
+            //               ],
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //       SizedBox(width: 12.w),
+            //       // WhatsApp Circular Button
+            //       Container(
+            //         width: 52.h,
+            //         height: 52.h,
+            //         decoration: BoxDecoration(
+            //           color: const Color(0xFFEFFDF4),
+            //           shape: BoxShape.circle,
+            //           border: Border.all(
+            //             color: const Color(0xFFA7F3D0),
+            //             width: 1,
+            //           ),
+            //         ),
+            //         child: Icon(
+            //           Icons.chat_bubble_outline,
+            //           color: const Color(0xFF1B8E5A),
+            //           size: 26.w,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),

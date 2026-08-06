@@ -48,8 +48,8 @@ import 'package:abojude_flutter/features/create_listing/business_directory_creat
 import 'package:abojude_flutter/features/create_listing/business_directory_create/presentation/business_details_screen.dart';
 import 'package:abojude_flutter/features/create_listing/business_directory_create/presentation/business_success_screen.dart';
 
-
 import 'package:abojude_flutter/features/home/presentation/home_screen.dart';
+import 'package:abojude_flutter/features/profile/presentation/my_listings_screen.dart';
 import 'package:abojude_flutter/navigation_menu.dart';
 import 'package:abojude_flutter/welcome_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -115,7 +115,7 @@ final class Routes {
   static const String serviceStep5Review = '/serviceStep5Review';
   static const String serviceDetails = '/serviceDetails';
   static const String serviceSuccess = '/serviceSuccess';
-
+  static const String myListingsScreen = '/myListingsScreen';
 }
 
 final class RouteGenerator {
@@ -156,6 +156,16 @@ final class RouteGenerator {
               )
             : CupertinoPageRoute(builder: (context) => const RegisterScreen());
 
+      case Routes.myListingsScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const MyListingsScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const MyListingsScreen(),
+              );
+
       case Routes.registerVerifyScreen:
         final email = settings.arguments as String?;
         return Platform.isAndroid
@@ -166,7 +176,6 @@ final class RouteGenerator {
             : CupertinoPageRoute(
                 builder: (context) => RegisterVerifyScreen(email: email),
               );
-
 
       case Routes.navigationMenu:
         return Platform.isAndroid
@@ -206,7 +215,8 @@ final class RouteGenerator {
                 settings: settings,
               )
             : CupertinoPageRoute(
-                builder: (context) => ForgetPasswordVerifyOtpScreen(email: email),
+                builder: (context) =>
+                    ForgetPasswordVerifyOtpScreen(email: email),
               );
 
       case Routes.continueAsGuest:
@@ -337,11 +347,15 @@ final class RouteGenerator {
         final hours = map['hours'] as BusinessDayHours;
         return Platform.isAndroid
             ? _FadedTransitionRoute(
-                widget: BusinessHoursSetterScreen(dayName: dayName, hours: hours),
+                widget: BusinessHoursSetterScreen(
+                  dayName: dayName,
+                  hours: hours,
+                ),
                 settings: settings,
               )
             : CupertinoPageRoute(
-                builder: (context) => BusinessHoursSetterScreen(dayName: dayName, hours: hours),
+                builder: (context) =>
+                    BusinessHoursSetterScreen(dayName: dayName, hours: hours),
               );
 
       case Routes.businessStep3Gallery:

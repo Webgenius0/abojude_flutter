@@ -133,9 +133,10 @@ class _BuySellSuccessScreenState extends State<BuySellSuccessScreen> {
 
                       // Pending Approval Status Chip
                       StreamBuilder<BuyAndSellPostCreateModel>(
-                        stream: buyAndSellPostCreateRxObj.getPostCreateData,
+                        stream: createListingAfterDraftRxObj.getPostCreateData,
                         builder: (context, snapshot) {
-                          final status = snapshot.data?.data?.status ?? "pending";
+                          final status =
+                              snapshot.data?.data?.status ?? "pending";
                           final capitalizedStatus = status.isNotEmpty
                               ? status[0].toUpperCase() + status.substring(1)
                               : status;
@@ -203,21 +204,25 @@ class _BuySellSuccessScreenState extends State<BuySellSuccessScreen> {
                   // View My Listings Button
                   GestureDetector(
                     onTap: () {
+
                       Get.to(() => const MyListingsScreen());
                       getMyListRxObj.getMyList(isRefresh: true);
+
+                      NavigationService.navigateTo(Routes.myListingsScreen);
+
                     },
                     child: Container(
                       width: double.infinity,
                       height: 52.h,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF3F4F6),
+                        color: Color(0xFFF3F4F6),
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Center(
                         child: Text(
                           "View My Listings",
                           style: TextFontStyle.textStyle16InterW600.copyWith(
-                            color: const Color(0xFF4B5563),
+                            color: Color(0xFF4B5563),
                             fontSize: 15.sp,
                           ),
                         ),

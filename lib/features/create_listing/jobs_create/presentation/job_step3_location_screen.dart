@@ -7,6 +7,9 @@ import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_listing_model.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_step_header.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_button.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:abojude_flutter/features/auth/register/model/get_province_model.dart';
+import 'package:abojude_flutter/features/auth/register/model/get_city_model.dart';
 
 class JobStep3LocationScreen extends StatefulWidget {
   final JobListingModel model;
@@ -20,84 +23,37 @@ class JobStep3LocationScreen extends StatefulWidget {
 class _JobStep3LocationScreenState extends State<JobStep3LocationScreen> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _addressController;
+  late final TextEditingController _cityController;
 
   String? _selectedProvince;
   String? _selectedCity;
-
-  final Map<String, List<String>> _provinceToCities = {
-    "Ontario": ["Toronto", "Ottawa", "Mississauga", "Hamilton", "London"],
-    "Quebec": ["Montreal", "Quebec City", "Laval", "Gatineau", "Sherbrooke"],
-    "British Columbia": [
-      "Vancouver",
-      "Victoria",
-      "Surrey",
-      "Burnaby",
-      "Richmond",
-    ],
-    "Alberta": ["Calgary", "Edmonton", "Red Deer", "Lethbridge", "St. Albert"],
-    "Manitoba": [
-      "Winnipeg",
-      "Brandon",
-      "Steinbach",
-      "Portage la Prairie",
-      "Thompson",
-    ],
-    "Saskatchewan": [
-      "Saskatoon",
-      "Regina",
-      "Prince Albert",
-      "Moose Jaw",
-      "Swift Current",
-    ],
-    "Nova Scotia": ["Halifax", "Sydney", "Dartmouth", "Truro", "New Glasgow"],
-    "New Brunswick": [
-      "Moncton",
-      "Saint John",
-      "Fredericton",
-      "Dieppe",
-      "Miramichi",
-    ],
-    "Newfoundland and Labrador": [
-      "St. John's",
-      "Mount Pearl",
-      "Corner Brook",
-      "Conception Bay South",
-    ],
-    "Prince Edward Island": [
-      "Charlottetown",
-      "Summerside",
-      "Stratford",
-      "Cornwall",
-    ],
-  };
 
   @override
   void initState() {
     super.initState();
     _addressController = TextEditingController(text: widget.model.address);
-    if (widget.model.province.isNotEmpty &&
-        _provinceToCities.containsKey(widget.model.province)) {
-      _selectedProvince = widget.model.province;
-      if (widget.model.city.isNotEmpty &&
-          _provinceToCities[_selectedProvince]!.contains(widget.model.city)) {
-        _selectedCity = widget.model.city;
+    _selectedProvince = widget.model.province.isNotEmpty
+        ? widget.model.province
+        : null;
+    _selectedCity = widget.model.city.isNotEmpty ? widget.model.city : null;
+    _cityController = TextEditingController(text: _selectedCity ?? "");
+
+    getProvinceRxObj.getProvinceRx().then((_) {
+      if (_selectedProvince != null) {
+        getCityRxObj.getCityRx(_selectedProvince!);
       }
-    }
+    });
   }
 
   @override
   void dispose() {
     _addressController.dispose();
+    _cityController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<String> provinces = _provinceToCities.keys.toList();
-    final List<String> cities = _selectedProvince != null
-        ? _provinceToCities[_selectedProvince]!
-        : [];
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const JobStepHeader(currentStep: 3, title: "Location"),
@@ -117,90 +73,107 @@ class _JobStep3LocationScreenState extends State<JobStep3LocationScreen> {
                     children: [
                       // Province/Territory Dropdown
                       _buildLabel("Province/Territory"),
-                      DropdownButtonFormField<String>(
-                        initialValue: _selectedProvince,
-                        dropdownColor: Colors.white,
-                        hint: Text(
-                          "Select province",
-                          style: TextFontStyle.textStyle14IbmPlexSansW400
-                              .copyWith(color: const Color(0xFF9CA3AF)),
-                        ),
-                        decoration: _buildInputDecoration(),
-                        icon: const Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Color(0xFF9CA3AF),
-                        ),
-                        items: provinces.map((String prov) {
-                          return DropdownMenuItem<String>(
-                            value: prov,
-                            child: Text(
-                              prov,
+                      StreamBuilder<GetProvinceModel>(
+                        stream: getProvinceRxObj.getProvinceData,
+                        builder: (context, provinceSnapshot) {
+                          final List<String> provinces =
+                              provinceSnapshot.hasData &&
+                                  provinceSnapshot.data!.data != null
+                              ? provinceSnapshot.data!.data!
+                              : [];
+
+                          return DropdownButtonFormField<String>(
+                            initialValue: _selectedProvince,
+                            dropdownColor: Colors.white,
+                            hint: Text(
+                              "Select province",
                               style: TextFontStyle.textStyle14IbmPlexSansW400
-                                  .copyWith(color: AppColor.c2E3227),
+                                  .copyWith(color: const Color(0xFF9CA3AF)),
                             ),
+                            decoration: _buildInputDecoration(),
+                            icon: const Icon(
+                              Icons.keyboard_arrow_down,
+                              color: Color(0xFF9CA3AF),
+                            ),
+                            items: provinces.map((String prov) {
+                              return DropdownMenuItem<String>(
+                                value: prov,
+                                child: Text(
+                                  prov,
+                                  style: TextFontStyle
+                                      .textStyle14IbmPlexSansW400
+                                      .copyWith(color: AppColor.c2E3227),
+                                ),
+                              );
+                            }).toList(),
+                            validator: (value) {
+                              if (value == null) {
+                                return "Please select a province";
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedProvince = value;
+                                _selectedCity =
+                                    null; // reset city when province changes
+                                _cityController.text = "";
+                              });
+                              if (value != null) {
+                                getCityRxObj.getCityRx(value);
+                              }
+                            },
                           );
-                        }).toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return "Please select a province";
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedProvince = value;
-                            _selectedCity = null; // reset city when province changes
-                          });
                         },
                       ),
                       SizedBox(height: 20.h),
 
-                      // City Dropdown
+                      // City Selector
                       _buildLabel("City"),
-                      DropdownButtonFormField<String>(
-                        initialValue: _selectedCity,
-                        dropdownColor: Colors.white,
-                        disabledHint: Text(
-                          "Select province first",
-                          style: TextFontStyle.textStyle14IbmPlexSansW400
-                              .copyWith(color: const Color(0xFF9CA3AF)),
-                        ),
-                        hint: Text(
-                          "Select city",
-                          style: TextFontStyle.textStyle14IbmPlexSansW400
-                              .copyWith(color: const Color(0xFF9CA3AF)),
-                        ),
-                        decoration: _buildInputDecoration(),
-                        icon: const Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Color(0xFF9CA3AF),
-                        ),
-                        items: _selectedProvince == null
-                            ? null
-                            : cities.map((String cty) {
-                                return DropdownMenuItem<String>(
-                                  value: cty,
-                                  child: Text(
-                                    cty,
-                                    style: TextFontStyle
-                                        .textStyle14IbmPlexSansW400
-                                        .copyWith(color: AppColor.c2E3227),
+                      StreamBuilder<GetCityModel>(
+                        stream: getCityRxObj.getCityData,
+                        builder: (context, citySnapshot) {
+                          final List<String> cities =
+                              _selectedProvince != null &&
+                                  citySnapshot.hasData &&
+                                  citySnapshot.data!.data != null
+                              ? citySnapshot.data!.data!
+                              : [];
+
+                          return GestureDetector(
+                            onTap: _selectedProvince == null
+                                ? null
+                                : () {
+                                    _showCitySearchBottomSheet(context, cities);
+                                  },
+                            child: AbsorbPointer(
+                              child: TextFormField(
+                                controller: _cityController,
+                                style: TextFontStyle.textStyle14IbmPlexSansW400
+                                    .copyWith(color: AppColor.c2E3227),
+                                decoration: _buildInputDecoration().copyWith(
+                                  hintText: _selectedProvince == null
+                                      ? "Select province first"
+                                      : "Select city",
+                                  hintStyle: TextFontStyle
+                                      .textStyle14IbmPlexSansW400
+                                      .copyWith(color: const Color(0xFF9CA3AF)),
+                                  suffixIcon: const Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: Color(0xFF9CA3AF),
                                   ),
-                                );
-                              }).toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return "Please select a city";
-                          }
-                          return null;
+                                ),
+                                validator: (value) {
+                                  if (_selectedCity == null ||
+                                      _selectedCity!.isEmpty) {
+                                    return "Please select a city";
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          );
                         },
-                        onChanged: _selectedProvince == null
-                            ? null
-                            : (value) {
-                                setState(() {
-                                  _selectedCity = value;
-                                });
-                              },
                       ),
                       SizedBox(height: 20.h),
 
@@ -310,6 +283,189 @@ class _JobStep3LocationScreenState extends State<JobStep3LocationScreen> {
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
         borderSide: const BorderSide(color: Colors.red, width: 1.5),
+      ),
+    );
+  }
+
+  void _showCitySearchBottomSheet(BuildContext context, List<String> cities) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (context) {
+        return _CitySearchBottomSheet(
+          cities: cities,
+          initialSelectedCity: _selectedCity,
+          onCitySelected: (city) {
+            setState(() {
+              _selectedCity = city;
+              _cityController.text = city;
+            });
+          },
+        );
+      },
+    );
+  }
+}
+
+class _CitySearchBottomSheet extends StatefulWidget {
+  final List<String> cities;
+  final String? initialSelectedCity;
+  final ValueChanged<String> onCitySelected;
+
+  const _CitySearchBottomSheet({
+    required this.cities,
+    required this.initialSelectedCity,
+    required this.onCitySelected,
+  });
+
+  @override
+  State<_CitySearchBottomSheet> createState() => _CitySearchBottomSheetState();
+}
+
+class _CitySearchBottomSheetState extends State<_CitySearchBottomSheet> {
+  late List<String> _filteredCities;
+  late final TextEditingController _searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredCities = widget.cities;
+    _searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterCities(String query) {
+    setState(() {
+      if (query.trim().isEmpty) {
+        _filteredCities = widget.cities;
+      } else {
+        _filteredCities = widget.cities
+            .where((city) => city.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.7,
+      padding: EdgeInsets.only(
+        top: 16.h,
+        left: 20.w,
+        right: 20.w,
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 40.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFFE5E7EB),
+                borderRadius: BorderRadius.circular(2.r),
+              ),
+            ),
+          ),
+          SizedBox(height: 16.h),
+          Text(
+            "Select City",
+            style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
+              fontSize: 18.sp,
+            ),
+          ),
+          SizedBox(height: 16.h),
+          TextField(
+            controller: _searchController,
+            onChanged: _filterCities,
+            autofocus: true,
+            style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
+              color: AppColor.c2E3227,
+            ),
+            decoration: InputDecoration(
+              hintText: "Search city...",
+              hintStyle: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
+                color: const Color(0xFF9CA3AF),
+              ),
+              prefixIcon: const Icon(Icons.search, color: Color(0xFF9CA3AF)),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 16.w,
+                vertical: 12.h,
+              ),
+              filled: true,
+              fillColor: const Color(0xFFF9FAFB),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                borderSide: const BorderSide(
+                  color: Color(0xFFE5E7EB),
+                  width: 1.5,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                borderSide: const BorderSide(
+                  color: Color(0xFF1D3B71),
+                  width: 1.5,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 16.h),
+          Expanded(
+            child: _filteredCities.isEmpty
+                ? Center(
+                    child: Text(
+                      "No cities found",
+                      style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
+                        color: const Color(0xFF9CA3AF),
+                      ),
+                    ),
+                  )
+                : ListView.separated(
+                    itemCount: _filteredCities.length,
+                    separatorBuilder: (context, index) =>
+                        const Divider(color: Color(0xFFF3F4F6), height: 1),
+                    itemBuilder: (context, index) {
+                      final city = _filteredCities[index];
+                      final isSelected = city == widget.initialSelectedCity;
+
+                      return ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(
+                          city,
+                          style: TextFontStyle.textStyle14IbmPlexSansW400
+                              .copyWith(
+                                color: isSelected
+                                    ? const Color(0xFF1D3B71)
+                                    : AppColor.c2E3227,
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
+                              ),
+                        ),
+                        trailing: isSelected
+                            ? const Icon(Icons.check, color: Color(0xFF1D3B71))
+                            : null,
+                        onTap: () {
+                          widget.onCitySelected(city);
+                          Navigator.pop(context);
+                        },
+                      );
+                    },
+                  ),
+          ),
+        ],
       ),
     );
   }

@@ -25,7 +25,7 @@ class ServiceSuccessScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
+                  physics: BouncingScrollPhysics(),
                   child: Column(
                     children: [
                       SizedBox(height: 48.h),
@@ -181,8 +181,12 @@ class ServiceSuccessScreen extends StatelessWidget {
                   // View My Listings Button
                   GestureDetector(
                     onTap: () {
+
                       Get.to(() => const MyListingsScreen());
                       getMyListRxObj.getMyList(isRefresh: true);
+
+                      NavigationService.navigateTo(Routes.myListingsScreen);
+
                     },
                     child: Container(
                       width: double.infinity,
