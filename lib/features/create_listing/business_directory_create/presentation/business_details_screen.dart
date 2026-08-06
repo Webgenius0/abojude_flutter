@@ -220,7 +220,6 @@ class BusinessDetailsScreen extends StatelessWidget {
                           SizedBox(height: 16.h),
                           const Divider(color: Color(0xFFE5E7EB)),
                           SizedBox(height: 12.h),
-
                           // --- About Section ---
                           Text(
                             "About",
