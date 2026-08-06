@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names, unnecessary_string_interpolations
 
-const String url = "https://abojude.thesyndicates.team/api";
+// const String url = "https://abojude.thesyndicates.team/api";
+const String url = "https://ruthie-gastroenterological-bee.ngrok-free.dev/api";
 const String imageUrl = "${url}";
 
 final class NetworkConstants {
@@ -11,7 +12,7 @@ final class NetworkConstants {
   static const ACCEPT_LANGUAGE_VALUE = "pt";
   static const APP_KEY_VALUE = String.fromEnvironment("APP_KEY_VALUE");
   static const ACCEPT_TYPE = "application/json";
-  static const AUTHORIZATION = "Authorization";
+  static const AUTHORIZATION = "Authorization"; 
   static const CONTENT_TYPE = "content-Type";
 }
 

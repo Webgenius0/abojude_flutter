@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:abojude_flutter/features/explore_deatils_screen/business_screen.dart';
-import 'package:abojude_flutter/features/explore_deatils_screen/buy_&_sell_screen.dart';
-import 'package:abojude_flutter/features/explore_deatils_screen/job_screen.dart';
-import 'package:abojude_flutter/features/explore_deatils_screen/services_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
@@ -58,14 +53,34 @@ class CategoriesSection extends StatelessWidget {
                     final lowerLabel = label.toLowerCase();
                     if (lowerLabel.contains('buy') ||
                         lowerLabel.contains('sell')) {
-                      Get.to(() => const BuySellScreen());
+                      // Get.to(
+                      //   () => const CategoryListingScreen(
+                      //     categoryName: 'Buy & Sell',
+                      //     categorySlug: 'buy-and-sell',
+                      //   ),
+                      // );
                     } else if (lowerLabel.contains('job')) {
-                      Get.to(() => const JobScreen());
+                      // Get.to(
+                      //   () => const CategoryListingScreen(
+                      //     categoryName: 'Jobs',
+                      //     categorySlug: 'jobs',
+                      //   ),
+                      // );
                     } else if (lowerLabel.contains('business') ||
                         lowerLabel.contains('directory')) {
-                      Get.to(() => const BusinessScreen());
+                      // Get.to(
+                      //   () => const CategoryListingScreen(
+                      //     categoryName: 'Business Directory',
+                      //     categorySlug: 'business',
+                      //   ),
+                      // );
                     } else if (lowerLabel.contains('service')) {
-                      Get.to(() => const ServicesScreen());
+                      // Get.to(
+                      //   () => const CategoryListingScreen(
+                      //     categoryName: 'Services',
+                      //     categorySlug: 'services',
+                      //   ),
+                      // );
                     }
                   },
                   child: Container(
