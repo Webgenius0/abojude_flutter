@@ -5,7 +5,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
 import 'package:abojude_flutter/features/home/presentation/report_screen.dart';
 import 'package:abojude_flutter/features/message_screeen/message_screen.dart';
 import 'package:abojude_flutter/features/home/model/get_post_details_model.dart';
@@ -911,9 +910,9 @@ class _JobScreenState extends State<JobScreen> {
           child: ElevatedButton.icon(
             onPressed: () {
               Get.to(
-                    () => MessageScreen(
+                () => MessageScreen(
                   chat: ChatMessage(
-                    id: details?.id?.toString() ?? '1',
+                    id: details?.userId?.toString() ?? details?.id?.toString() ?? '1',
                     name: name,
                     initials: name.trim().isNotEmpty
                         ? name
@@ -929,6 +928,7 @@ class _JobScreenState extends State<JobScreen> {
                     isOnline: true,
                     avatarUrl: _formatImageUrl(details?.user?.avatar),
                   ),
+                  conversation_id: details?.id,
                 ),
               );
             },

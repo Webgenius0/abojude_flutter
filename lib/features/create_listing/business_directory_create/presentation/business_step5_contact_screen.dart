@@ -9,6 +9,7 @@ import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/business_directory_create/widgets/business_listing_model.dart';
 import 'package:abojude_flutter/features/create_listing/business_directory_create/widgets/business_step_header.dart';
 import 'package:abojude_flutter/features/create_listing/business_directory_create/widgets/business_button.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 
 class BusinessStep5ContactScreen extends StatefulWidget {
   final BusinessListingModel model;
@@ -16,10 +17,12 @@ class BusinessStep5ContactScreen extends StatefulWidget {
   const BusinessStep5ContactScreen({super.key, required this.model});
 
   @override
-  State<BusinessStep5ContactScreen> createState() => _BusinessStep5ContactScreenState();
+  State<BusinessStep5ContactScreen> createState() =>
+      _BusinessStep5ContactScreenState();
 }
 
-class _BusinessStep5ContactScreenState extends State<BusinessStep5ContactScreen> {
+class _BusinessStep5ContactScreenState
+    extends State<BusinessStep5ContactScreen> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _phoneController;
   late final TextEditingController _whatsAppController;
@@ -30,7 +33,9 @@ class _BusinessStep5ContactScreenState extends State<BusinessStep5ContactScreen>
   void initState() {
     super.initState();
     _phoneController = TextEditingController(text: widget.model.phoneNumber);
-    _whatsAppController = TextEditingController(text: widget.model.whatsAppNumber);
+    _whatsAppController = TextEditingController(
+      text: widget.model.whatsAppNumber,
+    );
     _emailController = TextEditingController(text: widget.model.emailAddress);
     _enableInAppChat = widget.model.enableInAppChat;
   }
@@ -47,7 +52,10 @@ class _BusinessStep5ContactScreenState extends State<BusinessStep5ContactScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const BusinessStepHeader(currentStep: 5, title: "Contact Information"),
+      appBar: const BusinessStepHeader(
+        currentStep: 5,
+        title: "Contact Information",
+      ),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -55,15 +63,17 @@ class _BusinessStep5ContactScreenState extends State<BusinessStep5ContactScreen>
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 16.h,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         "Configure how customers can contact your business. Add at least one contact channel.",
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: const Color(0xFF6B7280),
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: const Color(0xFF6B7280)),
                       ),
                       SizedBox(height: 24.h),
 
@@ -73,7 +83,8 @@ class _BusinessStep5ContactScreenState extends State<BusinessStep5ContactScreen>
                       TextFormField(
                         controller: _phoneController,
                         keyboardType: TextInputType.phone,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(color: AppColor.c2E3227),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration("+1 (555) 000-0000"),
                       ),
                       SizedBox(height: 20.h),
@@ -84,7 +95,8 @@ class _BusinessStep5ContactScreenState extends State<BusinessStep5ContactScreen>
                       TextFormField(
                         controller: _whatsAppController,
                         keyboardType: TextInputType.phone,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(color: AppColor.c2E3227),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration("+1 (555) 000-0000"),
                       ),
                       SizedBox(height: 20.h),
@@ -95,11 +107,16 @@ class _BusinessStep5ContactScreenState extends State<BusinessStep5ContactScreen>
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(color: AppColor.c2E3227),
-                        decoration: _buildInputDecoration("info@yourbusiness.ca"),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
+                        decoration: _buildInputDecoration(
+                          "info@yourbusiness.ca",
+                        ),
                         validator: (value) {
                           if (value != null && value.trim().isNotEmpty) {
-                            final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                            final emailRegExp = RegExp(
+                              r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                            );
                             if (!emailRegExp.hasMatch(value.trim())) {
                               return "Please enter a valid email address";
                             }
@@ -161,31 +178,52 @@ class _BusinessStep5ContactScreenState extends State<BusinessStep5ContactScreen>
               // Continue Button
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-                child: BusinessButton(
-                  text: "Continue",
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      final phone = _phoneController.text.trim();
-                      final whatsapp = _whatsAppController.text.trim();
-                      final email = _emailController.text.trim();
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: createBusinessRxObj.isLoading,
+                  builder: (context, isLoading, child) {
+                    return BusinessButton(
+                      text: isLoading ? "Submitting..." : "Continue",
+                      onTap: isLoading
+                          ? () {}
+                          : () {
+                              if (_formKey.currentState!.validate()) {
+                                final phone = _phoneController.text.trim();
+                                final whatsapp = _whatsAppController.text.trim();
+                                final email = _emailController.text.trim();
 
-                      if (phone.isEmpty && whatsapp.isEmpty && email.isEmpty && !_enableInAppChat) {
-                        ToastUtil.showShortToast(
-                          "Please configure at least one active contact channel.",
-                        );
-                        return;
-                      }
+                                if (phone.isEmpty &&
+                                    whatsapp.isEmpty &&
+                                    email.isEmpty &&
+                                    !_enableInAppChat) {
+                                  ToastUtil.showShortToast(
+                                    "Please configure at least one active contact channel.",
+                                  );
+                                  return;
+                                }
 
-                      widget.model.phoneNumber = phone;
-                      widget.model.whatsAppNumber = whatsapp;
-                      widget.model.emailAddress = email;
-                      widget.model.enableInAppChat = _enableInAppChat;
+                                widget.model.phoneNumber = phone;
+                                widget.model.whatsAppNumber = whatsapp;
+                                widget.model.emailAddress = email;
+                                widget.model.enableInAppChat = _enableInAppChat;
 
-                      NavigationService.navigateTo(
-                        Routes.businessStep6Review,
-                        arguments: widget.model,
-                      );
-                    }
+                                createBusinessRxObj
+                                    .createBusiness(model: widget.model)
+                                    .then((res) {
+                                  ToastUtil.showShortToast(
+                                    res.message ?? "Listing drafted successfully",
+                                  );
+                                  NavigationService.navigateTo(
+                                    Routes.businessStep6Review,
+                                    arguments: widget.model,
+                                  );
+                                }).catchError((e) {
+                                  ToastUtil.showShortToast(
+                                    "Failed to draft listing.",
+                                  );
+                                });
+                              }
+                            },
+                    );
                   },
                 ),
               ),

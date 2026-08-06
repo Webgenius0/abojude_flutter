@@ -888,20 +888,32 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               Get.to(
                 () => MessageScreen(
                   chat: ChatMessage(
-                    id: details?.id?.toString() ?? '1',
+                    id: details?.userId?.toString() ?? details?.id?.toString() ?? '1',
                     name: name,
                     initials: name.trim().isNotEmpty
-                        ? name.trim().split(RegExp(r'\s+')).take(2).map((e) => e[0]).join().toUpperCase()
+                        ? name
+                        .trim()
+                        .split(RegExp(r'\s+'))
+                        .take(2)
+                        .map((e) => e[0])
+                        .join()
+                        .toUpperCase()
                         : 'SK',
                     lastMessage: 'Inquiry regarding product listing',
                     time: 'Just now',
                     isOnline: true,
                     avatarUrl: _formatImageUrl(details?.user?.avatar),
                   ),
+                  conversation_id: details?.id,
                 ),
               );
             },
-            icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
+            icon: Image.asset(
+              'assets/icons/message-02.png',
+              width: 20,
+              height: 20,
+              color: Colors.white, // Remove this line if the PNG is already white
+            ),
             label: const Text(
               'Message Seller',
               style: TextStyle(
@@ -917,6 +929,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
+
           ),
         ),
       ),

@@ -48,10 +48,12 @@ final class Endpoints {
   static String getCategoryList() => "/v1/categories";
   static String getRecentPostList() => "/v1/posts/recent";
 
-  //......................ABu essa start..............................
+  //......................start..............................
   static String jobCreate() => "/v1/auth/post/draft";
+  static String serviceCreate() => "/v1/auth/post/draft";
+  static String businessDirectoryCreate() => "/v1/auth/post/draft";
 
-  //......................ABu essa end..............................
+  //......................end..............................
 
   // ------------------- GetFeaturedListings start-------------------
   static String getFeaturedListings({int page = 1, int perPage = 10}) =>
@@ -160,11 +162,28 @@ final class Endpoints {
   ///____________________________ferdaus hossan sojib_______________________///
 
   static String chatList() => "/v1/auth/conversations";
+
+  static String getConversationMessages(int conversationId) =>
+      "/v1/auth/conversations/messages?conversation_id=$conversationId";
+
+  static String getMyList({
+    int page = 1,
+    int perPage = 10,
+  }) =>
+      "/v1/auth/posts?page=$page&per_page=$perPage";
+ 
+
+
   static String postDetails(int postId) => "/v1/post/details?post_id=$postId";
 
   static String wishesList() => "/v1/auth/wishes";
+  static String sentMessage() => "/v1/auth/conversations/send";
   static String saveWishe() => "/v1/auth/wishes";
 
-  static String getMyList({int page = 1, int perPage = 10}) =>
-      "/v1/auth/posts?page=$page&per_page=$perPage";
+  // static String postDetails(int postId) =>
+  //     "/v1/post/details?post_id=$postId";
+
+
+
+
 }

@@ -5,6 +5,8 @@ import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/buy_sell_listing_model.dart';
+import 'package:abojude_flutter/features/profile/presentation/my_listings_screen.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/model/buy_and_sell_post_create_model.dart';
 
@@ -202,22 +204,25 @@ class _BuySellSuccessScreenState extends State<BuySellSuccessScreen> {
                   // View My Listings Button
                   GestureDetector(
                     onTap: () {
-                      NavigationService.navigateToUntilReplacement(
-                        Routes.myListingsScreen,
-                      );
+
+                      Get.to(() => const MyListingsScreen());
+                      getMyListRxObj.getMyList(isRefresh: true);
+
+                      NavigationService.navigateTo(Routes.myListingsScreen);
+
                     },
                     child: Container(
                       width: double.infinity,
                       height: 52.h,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF3F4F6),
+                        color: Color(0xFFF3F4F6),
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Center(
                         child: Text(
                           "View My Listings",
                           style: TextFontStyle.textStyle16InterW600.copyWith(
-                            color: const Color(0xFF4B5563),
+                            color: Color(0xFF4B5563),
                             fontSize: 15.sp,
                           ),
                         ),

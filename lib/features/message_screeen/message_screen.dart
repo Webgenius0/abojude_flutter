@@ -5,6 +5,10 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'message_screeen_list.dart'; // import to access ChatMessage data model
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:abojude_flutter/features/message_screeen/model/get_all_message_resposn_model.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
 import '../home/presentation/report_screen.dart';
 
 // 1. Details Message Data Model
@@ -36,8 +40,9 @@ class ProductRelates {
 // 2. Chat Details Screen Widget
 class MessageScreen extends StatefulWidget {
   final ChatMessage chat;
+  final int? conversation_id;
 
-  const MessageScreen({Key? key, required this.chat}) : super(key: key);
+  const MessageScreen({Key? key, required this.chat, this.conversation_id}) : super(key: key);
 
   @override
   State<MessageScreen> createState() => _MessageScreenState();
@@ -45,6 +50,7 @@ class MessageScreen extends StatefulWidget {
 
 class _MessageScreenState extends State<MessageScreen> {
   final List<DetailsMessage> _messages = [];
+  final List<DetailsMessage> _localMessages = [];
   final TextEditingController _textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final ImagePicker _picker = ImagePicker();
@@ -55,50 +61,40 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
   void initState() {
     super.initState();
-    _seedMockMessages();
+    _fetchMessages();
   }
 
-  // Pre-populate mock messages to match the user's screenshot exactly
-  void _seedMockMessages() {
-    _messages.addAll([
-      DetailsMessage(
-        id: 'mock_1',
-        sender: widget.chat.name,
-        text:
-            "Hi, I'm interested in the Samsung S24 Ultra, is the still available?",
-        time: 'Oct 15, 9:42 AM',
-        relatesToProduct: ProductRelates(
-          title: "Samsung Galaxy S24 Ultra Excelle...",
-          imageUrl:
-              "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&auto=format&fit=crop&q=80",
-        ),
-      ),
-      DetailsMessage(
-        id: 'mock_2',
-        sender: "You",
-        text:
-            "Hello! Yes it's still available. Feel free to ask any questions.",
-        time: 'Oct 15, 9:35 AM',
-      ),
-      DetailsMessage(
-        id: 'mock_3',
-        sender: widget.chat.name,
-        text: "Great! Is the price negotiable?",
-        time: 'Oct 15, 9:42 AM',
-      ),
-      DetailsMessage(
-        id: 'mock_4',
-        sender: widget.chat.name,
-        text: "Can we meet in person for inspection?",
-        time: 'Oct 15, 9:42 AM',
-      ),
-      DetailsMessage(
-        id: 'mock_5',
-        sender: "You",
-        text: "Sure, where will you come from?",
-        time: 'Oct 15, 9:35 AM',
-      ),
-    ]);
+  Future<void> _fetchMessages() async {
+    final convId = widget.conversation_id ?? int.tryParse(widget.chat.id);
+    if (convId != null && convId > 0) {
+      try {
+        await getAllMessageRxObj.getMessages(conversationId: convId);
+      } catch (_) {}
+    }
+  }
+
+  DetailsMessage _mapMessageDataToDetailsMessage(MessageData item) {
+    final senderName = item.senderName ?? '';
+    final bool isMe = senderName.isNotEmpty &&
+        senderName.trim().toLowerCase() != widget.chat.name.trim().toLowerCase();
+
+    String timeStr = item.timeAgo ?? '';
+    if (timeStr.isEmpty && item.createdAt != null) {
+      timeStr = DateFormat('h:mm a').format(item.createdAt!.toLocal());
+    }
+
+    List<String> images = [];
+    if (item.attachment != null && item.attachment!.isNotEmpty) {
+      images.add(item.attachment!);
+    }
+
+    return DetailsMessage(
+      id: item.id?.toString() ?? '',
+      sender: isMe ? 'You' : (senderName.isNotEmpty ? senderName : widget.chat.name),
+      text: item.message ?? '',
+      images: images,
+      time: timeStr,
+    );
   }
 
   @override
@@ -222,7 +218,7 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
   // Send message action
-  void _sendMessage() {
+  void _sendMessage() async {
     final text = _textController.text.trim();
     if (text.isEmpty && _selectedImages.isEmpty) return;
 
@@ -233,8 +229,11 @@ class _MessageScreenState extends State<MessageScreen> {
         .map((file) => file.path)
         .toList();
 
+    final String messageText = text;
+    final List<XFile> imagesToSend = List.from(_selectedImages);
+
     setState(() {
-      _messages.add(
+      _localMessages.add(
         DetailsMessage(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           sender: "You",
@@ -257,10 +256,29 @@ class _MessageScreenState extends State<MessageScreen> {
         );
       }
     });
+
+    // Send message via API
+    final File? attachmentFile =
+        imagesToSend.isNotEmpty ? File(imagesToSend.first.path) : null;
+    final int? receiverId = int.tryParse(widget.chat.id);
+    final int postId = widget.conversation_id ?? int.tryParse(widget.chat.id) ?? 0;
+
+    final bool success = await postSentMessageRxObj.sent(
+      receiverId: receiverId,
+      message: messageText,
+      postId: postId,
+      attachment: attachmentFile,
+    );
+
+    if (success && widget.conversation_id != null && widget.conversation_id! > 0) {
+      await getAllMessageRxObj.getMessages(conversationId: widget.conversation_id!);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+
+    print('___________________________:conversation_id ${widget.conversation_id}__________________________');
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
@@ -306,18 +324,49 @@ class _MessageScreenState extends State<MessageScreen> {
               children: [
                 Stack(
                   children: [
-                    CircleAvatar(
-                      radius: 22,
-                      backgroundColor: const Color(0xFFE9ECEF),
-                      child: Text(
-                        widget.chat.initials,
-                        style: const TextStyle(
-                          color: Color(0xFF0F3D7A),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
+                    (widget.chat.avatarUrl != null && widget.chat.avatarUrl!.isNotEmpty)
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(22),
+                            child: CachedNetworkImage(
+                              imageUrl: widget.chat.avatarUrl!,
+                              width: 44,
+                              height: 44,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  width: 44,
+                                  height: 44,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => CircleAvatar(
+                                radius: 22,
+                                backgroundColor: const Color(0xFFE9ECEF),
+                                child: Text(
+                                  widget.chat.initials,
+                                  style: const TextStyle(
+                                    color: Color(0xFF0F3D7A),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : CircleAvatar(
+                            radius: 22,
+                            backgroundColor: const Color(0xFFE9ECEF),
+                            child: Text(
+                              widget.chat.initials,
+                              style: const TextStyle(
+                                color: Color(0xFF0F3D7A),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
                     if (widget.chat.isOnline)
                       Positioned(
                         right: 0,
@@ -474,18 +523,53 @@ class _MessageScreenState extends State<MessageScreen> {
           children: [
             // 3. Message Stream List
             Expanded(
-              child: ListView.builder(
-                controller: _scrollController,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 16.0,
-                ),
-                itemCount: _messages.length,
-                itemBuilder: (context, index) {
-                  final message = _messages[index];
-                  final bool isMe = message.sender == 'You';
+              child: StreamBuilder<GetAllMessageResponseModel>(
+                stream: getAllMessageRxObj.messages,
+                builder: (context, snapshot) {
+                  if (widget.conversation_id != null &&
+                      widget.conversation_id! > 0 &&
+                      (snapshot.connectionState == ConnectionState.waiting ||
+                          getAllMessageRxObj.isLoading.value)) {
+                    return _buildShimmerMessages();
+                  }
 
-                  return _buildMessageBubble(message, isMe);
+                  List<DetailsMessage> apiMessages = [];
+                  if (snapshot.hasData && snapshot.data?.data != null) {
+                    apiMessages = snapshot.data!.data!
+                        .map((m) => _mapMessageDataToDetailsMessage(m))
+                        .toList();
+                  }
+
+                  final displayMessages = (widget.conversation_id != null && widget.conversation_id! > 0)
+                      ? [...apiMessages, ..._localMessages]
+                      : [..._messages, ..._localMessages];
+
+                  if (displayMessages.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No messages yet',
+                        style: TextStyle(
+                          color: Colors.grey[500],
+                          fontSize: 15,
+                        ),
+                      ),
+                    );
+                  }
+
+                  return ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 16.0,
+                    ),
+                    itemCount: displayMessages.length,
+                    itemBuilder: (context, index) {
+                      final message = displayMessages[index];
+                      final bool isMe = message.sender == 'You';
+
+                      return _buildMessageBubble(message, isMe);
+                    },
+                  );
                 },
               ),
             ),
@@ -498,6 +582,44 @@ class _MessageScreenState extends State<MessageScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  // Custom Shimmer Loading Effect for Messages
+  Widget _buildShimmerMessages() {
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      itemCount: 6,
+      itemBuilder: (context, index) {
+        final bool isMe = index % 2 == 1;
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              mainAxisAlignment:
+                  isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+              children: [
+                Container(
+                  width: index % 3 == 0 ? 200 : (index % 2 == 0 ? 140 : 220),
+                  height: index % 3 == 0 ? 55 : 42,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(16.0),
+                      topRight: const Radius.circular(16.0),
+                      bottomLeft: Radius.circular(isMe ? 16.0 : 4.0),
+                      bottomRight: Radius.circular(isMe ? 4.0 : 16.0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -594,10 +716,15 @@ class _MessageScreenState extends State<MessageScreen> {
                                   width: 48,
                                   height: 48,
                                   color: const Color(0xFFF8F9FA),
-                                  child: Image.network(
-                                    message.relatesToProduct!.imageUrl,
+                                  child: CachedNetworkImage(
+                                    imageUrl: message.relatesToProduct!.imageUrl,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
+                                    placeholder: (context, url) => Shimmer.fromColors(
+                                      baseColor: Colors.grey[300]!,
+                                      highlightColor: Colors.grey[100]!,
+                                      child: Container(color: Colors.white),
+                                    ),
+                                    errorWidget: (context, url, error) {
                                       return const Icon(
                                         Icons.phone_android_rounded,
                                         color: Color(0xFF0F3D7A),
@@ -759,12 +886,17 @@ class _MessageScreenState extends State<MessageScreen> {
   // Render file, asset, or network image helper
   Widget _renderSingleImage(String imagePath) {
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-      return Image.network(
-        imagePath,
+      return CachedNetworkImage(
+        imageUrl: imagePath,
         fit: BoxFit.cover,
         width: double.infinity,
         height: double.infinity,
-        errorBuilder: (context, error, stackTrace) {
+        placeholder: (context, url) => Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(color: Colors.white),
+        ),
+        errorWidget: (context, url, error) {
           return Container(
             color: Colors.grey[200],
             child: const Icon(Icons.broken_image_rounded, color: Colors.grey),

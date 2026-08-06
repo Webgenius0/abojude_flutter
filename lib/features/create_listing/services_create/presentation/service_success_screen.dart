@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
-import 'package:abojude_flutter/helpers/toast.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/services_create/widgets/service_listing_model.dart';
+import 'package:abojude_flutter/features/profile/presentation/my_listings_screen.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:get/get.dart';
 
 class ServiceSuccessScreen extends StatelessWidget {
   final ServiceListingModel model;
@@ -179,7 +181,12 @@ class ServiceSuccessScreen extends StatelessWidget {
                   // View My Listings Button
                   GestureDetector(
                     onTap: () {
-                      ToastUtil.showShortToast("My Listings coming soon!");
+
+                      Get.to(() => const MyListingsScreen());
+                      getMyListRxObj.getMyList(isRefresh: true);
+
+                      NavigationService.navigateTo(Routes.myListingsScreen);
+
                     },
                     child: Container(
                       width: double.infinity,
