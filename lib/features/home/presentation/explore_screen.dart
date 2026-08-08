@@ -1,11 +1,11 @@
+import 'package:abojude_flutter/helpers/all_routes.dart';
+import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
 import 'package:abojude_flutter/features/explore_deatils_screen/business_screen.dart';
-import 'package:abojude_flutter/features/explore_deatils_screen/job_screen.dart';
 import 'package:abojude_flutter/features/explore_deatils_screen/services_screen.dart';
 import 'package:abojude_flutter/features/home/presentation/product_details_screen.dart';
 import 'package:abojude_flutter/features/home/model/get_explore_model.dart';
@@ -41,15 +41,19 @@ class Listing {
 
   factory Listing.fromDatum(Datum datum) {
     return Listing(
-      id: datum.id?.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),
+      id:
+          datum.id?.toString() ??
+          DateTime.now().millisecondsSinceEpoch.toString(),
       title: datum.title ?? '',
       price: datum.price != null && datum.price.toString().isNotEmpty
-          ? (datum.price.toString().startsWith('£') || datum.price.toString().startsWith('\$')
-              ? datum.price.toString()
-              : '£${datum.price}')
+          ? (datum.price.toString().startsWith('£') ||
+                    datum.price.toString().startsWith('\$')
+                ? datum.price.toString()
+                : '£${datum.price}')
           : null,
       category: datum.categoryName ?? '',
-      location: "${datum.city ?? ''}${datum.city != null && datum.province != null ? ', ' : ''}${datum.province ?? ''}",
+      location:
+          "${datum.city ?? ''}${datum.city != null && datum.province != null ? ', ' : ''}${datum.province ?? ''}",
       timeAgo: datum.timeAgo ?? '',
       imageUrl: datum.thumbnail ?? '',
       isFeatured: datum.isFeatured ?? false,
@@ -105,8 +109,14 @@ class _ExploreScreenState extends State<ExploreScreen>
       categorySlugs = ['jobs'];
     } else if (_selectedCategory == ListingCategory.services) {
       categorySlugs = ['services'];
-    } else if (_activeFilters.category != 'All' && _activeFilters.category.isNotEmpty) {
-      categorySlugs = [_activeFilters.category.toLowerCase().replaceAll(' ', '-').replaceAll('&', 'and')];
+    } else if (_activeFilters.category != 'All' &&
+        _activeFilters.category.isNotEmpty) {
+      categorySlugs = [
+        _activeFilters.category
+            .toLowerCase()
+            .replaceAll(' ', '-')
+            .replaceAll('&', 'and'),
+      ];
     }
 
     try {
@@ -116,7 +126,9 @@ class _ExploreScreenState extends State<ExploreScreen>
         city: _activeFilters.city,
         minPrice: _activeFilters.minPrice?.toInt(),
         maxPrice: _activeFilters.maxPrice?.toInt(),
-        sortBy: _activeFilters.sortBy != 'Featured' ? _activeFilters.sortBy : null,
+        sortBy: _activeFilters.sortBy != 'Featured'
+            ? _activeFilters.sortBy
+            : null,
         search: _searchQuery.isNotEmpty ? _searchQuery : null,
       );
     } catch (_) {
@@ -186,9 +198,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildResultCount(rawItems.length),
-                        Expanded(
-                          child: _buildListingsGrid(rawItems),
-                        ),
+                        Expanded(child: _buildListingsGrid(rawItems)),
                       ],
                     );
                   },
@@ -423,15 +433,16 @@ class _ExploreScreenState extends State<ExploreScreen>
           ),
         );
 
-        final slideAnim = Tween<Offset>(
-          begin: const Offset(0.0, 0.15),
-          end: Offset.zero,
-        ).animate(
-          CurvedAnimation(
-            parent: _animController,
-            curve: Interval(start, end, curve: Curves.easeOutCubic),
-          ),
-        );
+        final slideAnim =
+            Tween<Offset>(
+              begin: const Offset(0.0, 0.15),
+              end: Offset.zero,
+            ).animate(
+              CurvedAnimation(
+                parent: _animController,
+                curve: Interval(start, end, curve: Curves.easeOutCubic),
+              ),
+            );
 
         return FadeTransition(
           opacity: fadeAnim,
@@ -448,7 +459,9 @@ class _ExploreScreenState extends State<ExploreScreen>
                 } else if (category.toLowerCase().contains('business')) {
                   Get.to(() => BusinessScreen(postId: postId));
                 } else if (category.toLowerCase().contains('job')) {
-                  Get.to(() => JobScreen(postId: postId));
+                  Get.to(
+                    () => NavigationService.navigateTo(Routes.jobStep1Photos),
+                  );
                 } else if (category.toLowerCase().contains('service')) {
                   Get.to(() => const ServicesScreen());
                 } else {
@@ -480,10 +493,7 @@ class _ListingCard extends StatelessWidget {
   final Listing listing;
   final VoidCallback onFavoriteToggle;
 
-  const _ListingCard({
-    required this.listing,
-    required this.onFavoriteToggle,
-  });
+  const _ListingCard({required this.listing, required this.onFavoriteToggle});
 
   String? _formatImageUrl(String? rawUrl) {
     if (rawUrl == null || rawUrl.trim().isEmpty) return null;
@@ -517,10 +527,7 @@ class _ListingCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildImage(),
-          _buildDetails(),
-        ],
+        children: [_buildImage(), _buildDetails()],
       ),
     );
   }
@@ -666,7 +673,7 @@ class _ListingCard extends StatelessWidget {
             ],
             Text(
               listing.title,
-              style:   TextStyle(
+              style: TextStyle(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w600,
                 color: Color(0xFF111827),
@@ -678,36 +685,33 @@ class _ListingCard extends StatelessWidget {
             const SizedBox(height: 6),
             if (listing.category.isNotEmpty)
               Container(
-                padding:   EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF3F4F6),
                   borderRadius: BorderRadius.circular(6.r),
                 ),
                 child: Text(
                   listing.category,
-                  style:   TextStyle(
+                  style: TextStyle(
                     fontSize: 11.sp,
                     color: Color(0xFF374151),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
-              SizedBox(height: 6.h),
+            SizedBox(height: 6.h),
             Row(
               children: [
-                  Icon(
+                Icon(
                   Icons.location_on_outlined,
                   size: 12.sp,
                   color: Color(0xFF9CA3AF),
                 ),
-                  SizedBox(width: 3.w),
+                SizedBox(width: 3.w),
                 Expanded(
                   child: Text(
                     listing.location,
-                    style:   TextStyle(
-                      fontSize: 11.sp,
-                      color: Color(0xFF6B7280),
-                    ),
+                    style: TextStyle(fontSize: 11.sp, color: Color(0xFF6B7280)),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
