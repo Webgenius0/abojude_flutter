@@ -220,26 +220,32 @@ class _BuySellStep5ReviewScreenState extends State<BuySellStep5ReviewScreen> {
                                           ),
                                           SizedBox(width: 12.w),
                                           // Location Badge
-                                          Row(
-                                            children: [
-                                              Icon(
-                                                Icons.location_on_outlined,
-                                                size: 16.w,
-                                                color: const Color(0xFF797A7C),
-                                              ),
-                                              SizedBox(width: 4.w),
-                                              Text(
-                                                "$displayCity, $displayProvince",
-                                                style: TextFontStyle
-                                                    .textStyle14IbmPlexSansW400
-                                                    .copyWith(
-                                                      fontSize: 12.sp,
-                                                      color: const Color(
-                                                        0xFF797A7C,
-                                                      ),
-                                                    ),
-                                              ),
-                                            ],
+                                          Expanded(
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.location_on_outlined,
+                                                  size: 16.w,
+                                                  color: const Color(
+                                                    0xFF797A7C,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 4.w),
+                                                Expanded(
+                                                  child: Text(
+                                                    "$displayCity, $displayProvince",
+                                                    style: TextFontStyle
+                                                        .textStyle14IbmPlexSansW400
+                                                        .copyWith(
+                                                          fontSize: 12.sp,
+                                                          color: const Color(
+                                                            0xFF797A7C,
+                                                          ),
+                                                        ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),

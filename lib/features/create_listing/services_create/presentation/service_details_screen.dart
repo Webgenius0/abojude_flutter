@@ -99,7 +99,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                       Stack(
                         children: [
                           SizedBox(
-                            height: 250.h,
+                            height: 248.h,
                             child: PageView.builder(
                               controller: _pageController,
                               onPageChanged: (int index) {

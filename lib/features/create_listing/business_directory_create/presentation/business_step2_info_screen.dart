@@ -210,7 +210,6 @@ class _BusinessStep2InfoScreenState extends State<BusinessStep2InfoScreen> {
                                     },
                                   ),
                                   SizedBox(width: 12.w),
-
                                   // Day Name (clickable to configure time)
                                   Expanded(
                                     child: GestureDetector(
