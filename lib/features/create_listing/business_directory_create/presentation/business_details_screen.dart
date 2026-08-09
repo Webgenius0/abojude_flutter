@@ -305,7 +305,7 @@ class BusinessDetailsScreen extends StatelessWidget {
                                       ? model.emailAddress
                                       : "alnour@example.com",
                                 ),
-                                const Divider(
+                                const Divider( 
                                   color: Color(0xFFE5E7EB),
                                   height: 1,
                                 ),

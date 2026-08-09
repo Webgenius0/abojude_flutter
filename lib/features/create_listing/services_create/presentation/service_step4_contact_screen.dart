@@ -1,3 +1,4 @@
+import 'package:abojude_flutter/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,7 +18,8 @@ class ServiceStep4ContactScreen extends StatefulWidget {
   const ServiceStep4ContactScreen({super.key, required this.model});
 
   @override
-  State<ServiceStep4ContactScreen> createState() => _ServiceStep4ContactScreenState();
+  State<ServiceStep4ContactScreen> createState() =>
+      _ServiceStep4ContactScreenState();
 }
 
 class _ServiceStep4ContactScreenState extends State<ServiceStep4ContactScreen> {
@@ -31,7 +33,9 @@ class _ServiceStep4ContactScreenState extends State<ServiceStep4ContactScreen> {
   void initState() {
     super.initState();
     _phoneController = TextEditingController(text: widget.model.phoneNumber);
-    _whatsAppController = TextEditingController(text: widget.model.whatsAppNumber);
+    _whatsAppController = TextEditingController(
+      text: widget.model.whatsAppNumber,
+    );
     _emailController = TextEditingController(text: widget.model.emailAddress);
     _enableInAppChat = widget.model.enableInAppChat;
   }
@@ -56,15 +60,17 @@ class _ServiceStep4ContactScreenState extends State<ServiceStep4ContactScreen> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 16.h,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         "Choose how buyers can reach you. Enable at least one contact method.",
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: const Color(0xFF6B7280),
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: const Color(0xFF6B7280)),
                       ),
                       SizedBox(height: 24.h),
 
@@ -74,9 +80,8 @@ class _ServiceStep4ContactScreenState extends State<ServiceStep4ContactScreen> {
                         controller: _phoneController,
                         keyboardType: TextInputType.phone,
                         textInputAction: TextInputAction.next,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration("+1 (416) 555-0123"),
                       ),
                       SizedBox(height: 20.h),
@@ -87,12 +92,11 @@ class _ServiceStep4ContactScreenState extends State<ServiceStep4ContactScreen> {
                         controller: _whatsAppController,
                         keyboardType: TextInputType.phone,
                         textInputAction: TextInputAction.next,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration("+1 (416) 555-0123"),
                       ),
-                      SizedBox(height: 20.h),
+                      UIHelper.verticalSpace(20),
 
                       // Email Field
                       _buildLabel("Email Address"),
@@ -100,13 +104,14 @@ class _ServiceStep4ContactScreenState extends State<ServiceStep4ContactScreen> {
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.done,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration("your@email.com"),
                         validator: (value) {
                           if (value != null && value.trim().isNotEmpty) {
-                            final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                            final emailRegex = RegExp(
+                              r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                            );
                             if (!emailRegex.hasMatch(value.trim())) {
                               return "Please enter a valid email address";
                             }
@@ -118,7 +123,10 @@ class _ServiceStep4ContactScreenState extends State<ServiceStep4ContactScreen> {
 
                       // Enable in-App Chat Card
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 16.h,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12.r),
@@ -135,17 +143,19 @@ class _ServiceStep4ContactScreenState extends State<ServiceStep4ContactScreen> {
                                 children: [
                                   Text(
                                     "Enable in-App Chat",
-                                    style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
-                                      fontSize: 15.sp,
-                                    ),
+                                    style: TextFontStyle
+                                        .textStyle16IbmPlexSansW600
+                                        .copyWith(fontSize: 15.sp),
                                   ),
                                   SizedBox(height: 4.h),
                                   Text(
                                     "Allow buyers to message you in the app",
-                                    style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                                      fontSize: 13.sp,
-                                      color: const Color(0xFF6B7280),
-                                    ),
+                                    style: TextFontStyle
+                                        .textStyle14IbmPlexSansW400
+                                        .copyWith(
+                                          fontSize: 13.sp,
+                                          color: const Color(0xFF6B7280),
+                                        ),
                                   ),
                                 ],
                               ),
@@ -179,11 +189,17 @@ class _ServiceStep4ContactScreenState extends State<ServiceStep4ContactScreen> {
                           : () {
                               if (_formKey.currentState!.validate()) {
                                 final phone = _phoneController.text.trim();
-                                final whatsapp = _whatsAppController.text.trim();
+                                final whatsapp = _whatsAppController.text
+                                    .trim();
                                 final email = _emailController.text.trim();
 
-                                if (phone.isEmpty && whatsapp.isEmpty && email.isEmpty && !_enableInAppChat) {
-                                  ToastUtil.showShortToast("Please provide or enable at least one contact method.");
+                                if (phone.isEmpty &&
+                                    whatsapp.isEmpty &&
+                                    email.isEmpty &&
+                                    !_enableInAppChat) {
+                                  ToastUtil.showShortToast(
+                                    "Please provide or enable at least one contact method.",
+                                  );
                                   return;
                                 }
 
@@ -209,7 +225,8 @@ class _ServiceStep4ContactScreenState extends State<ServiceStep4ContactScreen> {
                                     )
                                     .then((res) {
                                       ToastUtil.showShortToast(
-                                        res.message ?? "Listing drafted successfully",
+                                        res.message ??
+                                            "Listing drafted successfully",
                                       );
                                       NavigationService.navigateTo(
                                         Routes.serviceStep5Review,

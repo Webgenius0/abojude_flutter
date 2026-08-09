@@ -1,3 +1,4 @@
+import 'package:abojude_flutter/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
@@ -177,7 +178,7 @@ class _ServiceStep3LocationScreenState
                           );
                         },
                       ),
-                      SizedBox(height: 20.h),
+                      UIHelper.verticalSpace(20),
 
                       // Address Field (Optional)
                       _buildLabel("Address (Optional)", isRequired: false),

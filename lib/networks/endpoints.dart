@@ -100,12 +100,10 @@ final class Endpoints {
 
     return "/v1/posts?${params.join("&")}";
   }
- 
 
   static String adsList() => "/v1/ads";
 
   // -------------------ExploreList end-------------------
- 
 
   static String getProfile() => "/v1/auth/profile";
   static String updateProfile() => "/v1/auth/profile";
@@ -125,15 +123,10 @@ final class Endpoints {
   static String chatList() => "/v1/auth/conversations";
   static String getConversationMessages(int conversationId) =>
       "/v1/auth/conversations/messages?conversation_id=$conversationId";
- 
-  static String getMyList({int page = 1, int perPage = 10}) =>
-      "/v1/auth/posts?page=$page&per_page=$perPage";
- 
 
   static String getMyList({int page = 1, int perPage = 10}) =>
       "/v1/auth/posts?page=$page&per_page=$perPage";
 
- 
   static String postDetails(int postId) => "/v1/post/details?post_id=$postId";
   static String wishesList() => "/v1/auth/wishes";
   static String sentMessage() => "/v1/auth/conversations/send";
