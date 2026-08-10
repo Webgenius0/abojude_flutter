@@ -7,6 +7,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:abojude_flutter/features/explore_deatils_screen/business_screen.dart';
 import 'package:abojude_flutter/features/explore_deatils_screen/services_screen.dart';
+import 'package:abojude_flutter/features/explore_deatils_screen/job_screen.dart';
 import 'package:abojude_flutter/features/home/presentation/product_details_screen.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 
@@ -70,9 +71,9 @@ class _ListingCardState extends State<ListingCard> {
     final String priceStr = item is Map
         ? (item['price'] as String? ?? '')
         : (item.price != null
-              ? (item.price.toString().startsWith('£')
+              ? (item.price.toString().startsWith('\$')
                     ? item.price.toString()
-                    : '£${item.price}')
+                    : '\$${item.price}')
               : '');
     final String location = item is Map
         ? (item['location'] as String? ?? '')
@@ -92,12 +93,11 @@ class _ListingCardState extends State<ListingCard> {
         } else if (category == 'Business') {
           Get.to(() => BusinessScreen(postId: postId));
         } else if (category == 'Jobs') {
-
-          NavigationService.navigateTo(Routes.jobStep1Photos);
+          Get.to(() => JobScreen(postId: postId));
         } else if (category == 'Services') {
-          Get.to(() => const ServicesScreen());
+          Get.to(() => ProductDetailsScreen(postId: postId));
         } else {
-          Get.to(() => BusinessScreen(postId: postId));
+          Get.to(() => ProductDetailsScreen(postId: postId));
         }
       },
       child: Container(

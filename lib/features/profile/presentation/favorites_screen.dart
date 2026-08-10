@@ -538,7 +538,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                   // Price if exists
                   if (price != null && price.isNotEmpty) ...[
                     Text(
-                      price.startsWith('£') || price.startsWith('\$')
+                      price.startsWith('\$')
                           ? price
                           : '\$$price',
                       style: GoogleFonts.inter(

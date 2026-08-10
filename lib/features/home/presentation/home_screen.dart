@@ -1,5 +1,6 @@
 import 'package:abojude_flutter/features/profile/model/get_profile_model.dart';
 import 'package:abojude_flutter/features/auth/register/presentation/select_location_screen.dart';
+import 'package:abojude_flutter/features/home/presentation/search_products_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -567,16 +568,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    showFilterBottomSheet(
-                      context,
-                      currentFilters: _activeFilters,
-                      onApply: (filters) {
-                        setState(() {
-                          _activeFilters = filters;
-                          _applyFilters(); // your existing filter method
-                        });
-                      },
-                    );
+                    Get.to(() => const SearchProductsScreen());
                   },
                   child: Container(
                     height: 50,
@@ -592,6 +584,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     child: const TextField(
+                      readOnly: true,
+                      enabled: false,
                       decoration: InputDecoration(
                         hintText: 'What are you looking for?',
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 14),

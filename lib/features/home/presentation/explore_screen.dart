@@ -46,10 +46,9 @@ class Listing {
           DateTime.now().millisecondsSinceEpoch.toString(),
       title: datum.title ?? '',
       price: datum.price != null && datum.price.toString().isNotEmpty
-          ? (datum.price.toString().startsWith('£') ||
-                    datum.price.toString().startsWith('\$')
+          ? (datum.price.toString().startsWith('\$')
                 ? datum.price.toString()
-                : '£${datum.price}')
+                : '\$${datum.price}')
           : null,
       category: datum.categoryName ?? '',
       location:

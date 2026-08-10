@@ -344,19 +344,28 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             },
           ),
           items: imagesList.map((imageUrl) {
-            return Container(
-              width: double.infinity,
-              color: Colors.grey[200],
-              child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(color: Colors.white),
-                ),
-                errorWidget: (context, url, error) => const Center(
-                  child: Icon(Icons.image, size: 50, color: Colors.grey),
+            return GestureDetector(
+              onTap: () {
+                _openImageZoomView(
+                  context,
+                  imagesList,
+                  imagesList.indexOf(imageUrl),
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                color: Colors.grey[200],
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(color: Colors.white),
+                  ),
+                  errorWidget: (context, url, error) => const Center(
+                    child: Icon(Icons.image, size: 50, color: Colors.grey),
+                  ),
                 ),
               ),
             );
@@ -415,11 +424,115 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
+  void _openImageZoomView(
+    BuildContext context,
+    List<String> images,
+    int initialIndex,
+  ) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (context) {
+          int currentIndex = initialIndex;
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return Scaffold(
+                backgroundColor: Colors.black,
+                body: Stack(
+                  children: [
+                    PageView.builder(
+                      itemCount: images.length,
+                      controller: PageController(initialPage: initialIndex),
+                      onPageChanged: (index) {
+                        setState(() {
+                          currentIndex = index;
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        return InteractiveViewer(
+                          panEnabled: true,
+                          minScale: 0.5,
+                          maxScale: 4.0,
+                          child: Center(
+                            child: CachedNetworkImage(
+                              imageUrl: images[index],
+                              fit: BoxFit.contain,
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                              errorWidget: (context, url, error) => const Icon(
+                                Icons.image_not_supported,
+                                color: Colors.white,
+                                size: 50,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    SafeArea(
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: GestureDetector(
+                            onTap: () => Navigator.pop(context),
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.5),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.close,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (images.length > 1)
+                      Positioned(
+                        bottom: 40,
+                        left: 0,
+                        right: 0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            images.length,
+                            (index) => Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: currentIndex == index
+                                    ? Colors.white
+                                    : Colors.white.withOpacity(0.4),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildPriceAndCategory(PostDetailsData? details) {
     final category = details?.categoryName ?? 'Buy & Sell';
     String priceStr = details?.price ?? '\$1,199';
-    if (!priceStr.startsWith('£') && !priceStr.startsWith('\$')) {
-      priceStr = '£$priceStr';
+    if (!priceStr.startsWith('\$')) {
+      priceStr = '\$$priceStr';
     }
 
     return Row(
@@ -581,11 +694,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Widget _buildSellerInfo(PostDetailsData? details) {
-    final name = details?.user?.name ?? 'Sara Khali';
+    final name =
+        details?.user?.name ?? (details == null ? 'Loading...' : 'Owner');
     final avatar = _formatImageUrl(details?.user?.avatar);
     final location = (details?.city != null || details?.province != null)
         ? "${details?.city ?? ''}${details?.city != null && details?.province != null ? ', ' : ''}${details?.province ?? ''}"
-        : 'Toronto, Ontario';
+        : (details == null ? 'Loading...' : 'Location not specified');
 
     final initials = name.trim().isNotEmpty
         ? name
