@@ -345,6 +345,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
           items: imagesList.map((imageUrl) {
             return GestureDetector(
+              behavior: HitTestBehavior.opaque,
               onTap: () {
                 _openImageZoomView(
                   context,
@@ -435,6 +436,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         fullscreenDialog: true,
         builder: (context) {
           int currentIndex = initialIndex;
+          bool isSwipeEnabled = true;
           return StatefulBuilder(
             builder: (context, setState) {
               return Scaffold(
@@ -443,6 +445,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   children: [
                     PageView.builder(
                       itemCount: images.length,
+                      physics: isSwipeEnabled
+                          ? const BouncingScrollPhysics()
+                          : const NeverScrollableScrollPhysics(),
                       controller: PageController(initialPage: initialIndex),
                       onPageChanged: (index) {
                         setState(() {
@@ -450,25 +455,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         });
                       },
                       itemBuilder: (context, index) {
-                        return InteractiveViewer(
-                          panEnabled: true,
-                          minScale: 0.5,
-                          maxScale: 4.0,
-                          child: Center(
-                            child: CachedNetworkImage(
-                              imageUrl: images[index],
-                              fit: BoxFit.contain,
-                              placeholder: (context, url) =>
-                                  const CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ),
-                              errorWidget: (context, url, error) => const Icon(
-                                Icons.image_not_supported,
-                                color: Colors.white,
-                                size: 50,
-                              ),
-                            ),
-                          ),
+                        return ZoomableImage(
+                          imageUrl: images[index],
+                          onZoomChanged: (zoomed) {
+                            if (isSwipeEnabled == zoomed) {
+                              setState(() {
+                                isSwipeEnabled = !zoomed;
+                              });
+                            }
+                          },
                         );
                       },
                     ),
@@ -695,7 +690,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   Widget _buildSellerInfo(PostDetailsData? details) {
     final name =
-        details?.user?.name ?? (details == null ? 'Loading...' : 'Owner');
+        (details?.userName != null && details!.userName!.trim().isNotEmpty)
+        ? details.userName!
+        : ((details?.user?.name != null &&
+                  details!.user!.name!.trim().isNotEmpty)
+              ? details.user!.name!
+              : (details == null ? 'Loading...' : 'User'));
     final avatar = _formatImageUrl(details?.user?.avatar);
     final location = (details?.city != null || details?.province != null)
         ? "${details?.city ?? ''}${details?.city != null && details?.province != null ? ', ' : ''}${details?.province ?? ''}"
@@ -709,7 +709,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               .map((e) => e[0])
               .join()
               .toUpperCase()
-        : 'SK';
+        : 'US';
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -1038,6 +1038,70 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ZoomableImage extends StatefulWidget {
+  final String imageUrl;
+  final ValueChanged<bool> onZoomChanged;
+
+  const ZoomableImage({
+    super.key,
+    required this.imageUrl,
+    required this.onZoomChanged,
+  });
+
+  @override
+  State<ZoomableImage> createState() => _ZoomableImageState();
+}
+
+class _ZoomableImageState extends State<ZoomableImage> {
+  final TransformationController _transformationController =
+      TransformationController();
+
+  @override
+  void dispose() {
+    _transformationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InteractiveViewer(
+      transformationController: _transformationController,
+      panEnabled: true,
+      minScale: 1.0,
+      maxScale: 4.0,
+      onInteractionUpdate: (details) {
+        final double scale = _transformationController.value
+            .getMaxScaleOnAxis();
+        if (scale > 1.0) {
+          widget.onZoomChanged(true);
+        } else {
+          widget.onZoomChanged(false);
+        }
+      },
+      onInteractionEnd: (details) {
+        final double scale = _transformationController.value
+            .getMaxScaleOnAxis();
+        if (scale <= 1.0) {
+          widget.onZoomChanged(false);
+        }
+      },
+      child: Center(
+        child: CachedNetworkImage(
+          imageUrl: widget.imageUrl,
+          fit: BoxFit.contain,
+          placeholder: (context, url) =>
+              const CircularProgressIndicator(color: Colors.white),
+          errorWidget: (context, url, error) => const Icon(
+            Icons.image_not_supported,
+            color: Colors.white,
+            size: 50,
           ),
         ),
       ),
