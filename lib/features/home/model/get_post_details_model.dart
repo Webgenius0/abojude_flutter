@@ -56,6 +56,8 @@ class PostDetailsData {
   Map<String, dynamic>? specifications;
   UserDetails? user;
   List<RelatedPost>? relatedPosts;
+  String? userName;
+  String? userSince;
 
   PostDetailsData({
     this.id,
@@ -79,6 +81,8 @@ class PostDetailsData {
     this.specifications,
     this.user,
     this.relatedPosts,
+    this.userName,
+    this.userSince,
   });
 
   factory PostDetailsData.fromJson(Map<String, dynamic> json) => PostDetailsData(
@@ -110,6 +114,8 @@ class PostDetailsData {
             ? []
             : List<RelatedPost>.from(
                 json["related_posts"]!.map((x) => RelatedPost.fromJson(x))),
+        userName: json["user_name"],
+        userSince: json["user_since"]?.toString(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -136,6 +142,8 @@ class PostDetailsData {
         "related_posts": relatedPosts == null
             ? []
             : List<dynamic>.from(relatedPosts!.map((x) => x.toJson())),
+        "user_name": userName,
+        "user_since": userSince,
       };
 }
 

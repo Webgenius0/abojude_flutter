@@ -378,35 +378,57 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   FilterOptions _activeFilters = FilterOptions();
+
+  Future<void> _onRefresh() async {
+    setState(() {
+      _activeFilters = FilterOptions();
+    });
+    await Future.wait([
+      getCategoryListRxObj.getCategoryListRx(),
+      getRecentPostListRxObj.getRecentPostListRx(),
+      getFeaturedListingsRxObj.getFeaturedListingsRx(),
+      adsListRxObj.getAdsListRx(),
+    ]);
+    final bool isGuest = appData.read(kKeyIsExploring) ?? false;
+    if (!isGuest) {
+      await getProfileRxObj.getProfile();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgGrey,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              _buildSearchBar(),
-              const SizedBox(height: 16),
-              _buildBannerCarousel(),
-              const SizedBox(height: 20),
-              FeaturedListingsSection(
-                onFavoriteToggle: (item) {
-                  setState(() {});
-                },
-              ),
-              const SizedBox(height: 20),
-              const CategoriesSection(),
-              const SizedBox(height: 20),
-              RecentListingsSection(
-                onFavoriteToggle: (item) {
-                  setState(() {});
-                },
-              ),
-              const SizedBox(height: 30),
-            ],
+        child: RefreshIndicator(
+          onRefresh: _onRefresh,
+          color: const Color(0xFF1B2D6B),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(),
+                _buildSearchBar(),
+                const SizedBox(height: 16),
+                _buildBannerCarousel(),
+                const SizedBox(height: 20),
+                FeaturedListingsSection(
+                  onFavoriteToggle: (item) {
+                    setState(() {});
+                  },
+                ),
+                const SizedBox(height: 20),
+                const CategoriesSection(),
+                const SizedBox(height: 20),
+                RecentListingsSection(
+                  onFavoriteToggle: (item) {
+                    setState(() {});
+                  },
+                ),
+                const SizedBox(height: 30),
+              ],
+            ),
           ),
         ),
       ),
