@@ -46,6 +46,8 @@ import 'package:abojude_flutter/features/home/data/rx_all_porducaosn_deatils_api
 import 'package:abojude_flutter/features/home/model/get_post_details_model.dart';
 import 'package:abojude_flutter/features/home/data/rx_add_list/rx.dart';
 import 'package:abojude_flutter/features/home/model/add_list_model.dart';
+import 'package:abojude_flutter/features/home/data/rx_report_post/rx.dart';
+import 'package:abojude_flutter/features/home/model/report_post_model.dart';
 import 'package:abojude_flutter/features/profile/data/rx_change_password/rx.dart';
 import 'package:abojude_flutter/features/profile/data/rx_my_listing_api/rx.dart';
 import 'package:abojude_flutter/features/profile/data/rx_my_whises_list_api/rx.dart';
@@ -898,5 +900,10 @@ PostSentMessageRx postSentMessageRxObj = PostSentMessageRx(
 // //   empty: MarkAsPaidOrDeclineModel(),
 // //   dataFetcher: BehaviorSubject<MarkAsPaidOrDeclineModel>(),
 // // );
+
+ReportPostRx reportPostRxObj = ReportPostRx(
+  empty: ReportPostModel(),
+  dataFetcher: BehaviorSubject<ReportPostModel>(),
+);
 
 

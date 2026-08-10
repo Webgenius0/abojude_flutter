@@ -149,9 +149,10 @@ class _JobScreenState extends State<JobScreen> {
             ),
             onPressed: () {
               Get.to(
-                () => const ReportScreen(
+                () => ReportScreen(
                   targetName: 'Listing Position',
                   isReportUser: false,
+                  postId: widget.postId,
                 ),
               );
             },
