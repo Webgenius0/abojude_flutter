@@ -375,9 +375,9 @@ class _JobScreenState extends State<JobScreen> {
 
     String? priceStr;
     if (details?.price != null && details!.price!.isNotEmpty) {
-      priceStr = details.price!.startsWith('£') || details.price!.startsWith('\$')
+      priceStr = details.price!.startsWith('\$')
           ? details.price!
-          : '£${details.price}';
+          : '\$${details.price}';
     }
 
     return Padding(
