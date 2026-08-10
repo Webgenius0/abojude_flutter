@@ -294,6 +294,9 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                   if (success) {
                                     appData.write(kKeyIsLoggedIn, true);
                                     appData.write(kKeySelectedLocation, true);
+                                    if (!widget.isGuest) {
+                                      getProfileRxObj.getProfile();
+                                    }
                                     NavigationService.navigateToUntilReplacement(
                                       Routes.navigationMenu,
                                     );
