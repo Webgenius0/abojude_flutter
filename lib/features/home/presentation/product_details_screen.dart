@@ -149,9 +149,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             icon: const Icon(Icons.outlined_flag, color: Colors.black54),
             onPressed: () {
               Get.to(
-                () => const ReportScreen(
+                () => ReportScreen(
                   targetName: 'Product Listing',
                   isReportUser: false,
+                  postId: widget.postId,
                 ),
               );
             },

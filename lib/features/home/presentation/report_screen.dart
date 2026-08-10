@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:dio/dio.dart';
 
 class ReportScreen extends StatefulWidget {
   final String targetName;
   final bool isReportUser;
+  final int? postId;
 
   const ReportScreen({
     Key? key,
     required this.targetName,
     this.isReportUser = false,
+    this.postId,
   }) : super(key: key);
 
   @override
@@ -123,29 +127,107 @@ class _ReportScreenState extends State<ReportScreen> {
       _isSubmitting = true;
     });
 
-    // Mock API request delay
-    Future.delayed(const Duration(seconds: 1), () {
-      if (!mounted) return;
-      setState(() {
-        _isSubmitting = false;
-      });
+    final String reason = _selectedOption!;
+    final String? otherNote = _selectedOption == 'Other' ? _otherTextController.text : null;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Report submitted successfully. Thank you!',
-            style: GoogleFonts.inter(
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
+    if (!widget.isReportUser && widget.postId != null) {
+      reportPostRxObj.reportPostRx(
+        postId: widget.postId!,
+        reason: reason,
+        otherNote: otherNote,
+      ).then((value) {
+        if (!mounted) return;
+        setState(() {
+          _isSubmitting = false;
+        });
+
+        if (value.status == true) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                value.message ?? 'Report submitted successfully. Thank you!',
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+              backgroundColor: Colors.green[600],
+              behavior: SnackBarBehavior.floating,
             ),
-          ),
-          backgroundColor: Colors.green[600],
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+          );
+          Get.back();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                value.message ?? 'You cannot report your own post.',
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+              backgroundColor: Colors.red[600],
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      }).catchError((error) {
+        if (!mounted) return;
+        setState(() {
+          _isSubmitting = false;
+        });
 
-      Get.back();
-    });
+        String errorMessage = 'Failed to submit report';
+        if (error is DioException) {
+          final responseData = error.response?.data;
+          if (responseData is Map && responseData.containsKey('message')) {
+            errorMessage = responseData['message'] ?? errorMessage;
+          } else if (error.message != null) {
+            errorMessage = error.message!;
+          }
+        } else {
+          errorMessage = error.toString();
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              errorMessage,
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+            backgroundColor: Colors.red[600],
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      });
+    } else {
+      // Mock API request delay for user report
+      Future.delayed(const Duration(seconds: 1), () {
+        if (!mounted) return;
+        setState(() {
+          _isSubmitting = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Report submitted successfully. Thank you!',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+            backgroundColor: Colors.green[600],
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+
+        Get.back();
+      });
+    }
   }
 
   @override

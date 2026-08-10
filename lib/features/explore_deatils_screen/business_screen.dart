@@ -149,9 +149,10 @@ class _BusinessScreenState extends State<BusinessScreen> {
             ),
             onPressed: () {
               Get.to(
-                () => const ReportScreen(
+                () => ReportScreen(
                   targetName: 'Business Listing',
                   isReportUser: false,
+                  postId: widget.postId,
                 ),
               );
             },

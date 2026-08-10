@@ -117,6 +117,8 @@ final class Endpoints {
   static String createBuyAndSellCategory() => "/v1/auth/post/draft";
   static String buyAndSellGetPostDraft() => "/v1/auth/post/draft";
   static String postCreateDraft() => "/v1/auth/post/create";
+  static String postReport() => "/v1/auth/report/post";
+
 
   ///____________________________ferdaus hossan sojib_______________________///
 
