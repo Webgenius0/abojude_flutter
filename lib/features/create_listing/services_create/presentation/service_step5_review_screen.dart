@@ -1,3 +1,4 @@
+import 'package:abojude_flutter/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
@@ -37,7 +38,7 @@ class ServiceStep5ReviewScreen extends StatelessWidget {
                         color: const Color(0xFF6B7280),
                       ),
                     ),
-                    SizedBox(height: 24.h),
+                    UIHelper.verticalSpace(24),
 
                     // Preview Listing Card
                     GestureDetector(
@@ -150,7 +151,8 @@ class ServiceStep5ReviewScreen extends StatelessWidget {
                                           fontSize: 18.sp,
                                         ),
                                   ),
-                                  SizedBox(height: 12.h),
+                                  UIHelper.verticalSpace(12),
+
                                   // Badges
                                   Row(
                                     children: [
@@ -177,7 +179,8 @@ class ServiceStep5ReviewScreen extends StatelessWidget {
                                               ),
                                         ),
                                       ),
-                                      SizedBox(width: 12.w),
+                                      UIHelper.horizontalSpace(12),
+
                                       // Location Badge
                                       Row(
                                         children: [
@@ -186,7 +189,7 @@ class ServiceStep5ReviewScreen extends StatelessWidget {
                                             size: 16.w,
                                             color: const Color(0xFF797A7C),
                                           ),
-                                          SizedBox(width: 4.w),
+                                          UIHelper.horizontalSpace(4),
                                           Text(
                                             "${model.city}, ${model.province}",
                                             style: TextFontStyle
@@ -209,7 +212,7 @@ class ServiceStep5ReviewScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 24.h),
+                    UIHelper.verticalSpace(24),
 
                     // Before You Submit Box
                     Text(

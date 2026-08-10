@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names, unnecessary_string_interpolations
 
 const String url = "https://abojude.thesyndicates.team/api";
+//const String url = "https://ruthie-gastroenterological-bee.ngrok-free.dev/api";
 const String imageUrl = "${url}";
 
 final class NetworkConstants {
@@ -43,23 +44,14 @@ final class Endpoints {
 
   // -------------------Resend Otp end-------------------
 
-  // ------------------- GetCategoryList start--------------
   static String getCategoryList() => "/v1/categories";
   static String getRecentPostList() => "/v1/posts/recent";
-
-  //......................start..............................
   static String jobCreate() => "/v1/auth/post/draft";
   static String serviceCreate() => "/v1/auth/post/draft";
   static String businessDirectoryCreate() => "/v1/auth/post/draft";
-
-  //......................end..............................
-
-  // ------------------- GetFeaturedListings start-------------------
   static String getFeaturedListings({int page = 1, int perPage = 10}) =>
       "/v1/posts/featured?page=$page&per_page=$perPage";
-  // -------------------GetFeaturedListings end-------------------
 
-  // ------------------- ExploreList start-------------------
   static String exploreList({
     List<String>? categorySlugs,
     String? province,
@@ -108,81 +100,38 @@ final class Endpoints {
 
     return "/v1/posts?${params.join("&")}";
   }
+
+  static String adsList() => "/v1/ads";
+
   // -------------------ExploreList end-------------------
 
-  // ------------------- GetProfile start-------------------
   static String getProfile() => "/v1/auth/profile";
-  // -------------------GetProfile end-------------------
-
-  // ------------------- UpdateProfile start-------------------
   static String updateProfile() => "/v1/auth/profile";
-  // -------------------UpdateProfile end-------------------
-
-  // -------------------ContactSupport start-------------------
   static String contactSupport() => "/v1/contact-support";
-  // -------------------ContactSupport end-------------------
-
-  // // ------------------- BlockUserList start-------------------
   static String blockUserList() => "/v1/auth/blocked-users";
-  // // -------------------BlockUserList end-------------------
-
-  // // ------------------- BlockUser start-------------------
   static String blockUser() => "/v1/auth/block";
-  // // -------------------BlockUser end-------------------
-
-  // -------------------TermsAndService start--------------
   static String termsAndService(String slug) => "/v1/page?slug=$slug";
-  // -------------------TermsAndService end-------------------
-
-  // ------------------- GetNotificationSetting start--------------
   static String getNotificationSetting() => "/v1/auth/notification-settings";
-  // -------------------GetNotificationSetting end-------------------
-
-  // ------------------- UpdateNotificationSetting start--------------
   static String updateNotificationSetting() => "/v1/auth/notification-settings";
-  // -------------------UpdateNotificationSetting end-------------------
-
-  // ------------------- GetWishList start--------------
   static String getWishList() => "/v1/auth/wishes";
-  // -------------------GetWishList end-------------------
-
-  // ------------------- Create buy and sell category list start--------------
   static String createBuyAndSellCategory() => "/v1/auth/post/draft";
-  // -------------------Create buy and sell category list end-----------------
-
-  // ------------------- Get buy and sell post draft start--------------
   static String buyAndSellGetPostDraft() => "/v1/auth/post/draft";
-  // -------------------Get buy and sell post draft end-----------------
-
-  // ------------------- Create buy and sell post start--------------
   static String postCreateDraft() => "/v1/auth/post/create";
-  // ------------------- Create buy and sell post end-----------------
 
   ///____________________________ferdaus hossan sojib_______________________///
 
   static String chatList() => "/v1/auth/conversations";
-
   static String getConversationMessages(int conversationId) =>
       "/v1/auth/conversations/messages?conversation_id=$conversationId";
 
-  static String getMyList({
-    int page = 1,
-    int perPage = 10,
-  }) =>
+  static String getMyList({int page = 1, int perPage = 10}) =>
       "/v1/auth/posts?page=$page&per_page=$perPage";
- 
-
 
   static String postDetails(int postId) => "/v1/post/details?post_id=$postId";
-
   static String wishesList() => "/v1/auth/wishes";
   static String sentMessage() => "/v1/auth/conversations/send";
   static String saveWishe() => "/v1/auth/wishes";
 
   // static String postDetails(int postId) =>
   //     "/v1/post/details?post_id=$postId";
-
-
-
-
 }

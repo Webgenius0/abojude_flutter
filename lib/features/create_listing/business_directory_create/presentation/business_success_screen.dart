@@ -1,3 +1,4 @@
+import 'package:abojude_flutter/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
@@ -53,7 +54,7 @@ class BusinessSuccessScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 32.h),
+                      UIHelper.verticalSpace(32.h),
 
                       // Title
                       Text(
@@ -66,7 +67,8 @@ class BusinessSuccessScreen extends StatelessWidget {
                               height: 1.3,
                             ),
                       ),
-                      SizedBox(height: 12.h),
+                      UIHelper.verticalSpace(12.h),
+
                       // Description
                       Text(
                         "Your listing has been submitted and is currently awaiting admin approval. It will become visible to other users once approved.",
@@ -78,7 +80,7 @@ class BusinessSuccessScreen extends StatelessWidget {
                               height: 1.5,
                             ),
                       ),
-                      SizedBox(height: 32.h),
+                      UIHelper.verticalSpace(32.h),
 
                       // Status Info Card
                       Container(
@@ -116,7 +118,7 @@ class BusinessSuccessScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SizedBox(height: 28.h),
+                      UIHelper.verticalSpace(28.h),
 
                       // Pending Approval Status Chip
                       Container(
@@ -180,12 +182,10 @@ class BusinessSuccessScreen extends StatelessWidget {
                   // View My Listings Button
                   GestureDetector(
                     onTap: () {
-
                       Get.to(() => const MyListingsScreen());
                       getMyListRxObj.getMyList(isRefresh: true);
 
                       NavigationService.navigateTo(Routes.myListingsScreen);
-
                     },
                     child: Container(
                       width: double.infinity,

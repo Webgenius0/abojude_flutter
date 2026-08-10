@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
 import 'package:abojude_flutter/features/message_screeen/message_screen.dart';
 import 'report_screen.dart';
 import 'package:abojude_flutter/features/message_screeen/message_screeen_list.dart';
@@ -144,9 +142,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           IconButton(
             icon: const Icon(Icons.share_outlined, color: Colors.black54),
             onPressed: () {
-              Share.share(
-                'Check out this listing on Wasel Canada!',
-              );
+              Share.share('Check out this listing on Wasel Canada!');
             },
           ),
           IconButton(
@@ -188,17 +184,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _buildPriceAndCategory(details),
-                                const SizedBox(height: 12),
+                                SizedBox(height: 12),
                                 _buildTitleAndLocation(details),
-                                const SizedBox(height: 16),
+                                SizedBox(height: 16),
                                 _buildDescription(details),
-                                const SizedBox(height: 16),
+                                SizedBox(height: 16),
                                 _buildItemOverview(details),
-                                const SizedBox(height: 16),
+                                SizedBox(height: 16),
                                 _buildSellerInfo(details),
-                                const SizedBox(height: 16),
+                                SizedBox(height: 16),
                                 _buildContactInfo(details),
-                                const SizedBox(height: 16),
+                                SizedBox(height: 16),
                                 _buildRelatedItems(details?.relatedPosts),
                               ],
                             ),
@@ -371,10 +367,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             top: 12,
             left: 12,
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8,
-                vertical: 4,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
                 color: Colors.orange[700],
                 borderRadius: BorderRadius.circular(4),
@@ -441,10 +434,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
         ),
         Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: 4,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
             color: Colors.blue[50],
             borderRadius: BorderRadius.circular(4),
@@ -509,8 +499,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Widget _buildDescription(PostDetailsData? details) {
-    final description = details?.description ??
-        'No description available for this listing.';
+    final description =
+        details?.description ?? 'No description available for this listing.';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -557,17 +547,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          _buildOverviewRow(
-            'Category',
-            details?.categoryName ?? 'Buy & Sell',
-          ),
+          _buildOverviewRow('Category', details?.categoryName ?? 'Buy & Sell'),
           if (specs.isNotEmpty)
             ...specs.entries.map(
               (e) => _buildOverviewRow(e.key, e.value.toString()),
             )
           else ...[
             _buildOverviewRow('Condition', 'Like New / Excellent'),
-            _buildOverviewRow('Location', '${details?.city ?? 'Toronto'}, ${details?.province ?? 'Manitoba'}'),
+            _buildOverviewRow(
+              'Location',
+              '${details?.city ?? 'Toronto'}, ${details?.province ?? 'Manitoba'}',
+            ),
           ],
         ],
       ),
@@ -583,10 +573,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           Text(label, style: const TextStyle(color: Colors.grey, fontSize: 12)),
           Text(
             value,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
           ),
         ],
       ),
@@ -601,7 +588,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         : 'Toronto, Ontario';
 
     final initials = name.trim().isNotEmpty
-        ? name.trim().split(RegExp(r'\s+')).take(2).map((e) => e[0]).join().toUpperCase()
+        ? name
+              .trim()
+              .split(RegExp(r'\s+'))
+              .take(2)
+              .map((e) => e[0])
+              .join()
+              .toUpperCase()
         : 'SK';
 
     return Container(
@@ -672,7 +665,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget _buildContactInfo(PostDetailsData? details) {
     final phone = details?.phone ?? details?.user?.phone ?? '+1-416-555-1234';
     final whatsapp = details?.whatsapp ?? phone;
-    final email = details?.email ?? details?.user?.email ?? 'contact@example.com';
+    final email =
+        details?.email ?? details?.user?.email ?? 'contact@example.com';
     final location = (details?.city != null || details?.province != null)
         ? "${details?.city ?? ''}${details?.city != null && details?.province != null ? ', ' : ''}${details?.province ?? ''}"
         : 'Downtown Toronto, Ontario';
@@ -740,10 +734,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: bgColor,
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
               child: Icon(icon, size: 18, color: iconColor),
             ),
             const SizedBox(width: 12),
@@ -888,16 +879,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               Get.to(
                 () => MessageScreen(
                   chat: ChatMessage(
-                    id: details?.userId?.toString() ?? details?.id?.toString() ?? '1',
+                    id:
+                        details?.userId?.toString() ??
+                        details?.id?.toString() ??
+                        '1',
                     name: name,
                     initials: name.trim().isNotEmpty
                         ? name
-                        .trim()
-                        .split(RegExp(r'\s+'))
-                        .take(2)
-                        .map((e) => e[0])
-                        .join()
-                        .toUpperCase()
+                              .trim()
+                              .split(RegExp(r'\s+'))
+                              .take(2)
+                              .map((e) => e[0])
+                              .join()
+                              .toUpperCase()
                         : 'SK',
                     lastMessage: 'Inquiry regarding product listing',
                     time: 'Just now',
@@ -912,7 +906,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               'assets/icons/message-02.png',
               width: 20,
               height: 20,
-              color: Colors.white, // Remove this line if the PNG is already white
+              color:
+                  Colors.white, // Remove this line if the PNG is already white
             ),
             label: const Text(
               'Message Seller',
@@ -929,7 +924,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-
           ),
         ),
       ),

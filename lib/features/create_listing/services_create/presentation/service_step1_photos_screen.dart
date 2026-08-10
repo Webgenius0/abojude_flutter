@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:abojude_flutter/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
@@ -67,7 +68,7 @@ class _ServiceStep1PhotosScreenState extends State<ServiceStep1PhotosScreen> {
                         height: 1.4,
                       ),
                     ),
-                    SizedBox(height: 24.h),
+                    UIHelper.verticalSpace(24),
                     // Photo grid
                     GridView.builder(
                       shrinkWrap: true,

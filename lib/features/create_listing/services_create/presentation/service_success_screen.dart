@@ -1,3 +1,4 @@
+import 'package:abojude_flutter/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
@@ -142,7 +143,7 @@ class ServiceSuccessScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 24.h),
+                      UIHelper.verticalSpace(16),
                     ],
                   ),
                 ),
@@ -176,17 +177,15 @@ class ServiceSuccessScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 12.h),
+                  UIHelper.verticalSpace(12),
 
                   // View My Listings Button
                   GestureDetector(
                     onTap: () {
-
                       Get.to(() => const MyListingsScreen());
                       getMyListRxObj.getMyList(isRefresh: true);
 
                       NavigationService.navigateTo(Routes.myListingsScreen);
-
                     },
                     child: Container(
                       width: double.infinity,
@@ -232,7 +231,7 @@ class ServiceSuccessScreen extends StatelessWidget {
             decoration: BoxDecoration(color: iconBg, shape: BoxShape.circle),
             child: Icon(icon, color: iconColor, size: 20.w),
           ),
-          SizedBox(width: 16.w),
+          UIHelper.horizontalSpace(16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,7 +243,8 @@ class ServiceSuccessScreen extends StatelessWidget {
                     color: AppColor.c2E3227,
                   ),
                 ),
-                SizedBox(height: 4.h),
+                UIHelper.verticalSpace(4),
+
                 Text(
                   subtitle,
                   style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(

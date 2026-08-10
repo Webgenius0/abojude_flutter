@@ -1,3 +1,4 @@
+import 'package:abojude_flutter/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
@@ -29,7 +30,9 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.model.title);
-    _descriptionController = TextEditingController(text: widget.model.description);
+    _descriptionController = TextEditingController(
+      text: widget.model.description,
+    );
     _areaInputController = TextEditingController();
     _serviceAreas = List.from(widget.model.serviceAreas);
   }
@@ -75,7 +78,10 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 16.h,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -84,10 +90,11 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
                       TextFormField(
                         controller: _titleController,
                         textInputAction: TextInputAction.next,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
+                        decoration: _buildInputDecoration(
+                          "Enter service title",
                         ),
-                        decoration: _buildInputDecoration("Enter service title"),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return "Please enter a service title";
@@ -95,7 +102,7 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 20.h),
+                      UIHelper.verticalSpace(20),
 
                       // Service Description Field
                       _buildLabel("Service Description"),
@@ -103,9 +110,8 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
                         controller: _descriptionController,
                         maxLines: 5,
                         minLines: 3,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration(
                           "Describe your service, experience, and what clients can expect...",
                         ),
@@ -127,10 +133,11 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
                             child: TextFormField(
                               controller: _areaInputController,
                               textInputAction: TextInputAction.done,
-                              style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                                color: AppColor.c2E3227,
+                              style: TextFontStyle.textStyle14IbmPlexSansW400
+                                  .copyWith(color: AppColor.c2E3227),
+                              decoration: _buildInputDecoration(
+                                "Enter your service areas",
                               ),
-                              decoration: _buildInputDecoration("Enter your service areas"),
                               onFieldSubmitted: (_) => _addArea(),
                             ),
                           ),
@@ -144,10 +151,7 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
                                 color: const Color(0xFF1D3B71),
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
-                              child: const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                              ),
+                              child: const Icon(Icons.add, color: Colors.white),
                             ),
                           ),
                         ],
@@ -155,10 +159,11 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
                       SizedBox(height: 8.h),
                       Text(
                         "List all cities and areas you serve, separated by commas.",
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: const Color(0xFF9CA3AF),
-                          fontSize: 12.sp,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(
+                              color: const Color(0xFF9CA3AF),
+                              fontSize: 12.sp,
+                            ),
                       ),
                       SizedBox(height: 16.h),
 
@@ -169,7 +174,10 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
                           runSpacing: 10.h,
                           children: _serviceAreas.map((area) {
                             return Container(
-                              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 14.w,
+                                vertical: 8.h,
+                              ),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFEFF6FF),
                                 borderRadius: BorderRadius.circular(20.r),
@@ -181,27 +189,27 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                    Text(
-                                      area,
-                                      style: TextStyle(
-                                        color: const Color(0xFF1D3B71),
-                                        fontSize: 13.sp,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                  Text(
+                                    area,
+                                    style: TextStyle(
+                                      color: const Color(0xFF1D3B71),
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                    SizedBox(width: 6.w),
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          _serviceAreas.remove(area);
-                                        });
-                                      },
-                                      child: Icon(
-                                        Icons.close,
-                                        size: 14.w,
-                                        color: const Color(0xFF1D3B71),
-                                      ),
+                                  ),
+                                  SizedBox(width: 6.w),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _serviceAreas.remove(area);
+                                      });
+                                    },
+                                    child: Icon(
+                                      Icons.close,
+                                      size: 14.w,
+                                      color: const Color(0xFF1D3B71),
                                     ),
+                                  ),
                                 ],
                               ),
                             );
@@ -219,11 +227,14 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
                       if (_serviceAreas.isEmpty) {
-                        ToastUtil.showShortToast("Please add at least one service area.");
+                        ToastUtil.showShortToast(
+                          "Please add at least one service area.",
+                        );
                         return;
                       }
                       widget.model.title = _titleController.text.trim();
-                      widget.model.description = _descriptionController.text.trim();
+                      widget.model.description = _descriptionController.text
+                          .trim();
                       widget.model.serviceAreas = _serviceAreas;
 
                       NavigationService.navigateTo(

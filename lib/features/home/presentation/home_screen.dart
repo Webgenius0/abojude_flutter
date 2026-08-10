@@ -8,6 +8,10 @@ import '../widgets/featured_listings_section.dart';
 import '../widgets/recent_listings_section.dart';
 import 'notificatosn_screen.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:abojude_flutter/features/home/model/add_list_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -249,6 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
     getCategoryListRxObj.getCategoryListRx();
     getRecentPostListRxObj.getRecentPostListRx();
     getFeaturedListingsRxObj.getFeaturedListingsRx();
+    adsListRxObj.getAdsListRx();
   }
 
   void _applyFilters() {
@@ -582,178 +587,177 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  String? _formatImageUrl(String? rawUrl) {
+    if (rawUrl == null || rawUrl.trim().isEmpty) return null;
+    String url = rawUrl.trim();
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+
+    const String baseDomain = "https://abojude.thesyndicates.team";
+    url = url.replaceAll('/./', '/').replaceAll('/../', '/');
+    if (!url.toLowerCase().contains('storage')) {
+      final cleanPath = url.startsWith('/') ? url : '/$url';
+      return '$baseDomain/storage$cleanPath';
+    } else {
+      final cleanPath = url.startsWith('/') ? url : '/$url';
+      return '$baseDomain$cleanPath';
+    }
+  }
+
   // ─── Banner Carousel ──────────────────────────────────────
   Widget _buildBannerCarousel() {
-    return Column(
-      children: [
-        CarouselSlider(
-          carouselController: _carouselController,
-          options: CarouselOptions(
+    return StreamBuilder<AddListModel>(
+      stream: adsListRxObj.getAdsListData,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox(
             height: 215,
-            viewportFraction: 0.92,
-            autoPlay: true,
-            autoPlayInterval: const Duration(seconds: 4),
-            autoPlayAnimationDuration: const Duration(milliseconds: 600),
-            enlargeCenterPage: true,
-            onPageChanged: (index, reason) {
-              setState(() => _currentBannerIndex = index);
-            },
-          ),
-          items: _banners.map((banner) => _buildBannerItem(banner)).toList(),
-        ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            _banners.length,
-            (index) => GestureDetector(
-              onTap: () => _carouselController.animateToPage(index),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                width: _currentBannerIndex == index ? 24 : 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  color: _currentBannerIndex == index
-                      ? lightGreen
-                      : Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(4),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        final adsModel = snapshot.data;
+        final ads = adsModel?.data ?? [];
+
+        if (ads.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        if (_currentBannerIndex >= ads.length) {
+          _currentBannerIndex = 0;
+        }
+
+        return Column(
+          children: [
+            CarouselSlider(
+              carouselController: _carouselController,
+              options: CarouselOptions(
+                height: 215,
+                viewportFraction: 0.92,
+                autoPlay: true,
+                autoPlayInterval: const Duration(seconds: 4),
+                autoPlayAnimationDuration: const Duration(milliseconds: 600),
+                enlargeCenterPage: true,
+                onPageChanged: (index, reason) {
+                  setState(() => _currentBannerIndex = index);
+                },
+              ),
+              items: ads.map((banner) => _buildBannerItem(banner)).toList(),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                ads.length,
+                (index) => GestureDetector(
+                  onTap: () => _carouselController.animateToPage(index),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    width: _currentBannerIndex == index ? 24 : 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: _currentBannerIndex == index
+                          ? lightGreen
+                          : Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 
-  Widget _buildBannerItem(Map<String, dynamic> banner) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 4.h),
-      decoration: BoxDecoration(
-        // color: banner['bgColor'] as Color,
-        image: DecorationImage(
-          image: AssetImage('assets/images/bannerImage.png'),
-          fit: BoxFit.cover,
+  Future<void> _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {}
+  }
+
+  Widget _buildBannerItem(Datum banner) {
+    final formattedUrl = _formatImageUrl(banner.media);
+    return GestureDetector(
+      onTap: () {
+        if (banner.backLink != null && banner.backLink!.trim().isNotEmpty) {
+          _launchUrl(banner.backLink!.trim());
+        }
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 4.h),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16.r),
+          color: Colors.grey[200],
         ),
-        borderRadius: BorderRadius.circular(16.r),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16.r),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: formattedUrl != null && formattedUrl.isNotEmpty
+                    ? CachedNetworkImage(
+                        imageUrl: formattedUrl,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                        placeholder: (context, url) => Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(color: Colors.white),
+                        ),
+                        errorWidget: (context, url, error) => Image.asset(
+                          'assets/images/bannerImage.png',
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                        ),
+                      )
+                    : Image.asset(
+                        'assets/images/bannerImage.png',
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      ),
+              ),
+              if (banner.title != null && banner.title!.isNotEmpty)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.7),
+                        ],
+                      ),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 12.h,
+                    ),
+                    child: Text(
+                      banner.title!,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
-      // child: Stack(
-      //   children: [
-      //     Positioned(
-      //       right: -20,
-      //       top: -20,
-      //       child: Container(
-      //         width: 120,
-      //         height: 120,
-      //         decoration: BoxDecoration(
-      //           color: Colors.white.withOpacity(0.05),
-      //           shape: BoxShape.circle,
-      //         ),
-      //       ),
-      //     ),
-      //     Positioned(
-      //       right: 20,
-      //       bottom: -30,
-      //       child: Container(
-      //         width: 80,
-      //         height: 80,
-      //         decoration: BoxDecoration(
-      //           color: Colors.white.withOpacity(0.05),
-      //           shape: BoxShape.circle,
-      //         ),
-      //       ),
-      //     ),
-      //     Padding(
-      //       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      //       child: Column(
-      //         crossAxisAlignment: CrossAxisAlignment.start,
-      //         children: [
-      //           Container(
-      //             padding: const EdgeInsets.symmetric(
-      //               horizontal: 10,
-      //               vertical: 4,
-      //             ),
-      //             decoration: BoxDecoration(
-      //               color: lightGreen.withOpacity(0.2),
-      //               borderRadius: BorderRadius.circular(20),
-      //               border: Border.all(color: lightGreen.withOpacity(0.5)),
-      //             ),
-      //             child: Row(
-      //               mainAxisSize: MainAxisSize.min,
-      //               children: [
-      //                 const Icon(Icons.verified, color: lightGreen, size: 12),
-      //                 const SizedBox(width: 4),
-      //                 Text(
-      //                   banner['tag'] as String,
-      //                   style: const TextStyle(
-      //                     color: lightGreen,
-      //                     fontSize: 10,
-      //                     fontWeight: FontWeight.w600,
-      //                     letterSpacing: 0.5,
-      //                   ),
-      //                 ),
-      //               ],
-      //             ),
-      //           ),
-      //           const SizedBox(height: 8),
-      //           Text(
-      //             banner['title'] as String,
-      //             style: const TextStyle(
-      //               color: Colors.white,
-      //               fontSize: 18,
-      //               fontWeight: FontWeight.w800,
-      //             ),
-      //           ),
-      //           Text(
-      //             banner['highlight'] as String,
-      //             style: const TextStyle(
-      //               color: lightGreen,
-      //               fontSize: 18,
-      //               fontWeight: FontWeight.w800,
-      //             ),
-      //           ),
-      //           const SizedBox(height: 4),
-      //           Text(
-      //             banner['subtitle'] as String,
-      //             style: TextStyle(
-      //               color: Colors.white.withOpacity(0.75),
-      //               fontSize: 10,
-      //             ),
-      //             maxLines: 2,
-      //             overflow: TextOverflow.ellipsis,
-      //           ),
-      //           const SizedBox(height: 10),
-      //           Row(
-      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //             children: List.generate(
-      //               4,
-      //               (i) => Column(
-      //                 children: [
-      //                   Icon(
-      //                     (banner['statIcons'] as List<IconData>)[i],
-      //                     color: Colors.white,
-      //                     size: 16,
-      //                   ),
-      //                   const SizedBox(height: 2),
-      //                   Text(
-      //                     (banner['stats'] as List<String>)[i],
-      //                     textAlign: TextAlign.center,
-      //                     style: TextStyle(
-      //                       color: Colors.white.withOpacity(0.85),
-      //                       fontSize: 8,
-      //                       fontWeight: FontWeight.w500,
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //           ),
-      //         ],
-      //       ),
-      //     ),
-      //   ],
-      // ),
     );
   }
 }
