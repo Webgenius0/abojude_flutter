@@ -114,7 +114,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Listing Details',
+          'Listing Details'.tr,
           style: TextStyle(
             color: Colors.black,
             fontSize: 16.sp,
@@ -609,7 +609,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'About Business',
+            'About Business'.tr,
             style: TextStyle(
               fontSize: 15.sp,
               fontWeight: FontWeight.bold,
@@ -1191,7 +1191,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                   .white, // Remove this if your PNG already has the desired color
             ),
             label: Text(
-              'Message',
+              'Message'.tr,
               style: TextStyle(
                 fontSize: 15.sp,
                 fontWeight: FontWeight.bold,

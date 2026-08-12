@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 
 class LocationDropdownField extends StatelessWidget {
   final String label;
@@ -28,7 +29,7 @@ class LocationDropdownField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
+          label.tr,
           style: GoogleFonts.inter(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
@@ -66,7 +67,7 @@ class LocationDropdownField extends StatelessWidget {
               child: DropdownButton<String>(
                 value: value,
                 hint: Text(
-                  hintText,
+                  hintText.tr,
                   style: GoogleFonts.inter(
                     fontSize: 15.sp,
                     color: const Color(0xFF9CA3AF),

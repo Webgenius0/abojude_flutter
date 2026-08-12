@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 import 'package:abojude_flutter/features/terms_of_service_screen/model/terms_and_condition_model.dart';
 
@@ -62,7 +63,7 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
         title: StreamBuilder<TermsAndConditionModel>(
           stream: termsAndConditionRxObj.getTermsAndConditionData,
           builder: (context, snapshot) {
-            final title = snapshot.data?.data?.title ?? 'Terms of Service';
+            final title = snapshot.data?.data?.title ?? 'Terms of Service'.tr;
             return Text(
               title,
               style: const TextStyle(
@@ -92,7 +93,7 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
               if (snapshot.hasError) {
                 return Center(
                   child: Text(
-                    'Failed to load terms and conditions.',
+                    'Failed to load terms and conditions.'.tr,
                     style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
                   ),
                 );
@@ -101,7 +102,7 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
               if (!snapshot.hasData || snapshot.data?.data == null) {
                 return Center(
                   child: Text(
-                    'No data available.',
+                    'No data available.'.tr,
                     style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
                   ),
                 );

@@ -4,6 +4,7 @@ import 'package:abojude_flutter/networks/api_acess.dart';
 import 'package:abojude_flutter/features/home/model/get_category_list_model.dart';
 import 'package:abojude_flutter/features/auth/register/model/get_province_model.dart';
 import 'package:abojude_flutter/features/auth/register/model/get_city_model.dart';
+import 'package:get/get.dart';
 
 class FilterOptions {
   String category;
@@ -270,9 +271,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
-          'Filters',
-          style: TextStyle(
+        Text(
+          'Filters'.tr,
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Color(0xFF111827),
@@ -282,9 +283,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           children: [
             GestureDetector(
               onTap: _clearAll,
-              child: const Text(
-                'Clear All',
-                style: TextStyle(
+              child: Text(
+                'Clear All'.tr,
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Color(0xFFDC2626),
@@ -592,7 +593,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               const SizedBox(width: 12),
             ],
             Text(
-              _isFiltering ? 'Filtering...' : 'Apply Filters',
+              _isFiltering ? 'Filtering...'.tr : 'Apply Filters'.tr,
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -606,7 +607,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   Widget _sectionLabel(String text) {
     return Text(
-      text,
+      text.tr,
       style: const TextStyle(
         fontSize: 15,
         fontWeight: FontWeight.w600,

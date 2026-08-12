@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
@@ -82,7 +83,7 @@ class _BusinessStep2InfoScreenState extends State<BusinessStep2InfoScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const BusinessStepHeader(currentStep: 2, title: "Business Info"),
+      appBar: BusinessStepHeader(currentStep: 2, title: "Business Info".tr),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -98,18 +99,18 @@ class _BusinessStep2InfoScreenState extends State<BusinessStep2InfoScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Business Name Field
-                      _buildLabel("Business Name", isRequired: true),
+                      _buildLabel("Business Name".tr, isRequired: true),
                       SizedBox(height: 8.h),
                       TextFormField(
                         controller: _nameController,
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration(
-                          "Enter business name",
+                          "Enter business name".tr,
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "Please enter your business name";
+                            return "Please enter your business name".tr;
                           }
                           return null;
                         },
@@ -117,20 +118,20 @@ class _BusinessStep2InfoScreenState extends State<BusinessStep2InfoScreen> {
                       SizedBox(height: 20.h),
 
                       // Business Category Field
-                      _buildLabel("Business Category", isRequired: false),
+                      _buildLabel("Business Category".tr, isRequired: false),
                       SizedBox(height: 8.h),
                       TextFormField(
                         controller: _categoryController,
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration(
-                          "Enter business category",
+                          "Enter business category".tr,
                         ),
                       ),
                       SizedBox(height: 20.h),
 
                       // Description Field
-                      _buildLabel("Description", isRequired: true),
+                      _buildLabel("Description".tr, isRequired: true),
                       SizedBox(height: 8.h),
                       TextFormField(
                         controller: _descriptionController,
@@ -139,11 +140,11 @@ class _BusinessStep2InfoScreenState extends State<BusinessStep2InfoScreen> {
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration(
-                          "Tell customers about your business, services, and what makes you unique...",
+                          "Tell customers about your business, services, and what makes you unique...".tr,
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "Please enter a description";
+                            return "Please enter a description".tr;
                           }
                           return null;
                         },
@@ -151,7 +152,7 @@ class _BusinessStep2InfoScreenState extends State<BusinessStep2InfoScreen> {
                       SizedBox(height: 20.h),
 
                       // Website Field (Optional)
-                      _buildLabel("Website (Optional)", isRequired: false),
+                      _buildLabel("Website (Optional)".tr, isRequired: false),
                       SizedBox(height: 8.h),
                       TextFormField(
                         controller: _websiteController,
@@ -165,7 +166,7 @@ class _BusinessStep2InfoScreenState extends State<BusinessStep2InfoScreen> {
 
                       // Business Hours Section
                       Text(
-                        "Business Hours",
+                        "Business Hours".tr,
                         style: TextFontStyle.textStyle16IbmPlexSansW600
                             .copyWith(fontSize: 15.sp),
                       ),
@@ -218,7 +219,7 @@ class _BusinessStep2InfoScreenState extends State<BusinessStep2InfoScreen> {
                                       child: Row(
                                         children: [
                                           Text(
-                                            day,
+                                            day.tr,
                                             style: TextStyle(
                                               fontSize: 14.sp,
                                               fontWeight: FontWeight.w500,
@@ -229,7 +230,7 @@ class _BusinessStep2InfoScreenState extends State<BusinessStep2InfoScreen> {
                                           Text(
                                             dayHours.isOpen
                                                 ? "${dayHours.openingTime} - ${dayHours.closingTime}"
-                                                : "Closed",
+                                                : "Closed".tr,
                                             style: TextStyle(
                                               fontSize: 13.sp,
                                               color: dayHours.isOpen
@@ -263,7 +264,7 @@ class _BusinessStep2InfoScreenState extends State<BusinessStep2InfoScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
                 child: BusinessButton(
-                  text: "Continue",
+                  text: "Continue".tr,
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
                       widget.model.businessName = _nameController.text.trim();
@@ -291,7 +292,7 @@ class _BusinessStep2InfoScreenState extends State<BusinessStep2InfoScreen> {
   Widget _buildLabel(String labelText, {bool isRequired = true}) {
     return RichText(
       text: TextSpan(
-        text: labelText,
+        text: labelText.tr,
         style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
           fontSize: 14.sp,
         ),
@@ -309,7 +310,7 @@ class _BusinessStep2InfoScreenState extends State<BusinessStep2InfoScreen> {
 
   InputDecoration _buildInputDecoration(String hint) {
     return InputDecoration(
-      hintText: hint,
+      hintText: hint.tr,
       hintStyle: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
         color: const Color(0xFF9CA3AF),
       ),

@@ -118,9 +118,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
           onPressed: () => Get.back(),
         ),
-        title: const Text(
-          'Listing Details',
-          style: TextStyle(
+        title: Text(
+          'Listing Details'.tr,
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -614,9 +614,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Description',
-          style: TextStyle(
+        Text(
+          'Description'.tr,
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
@@ -647,9 +647,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Item Overview',
-            style: TextStyle(
+          Text(
+            'Item Overview'.tr,
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
@@ -1024,9 +1024,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               color:
                   Colors.white, // Remove this line if the PNG is already white
             ),
-            label: const Text(
-              'Message Seller',
-              style: TextStyle(
+            label: Text(
+              'Message Seller'.tr,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/features/auth/register/widgets/location_header.dart';
 import 'package:abojude_flutter/features/auth/register/widgets/location_dropdown.dart';
 import 'package:abojude_flutter/features/auth/register/widgets/location_success_card.dart';
@@ -85,7 +86,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                             if (provinceSnapshot.hasError) {
                               return Center(
                                 child: Text(
-                                  'Failed to load locations',
+                                  'Failed to load locations'.tr,
                                   style: GoogleFonts.inter(
                                     fontSize: 14.sp,
                                     color: Colors.red,
@@ -188,7 +189,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                       if (citySnapshot.hasError) {
                                         return Center(
                                           child: Text(
-                                            'Failed to load cities',
+                                            'Failed to load cities'.tr,
                                             style: GoogleFonts.inter(
                                               fontSize: 14.sp,
                                               color: Colors.red,
@@ -261,7 +262,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                     _showValidationError = true;
                                   });
                                   ToastUtil.showShortToast(
-                                    'Please select both province and city',
+                                    'Please select both province and city'.tr,
                                   );
                                 } else {
                                   bool success = false;
@@ -272,7 +273,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                     if (guestToken == null ||
                                         guestToken.isEmpty) {
                                       ToastUtil.showShortToast(
-                                        "Guest token is invalid or missing",
+                                        "Guest token is invalid or missing".tr,
                                       );
                                       return;
                                     }

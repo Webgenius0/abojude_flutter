@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/helpers/toast.dart';
@@ -66,7 +67,7 @@ class _BusinessStep1PhotosScreenState extends State<BusinessStep1PhotosScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const BusinessStepHeader(currentStep: 1, title: "Images"),
+      appBar: BusinessStepHeader(currentStep: 1, title: "Images".tr),
       body: SafeArea(
         child: Column(
           children: [
@@ -77,7 +78,7 @@ class _BusinessStep1PhotosScreenState extends State<BusinessStep1PhotosScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Upload a cover image and your business logo.",
+                      "Upload a cover image and your business logo.".tr,
                       style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                         color: const Color(0xFF6B7280),
                         fontSize: 14.sp,
@@ -86,7 +87,7 @@ class _BusinessStep1PhotosScreenState extends State<BusinessStep1PhotosScreen> {
                     SizedBox(height: 24.h),
 
                     // Cover Image section
-                    _buildLabel("Cover Image"),
+                    _buildLabel("Cover Image".tr),
                     SizedBox(height: 8.h),
                     _model.coverImage != null
                         ? Stack(
@@ -154,7 +155,7 @@ class _BusinessStep1PhotosScreenState extends State<BusinessStep1PhotosScreen> {
                                     ),
                                     SizedBox(height: 10.h),
                                     Text(
-                                      "Upload Cover Image",
+                                      "Upload Cover Image".tr,
                                       style: TextStyle(
                                         color: const Color(0xFF1F2937),
                                         fontSize: 14.sp,
@@ -163,7 +164,7 @@ class _BusinessStep1PhotosScreenState extends State<BusinessStep1PhotosScreen> {
                                     ),
                                     SizedBox(height: 4.h),
                                     Text(
-                                      "Recommended: 1200 × 400px",
+                                      "Recommended: 1200 × 400px".tr,
                                       style: TextStyle(
                                         color: const Color(0xFF9CA3AF),
                                         fontSize: 12.sp,
@@ -177,7 +178,7 @@ class _BusinessStep1PhotosScreenState extends State<BusinessStep1PhotosScreen> {
                     SizedBox(height: 24.h),
 
                     // Business Logo section
-                    _buildLabel("Business Logo"),
+                    _buildLabel("Business Logo".tr),
                     SizedBox(height: 8.h),
                     _model.logo != null
                         ? Stack(
@@ -246,7 +247,7 @@ class _BusinessStep1PhotosScreenState extends State<BusinessStep1PhotosScreen> {
                                     ),
                                     SizedBox(height: 10.h),
                                     Text(
-                                      "Add Logo",
+                                      "Add Logo".tr,
                                       style: TextStyle(
                                         color: const Color(0xFF1F2937),
                                         fontSize: 13.sp,
@@ -260,7 +261,7 @@ class _BusinessStep1PhotosScreenState extends State<BusinessStep1PhotosScreen> {
                           ),
                     SizedBox(height: 12.h),
                     Text(
-                      "Square format recommended. Minimum 200 × 200px. PNG or JPG.",
+                      "Square format recommended. Minimum 200 × 200px. PNG or JPG.".tr,
                       style: TextStyle(
                         color: const Color(0xFF9CA3AF),
                         fontSize: 12.sp,
@@ -276,11 +277,11 @@ class _BusinessStep1PhotosScreenState extends State<BusinessStep1PhotosScreen> {
                 text: "Continue",
                 onTap: () {
                   if (_model.coverImage == null) {
-                    ToastUtil.showShortToast("Please upload a cover image.");
+                    ToastUtil.showShortToast("Please upload a cover image.".tr);
                     return;
                   }
                   if (_model.logo == null) {
-                    ToastUtil.showShortToast("Please upload a business logo.");
+                    ToastUtil.showShortToast("Please upload a business logo.".tr);
                     return;
                   }
                   NavigationService.navigateTo(
@@ -299,7 +300,7 @@ class _BusinessStep1PhotosScreenState extends State<BusinessStep1PhotosScreen> {
   Widget _buildLabel(String labelText) {
     return RichText(
       text: TextSpan(
-        text: labelText,
+        text: labelText.tr,
         style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
           fontSize: 14.sp,
         ),

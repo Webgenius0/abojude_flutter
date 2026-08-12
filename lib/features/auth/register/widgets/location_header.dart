@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 
 class LocationHeader extends StatelessWidget {
   const LocationHeader({super.key});
@@ -39,7 +40,7 @@ class LocationHeader extends StatelessWidget {
         // --------------- Title ---------------
         Center(
           child: Text(
-            'Select Your Location',
+            'Select Your Location'.tr,
             style: GoogleFonts.inter(
               fontSize: 24.sp,
               fontWeight: FontWeight.bold,
@@ -53,7 +54,7 @@ class LocationHeader extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Text(
-            'Choose your province and city to personalize listings and recommendations.',
+            'Choose your province and city to personalize listings and recommendations.'.tr,
             textAlign: TextAlign.center,
             style: GoogleFonts.inter(
               fontSize: 15.sp,

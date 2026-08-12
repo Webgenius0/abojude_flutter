@@ -4,6 +4,7 @@ import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_listing_model.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_step_header.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_button.dart';
@@ -21,7 +22,7 @@ class JobStep5ReviewScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const JobStepHeader(currentStep: 5, title: "Review & Submit"),
+      appBar: JobStepHeader(currentStep: 5, title: "Review & Submit".tr),
       body: SafeArea(
         child: Column(
           children: [
@@ -32,7 +33,7 @@ class JobStep5ReviewScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Review your listing details before submitting for approval.",
+                      "Review your listing details before submitting for approval.".tr,
                       style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                         color: const Color(0xFF6B7280),
                       ),
@@ -106,7 +107,7 @@ class JobStep5ReviewScreen extends StatelessWidget {
                                       ),
                                       child: Center(
                                         child: Text(
-                                          "Click to See Public View",
+                                          "Click to See Public View".tr,
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 12.sp,
@@ -170,7 +171,7 @@ class JobStep5ReviewScreen extends StatelessWidget {
                                           ),
                                         ),
                                         child: Text(
-                                          "Jobs",
+                                          "Jobs".tr,
                                           style: TextFontStyle
                                               .textStyle14IbmPlexSansW400
                                               .copyWith(
@@ -194,7 +195,7 @@ class JobStep5ReviewScreen extends StatelessWidget {
                                           ),
                                         ),
                                         child: Text(
-                                          model.jobType,
+                                          model.jobType.tr,
                                           style: TextFontStyle
                                               .textStyle14IbmPlexSansW400
                                               .copyWith(
@@ -217,7 +218,7 @@ class JobStep5ReviewScreen extends StatelessWidget {
                                       ),
                                       SizedBox(width: 4.w),
                                       Text(
-                                        "${model.city}, ${model.province}",
+                                        "${model.city.tr}, ${model.province.tr}",
                                         style: TextFontStyle
                                             .textStyle14IbmPlexSansW400
                                             .copyWith(
@@ -238,7 +239,7 @@ class JobStep5ReviewScreen extends StatelessWidget {
 
                     // Before You Submit Box
                     Text(
-                      "Before You Submit",
+                      "Before You Submit".tr,
                       style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
                         fontSize: 15.sp,
                       ),
@@ -258,17 +259,17 @@ class JobStep5ReviewScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           _buildBulletPoint(
-                            "Your listing will be reviewed by our team",
+                            "Your listing will be reviewed by our team".tr,
                           ),
                           _buildBulletPoint(
-                            "Review usually takes up to 24 hours",
+                            "Review usually takes up to 24 hours".tr,
                           ),
-                          _buildBulletPoint("You'll be notified once approved"),
+                          _buildBulletPoint("You'll be notified once approved".tr),
                           _buildBulletPoint(
-                            "Approved listings become visible to all users",
+                            "Approved listings become visible to all users".tr,
                           ),
                           _buildBulletPoint(
-                            "You can edit or remove your listing later",
+                            "You can edit or remove your listing later".tr,
                           ),
                         ],
                       ),
@@ -284,7 +285,7 @@ class JobStep5ReviewScreen extends StatelessWidget {
                 valueListenable: createListingAfterDraftRxObj.isLoading,
                 builder: (context, isLoading, child) {
                   return JobButton(
-                    text: isLoading ? "Submitting..." : "Submit Listing",
+                    text: isLoading ? "Submitting...".tr : "Submit Listing".tr,
                     isSubmit: true,
                     onTap: isLoading
                         ? () {}
@@ -299,7 +300,7 @@ class JobStep5ReviewScreen extends StatelessWidget {
                                 })
                                 .catchError((e) {
                                   ToastUtil.showShortToast(
-                                    "Failed to submit listing.",
+                                    "Failed to submit listing.".tr,
                                   );
                                 });
                           },
@@ -332,7 +333,7 @@ class JobStep5ReviewScreen extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              text,
+              text.tr,
               style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                 fontSize: 13.sp,
                 color: const Color(0xFF78350F),

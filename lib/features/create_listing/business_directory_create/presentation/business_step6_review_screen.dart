@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
@@ -21,9 +22,9 @@ class BusinessStep6ReviewScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const BusinessStepHeader(
+      appBar: BusinessStepHeader(
         currentStep: 6,
-        title: "Review & Submit",
+        title: "Review & Submit".tr,
       ),
       body: SafeArea(
         child: Column(
@@ -35,7 +36,7 @@ class BusinessStep6ReviewScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Review your listing details before submitting for approval.",
+                      "Review your listing details before submitting for approval.".tr,
                       style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                         color: const Color(0xFF6B7280),
                       ),
@@ -106,7 +107,7 @@ class BusinessStep6ReviewScreen extends StatelessWidget {
                                       ),
                                       child: Center(
                                         child: Text(
-                                          "Click to See Public View",
+                                          "Click to See Public View".tr,
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 12.sp,
@@ -170,7 +171,7 @@ class BusinessStep6ReviewScreen extends StatelessWidget {
                                           ),
                                         ),
                                         child: Text(
-                                          "Business",
+                                          "Business".tr,
                                           style: TextFontStyle
                                               .textStyle14IbmPlexSansW400
                                               .copyWith(
@@ -191,7 +192,7 @@ class BusinessStep6ReviewScreen extends StatelessWidget {
                                           ),
                                           SizedBox(width: 4.w),
                                           Text(
-                                            "${model.city}, ${model.province}",
+                                            "${model.city.tr}, ${model.province.tr}",
                                             style: TextFontStyle
                                                 .textStyle14IbmPlexSansW400
                                                 .copyWith(
@@ -216,7 +217,7 @@ class BusinessStep6ReviewScreen extends StatelessWidget {
 
                     // Before You Submit Box
                     Text(
-                      "Before You Submit",
+                      "Before You Submit".tr,
                       style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
                         fontSize: 15.sp,
                       ),
@@ -236,19 +237,19 @@ class BusinessStep6ReviewScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           _buildBulletPoint(
-                            "Your business directory listing will be reviewed by our admin team",
+                            "Your business directory listing will be reviewed by our admin team".tr,
                           ),
                           _buildBulletPoint(
-                            "Review usually takes up to 24 hours",
+                            "Review usually takes up to 24 hours".tr,
                           ),
                           _buildBulletPoint(
-                            "You'll receive a push/email notification once approved",
+                            "You'll receive a push/email notification once approved".tr,
                           ),
                           _buildBulletPoint(
-                            "Approved directories become searchable to all app users",
+                            "Approved directories become searchable to all app users".tr,
                           ),
                           _buildBulletPoint(
-                            "You can edit opening hours, logo, or description later",
+                            "You can edit opening hours, logo, or description later".tr,
                           ),
                         ],
                       ),
@@ -264,7 +265,7 @@ class BusinessStep6ReviewScreen extends StatelessWidget {
                 valueListenable: createListingAfterDraftRxObj.isLoading,
                 builder: (context, isLoading, child) {
                   return BusinessButton(
-                    text: isLoading ? "Submitting..." : "Submit Listing",
+                    text: isLoading ? "Submitting...".tr : "Submit Listing".tr,
                     isSubmit: true,
                     onTap: isLoading
                         ? () {}
@@ -279,7 +280,7 @@ class BusinessStep6ReviewScreen extends StatelessWidget {
                                 })
                                 .catchError((e) {
                                   ToastUtil.showShortToast(
-                                    "Failed to submit listing.",
+                                    "Failed to submit listing.".tr,
                                   );
                                 });
                           },
@@ -312,7 +313,7 @@ class BusinessStep6ReviewScreen extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              text,
+              text.tr,
               style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                 fontSize: 13.sp,
                 color: const Color(0xFF78350F),

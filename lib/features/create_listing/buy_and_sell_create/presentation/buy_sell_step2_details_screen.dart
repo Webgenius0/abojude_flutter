@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
@@ -47,7 +48,7 @@ class _BuySellStep2DetailsScreenState extends State<BuySellStep2DetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: BuySellStepHeader(currentStep: 2, title: "Details"),
+      appBar: BuySellStepHeader(currentStep: 2, title: "Details".tr),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -60,17 +61,17 @@ class _BuySellStep2DetailsScreenState extends State<BuySellStep2DetailsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Title Field
-                      _buildLabel("Title"),
+                      _buildLabel("Title".tr),
                       TextFormField(
                         controller: _titleController,
                         textInputAction: TextInputAction.next,
                         style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                           color: AppColor.c2E3227,
                         ),
-                        decoration: _buildInputDecoration("Enter listing title"),
+                        decoration: _buildInputDecoration("Enter listing title".tr),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "Please enter a listing title";
+                            return "Please enter a listing title".tr;
                           }
                           return null;
                         },
@@ -78,7 +79,7 @@ class _BuySellStep2DetailsScreenState extends State<BuySellStep2DetailsScreen> {
                       SizedBox(height: 20.h),
 
                       // Description Field
-                      _buildLabel("Description"),
+                      _buildLabel("Description".tr),
                       TextFormField(
                         controller: _descriptionController,
                         maxLines: 5,
@@ -86,10 +87,10 @@ class _BuySellStep2DetailsScreenState extends State<BuySellStep2DetailsScreen> {
                         style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                           color: AppColor.c2E3227,
                         ),
-                        decoration: _buildInputDecoration("Describe your item in detail..."),
+                        decoration: _buildInputDecoration("Describe your item in detail...".tr),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "Please describe your item";
+                            return "Please describe your item".tr;
                           }
                           return null;
                         },
@@ -97,7 +98,7 @@ class _BuySellStep2DetailsScreenState extends State<BuySellStep2DetailsScreen> {
                       SizedBox(height: 20.h),
 
                       // Price Field
-                      _buildLabel("Price"),
+                      _buildLabel("Price".tr),
                       TextFormField(
                         controller: _priceController,
                         keyboardType: TextInputType.number,
@@ -105,15 +106,15 @@ class _BuySellStep2DetailsScreenState extends State<BuySellStep2DetailsScreen> {
                         style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                           color: AppColor.c2E3227,
                         ),
-                        decoration: _buildInputDecoration("e.g. \$500"),
+                        decoration: _buildInputDecoration("e.g. \$500".tr),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "Please enter a price";
+                            return "Please enter a price".tr;
                           }
                           // Remove dollar signs if entered
                           final cleanVal = value.replaceAll('\$', '');
                           if (double.tryParse(cleanVal) == null) {
-                            return "Please enter a valid numeric price";
+                            return "Please enter a valid numeric price".tr;
                           }
                           return null;
                         },
@@ -121,7 +122,7 @@ class _BuySellStep2DetailsScreenState extends State<BuySellStep2DetailsScreen> {
                       SizedBox(height: 20.h),
 
                       // Condition Section
-                      _buildLabel("Condition"),
+                      _buildLabel("Condition".tr),
                       Wrap(
                         spacing: 8.w,
                         runSpacing: 10.h,
@@ -144,7 +145,7 @@ class _BuySellStep2DetailsScreenState extends State<BuySellStep2DetailsScreen> {
                                 ),
                               ),
                               child: Text(
-                                cond,
+                                cond.tr,
                                 style: TextStyle(
                                   color: isSelected ? Colors.white : const Color(0xFF4B5563),
                                   fontSize: 13.sp,

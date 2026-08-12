@@ -145,7 +145,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                       ),
                     ),
                     title: Text(
-                      'Favorites',
+                      'Favorites'.tr,
                       style: GoogleFonts.inter(
                         color: Colors.black87,
                         fontSize: 18.sp,
@@ -164,7 +164,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                               borderRadius: BorderRadius.circular(16.r),
                             ),
                             child: Text(
-                              '${allItems.length}',
+                              '${allItems.length}'.tr,
                               style: GoogleFonts.inter(
                                 color: const Color(0xFFE03131),
                                 fontSize: 12.sp,
@@ -200,12 +200,12 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                               fontSize: 14.sp, fontWeight: FontWeight.bold),
                           unselectedLabelStyle: GoogleFonts.inter(
                               fontSize: 14.sp, fontWeight: FontWeight.w500),
-                          tabs: const [
-                            Tab(text: 'All'),
-                            Tab(text: 'Buy & Sell'),
-                            Tab(text: 'Jobs'),
-                            Tab(text: 'Business'),
-                            Tab(text: 'Services'),
+                          tabs: [
+                            Tab(text: 'All'.tr),
+                            Tab(text: 'Buy & Sell'.tr),
+                            Tab(text: 'Jobs'.tr),
+                            Tab(text: 'Business'.tr),
+                            Tab(text: 'Services'.tr),
                           ],
                         ),
                       ),
@@ -260,8 +260,8 @@ class _FavoritesScreenState extends State<FavoritesScreen>
               SizedBox(height: 12.h),
               Text(
                 categoryFilter == 'All'
-                    ? 'No favorites added yet'
-                    : 'No favorites in $categoryFilter',
+                    ? 'No favorites added yet'.tr
+                    : 'No favorites in'.tr + ' ' + categoryFilter.tr,
                 style: GoogleFonts.inter(
                   color: Colors.grey[500],
                   fontSize: 14.sp,
@@ -378,8 +378,8 @@ class _FavoritesScreenState extends State<FavoritesScreen>
   }
 
   Widget _buildFavoriteCard(Datum item) {
-    final String title = item.title ?? 'No Title';
-    final String category = item.categoryName ?? 'General';
+    final String title = item.title ?? 'No Title'.tr;
+    final String category = item.categoryName ?? 'General'.tr;
     final String? rawImageUrl = item.thumbnail;
     final String? formattedImageUrl = _formatImageUrl(rawImageUrl);
     final bool isFeatured = item.isFeatured ?? false;
@@ -394,7 +394,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
       if (location.isNotEmpty) location += ', ';
       location += item.province!;
     }
-    if (location.isEmpty) location = 'Canada';
+    if (location.isEmpty) location = 'Canada'.tr;
 
     return GestureDetector(
       onTap: () => _navigateToDetail(item),
@@ -469,7 +469,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                             Icon(Icons.star, color: Colors.white, size: 9.sp),
                             SizedBox(width: 3.w),
                             Text(
-                              'Featured',
+                              'Featured'.tr,
                               style: GoogleFonts.inter(
                                 color: Colors.white,
                                 fontSize: 9.sp,
@@ -572,7 +572,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                       borderRadius: BorderRadius.circular(6.r),
                     ),
                     child: Text(
-                      category,
+                      category.tr,
                       style: GoogleFonts.inter(
                         color: const Color(0xFF495057),
                         fontSize: 10.sp,

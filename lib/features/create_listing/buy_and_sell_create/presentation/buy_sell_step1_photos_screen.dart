@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/helpers/toast.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/buy_and_sell_create/widgets/buy_sell_listing_model.dart';
@@ -50,7 +51,7 @@ class _BuySellStep1PhotosScreenState extends State<BuySellStep1PhotosScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: BuySellStepHeader(currentStep: 1, title: "Photos"),
+      appBar: BuySellStepHeader(currentStep: 1, title: "Photos".tr),
       body: SafeArea(
         child: Column(
           children: [
@@ -61,7 +62,7 @@ class _BuySellStep1PhotosScreenState extends State<BuySellStep1PhotosScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Add up to 5 photos on your product. The first photo will be the main thumbnail.",
+                      "Add up to 5 photos on your product. The first photo will be the main thumbnail.".tr,
                       style: TextFontStyle.textStyle14IbmPlexSansW400,
                     ),
                     SizedBox(height: 24.h),
@@ -104,7 +105,7 @@ class _BuySellStep1PhotosScreenState extends State<BuySellStep1PhotosScreen> {
                                     ),
                                     SizedBox(height: 8.h),
                                     Text(
-                                      "Add Photo",
+                                      "Add Photo".tr,
                                       style: TextFontStyle
                                           .textStyle14IbmPlexSansW400
                                           .copyWith(
@@ -146,7 +147,7 @@ class _BuySellStep1PhotosScreenState extends State<BuySellStep1PhotosScreen> {
                                     borderRadius: BorderRadius.circular(4.r),
                                   ),
                                   child: Text(
-                                    "Main",
+                                    "Main".tr,
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 10.sp,
@@ -181,7 +182,7 @@ class _BuySellStep1PhotosScreenState extends State<BuySellStep1PhotosScreen> {
                     ),
                     SizedBox(height: 24.h),
                     Text(
-                      "${_model.images.length} / 5 photos added",
+                      '${_model.images.length}'.tr + ' / '.tr + '5'.tr + ' ' + 'photos added'.tr,
                       style: TextFontStyle.textStyle14IbmPlexSansW400,
                     ),
                   ],
@@ -195,7 +196,7 @@ class _BuySellStep1PhotosScreenState extends State<BuySellStep1PhotosScreen> {
                 text: "Continue",
                 onTap: () {
                   if (_model.images.isEmpty) {
-                    ToastUtil.showShortToast("Please add at least one photo.");
+                    ToastUtil.showShortToast("Please add at least one photo.".tr);
                     return;
                   }
                   NavigationService.navigateTo(

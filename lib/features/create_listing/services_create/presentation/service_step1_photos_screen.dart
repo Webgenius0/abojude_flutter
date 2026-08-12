@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/helpers/toast.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
@@ -25,7 +26,7 @@ class _ServiceStep1PhotosScreenState extends State<ServiceStep1PhotosScreen> {
 
   Future<void> _pickImage() async {
     if (_model.images.length >= 5) {
-      ToastUtil.showShortToast("You can only add up to 5 photos.");
+      ToastUtil.showShortToast("You can only add up to 5 photos.".tr);
       return;
     }
     final XFile? image = await _picker.pickImage(
@@ -51,7 +52,7 @@ class _ServiceStep1PhotosScreenState extends State<ServiceStep1PhotosScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const ServiceStepHeader(currentStep: 1, title: "Photos"),
+      appBar: ServiceStepHeader(currentStep: 1, title: "Photos".tr),
       body: SafeArea(
         child: Column(
           children: [
@@ -62,7 +63,7 @@ class _ServiceStep1PhotosScreenState extends State<ServiceStep1PhotosScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Add up to 5 photos on your Service. The first photo will be the main thumbnail.",
+                      "Add up to 5 photos on your Service. The first photo will be the main thumbnail.".tr,
                       style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                         color: const Color(0xFF6B7280),
                         height: 1.4,
@@ -108,7 +109,7 @@ class _ServiceStep1PhotosScreenState extends State<ServiceStep1PhotosScreen> {
                                     ),
                                     SizedBox(height: 8.h),
                                     Text(
-                                      "Add Photo",
+                                      "Add Photo".tr,
                                       style: TextFontStyle
                                           .textStyle14IbmPlexSansW400
                                           .copyWith(
@@ -150,7 +151,7 @@ class _ServiceStep1PhotosScreenState extends State<ServiceStep1PhotosScreen> {
                                     borderRadius: BorderRadius.circular(4.r),
                                   ),
                                   child: Text(
-                                    "Main",
+                                    "Main".tr,
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 10.sp,
@@ -185,7 +186,7 @@ class _ServiceStep1PhotosScreenState extends State<ServiceStep1PhotosScreen> {
                     ),
                     SizedBox(height: 24.h),
                     Text(
-                      "${_model.images.length} / 5 photos added",
+                      '${_model.images.length}'.tr + " / 5 " + "photos added".tr,
                       style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                         color: const Color(0xFF6B7280),
                       ),
@@ -198,10 +199,10 @@ class _ServiceStep1PhotosScreenState extends State<ServiceStep1PhotosScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
               child: ServiceButton(
-                text: "Continue",
+                text: "Continue".tr,
                 onTap: () {
                   if (_model.images.isEmpty) {
-                    ToastUtil.showShortToast("Please add at least one photo.");
+                    ToastUtil.showShortToast("Please add at least one photo.".tr);
                     return;
                   }
                   NavigationService.navigateTo(

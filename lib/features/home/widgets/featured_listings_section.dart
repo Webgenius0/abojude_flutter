@@ -3,14 +3,12 @@ import 'package:shimmer/shimmer.dart';
 import 'package:abojude_flutter/features/home/model/get_featured_listings_model.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 import 'listing_card.dart';
+import 'package:get/get.dart';
 
 class FeaturedListingsSection extends StatefulWidget {
   final Function(Datum item)? onFavoriteToggle;
 
-  const FeaturedListingsSection({
-    super.key,
-    this.onFavoriteToggle,
-  });
+  const FeaturedListingsSection({super.key, this.onFavoriteToggle});
 
   @override
   State<FeaturedListingsSection> createState() =>
@@ -121,7 +119,7 @@ class _FeaturedListingsSectionState extends State<FeaturedListingsSection> {
       child: Row(
         children: [
           Text(
-            title,
+            title.tr,
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -136,7 +134,7 @@ class _FeaturedListingsSectionState extends State<FeaturedListingsSection> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                 child: Text(
-                  seeAllText,
+                  seeAllText.tr,
                   style: const TextStyle(
                     fontSize: 13,
                     color: navyBlue,

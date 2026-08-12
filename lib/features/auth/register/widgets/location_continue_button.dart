@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 
 class LocationContinueButton extends StatelessWidget {
   final VoidCallback onTap;
@@ -36,7 +37,7 @@ class LocationContinueButton extends StatelessWidget {
                       ),
                     )
                   : Text(
-                      'Continue',
+                      'Continue'.tr,
                       style: GoogleFonts.inter(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
@@ -50,7 +51,7 @@ class LocationContinueButton extends StatelessWidget {
         // --------------- Settings note ---------------
         Center(
           child: Text(
-            'You can change your location anytime from Settings',
+            'You can change your location anytime from Settings'.tr,
             style: GoogleFonts.inter(
               fontSize: 14.sp,
               color: const Color(0xFF9CA3AF),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/helpers/toast.dart';
@@ -50,7 +51,7 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const JobStepHeader(currentStep: 4, title: "Contact"),
+      appBar: JobStepHeader(currentStep: 4, title: "Contact".tr),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -66,14 +67,14 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Choose how buyers can reach you. Enable at least one contact method.",
+                        "Choose how buyers can reach you. Enable at least one contact method.".tr,
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(color: const Color(0xFF6B7280)),
                       ),
                       SizedBox(height: 24.h),
 
                       // Phone Number Field
-                      _buildLabel("Phone Number"),
+                      _buildLabel("Phone Number".tr),
                       TextFormField(
                         controller: _phoneController,
                         keyboardType: TextInputType.phone,
@@ -85,7 +86,7 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                       SizedBox(height: 20.h),
 
                       // WhatsApp Number Field
-                      _buildLabel("What's App Number"),
+                      _buildLabel("What's App Number".tr),
                       TextFormField(
                         controller: _whatsAppController,
                         keyboardType: TextInputType.phone,
@@ -97,7 +98,7 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                       SizedBox(height: 20.h),
 
                       // Email Field
-                      _buildLabel("Email Address"),
+                      _buildLabel("Email Address".tr),
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
@@ -111,7 +112,7 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                               r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
                             );
                             if (!emailRegex.hasMatch(value.trim())) {
-                              return "Please enter a valid email address";
+                              return "Please enter a valid email address".tr;
                             }
                           }
                           return null;
@@ -140,14 +141,14 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Enable in-App Chat",
+                                    "Enable in-App Chat".tr,
                                     style: TextFontStyle
                                         .textStyle16IbmPlexSansW600
                                         .copyWith(fontSize: 15.sp),
                                   ),
                                   SizedBox(height: 4.h),
                                   Text(
-                                    "Allow buyers to message you in the app",
+                                    "Allow buyers to message you in the app".tr,
                                     style: TextFontStyle
                                         .textStyle14IbmPlexSansW400
                                         .copyWith(
@@ -181,7 +182,7 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                   valueListenable: createJobRxObj.isLoading,
                   builder: (context, isLoading, child) {
                     return JobButton(
-                      text: isLoading ? "Submitting..." : "Continue",
+                      text: isLoading ? "Submitting...".tr : "Continue".tr,
                       onTap: isLoading
                           ? () {}
                           : () {
@@ -196,7 +197,7 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                                     email.isEmpty &&
                                     !_enableInAppChat) {
                                   ToastUtil.showShortToast(
-                                    "Please provide or enable at least one contact method.",
+                                    "Please provide or enable at least one contact method.".tr,
                                   );
                                   return;
                                 }
@@ -230,7 +231,7 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                                     .then((res) {
                                       ToastUtil.showShortToast(
                                         res.message ??
-                                            "Listing drafted successfully",
+                                            "Listing drafted successfully".tr,
                                       );
                                       NavigationService.navigateTo(
                                         Routes.jobStep5Review,
@@ -239,7 +240,7 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                                     })
                                     .catchError((e) {
                                       ToastUtil.showShortToast(
-                                        "Failed to create draft listing.",
+                                        "Failed to create draft listing.".tr,
                                       );
                                     });
                               }
@@ -259,7 +260,7 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
       child: Text(
-        labelText,
+        labelText.tr,
         style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
           fontSize: 14.sp,
         ),
@@ -269,7 +270,7 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
 
   InputDecoration _buildInputDecoration(String hint) {
     return InputDecoration(
-      hintText: hint,
+      hintText: hint.tr,
       hintStyle: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
         color: const Color(0xFF9CA3AF),
       ),

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/helpers/toast.dart';
@@ -25,7 +26,7 @@ class _BusinessStep3GalleryScreenState extends State<BusinessStep3GalleryScreen>
 
   Future<void> _pickGalleryImage() async {
     if (widget.model.galleryImages.length >= 10) {
-      ToastUtil.showShortToast("You can only add up to 10 photos.");
+      ToastUtil.showShortToast("You can only add up to 10 photos.".tr);
       return;
     }
     final XFile? image = await _picker.pickImage(
@@ -53,7 +54,7 @@ class _BusinessStep3GalleryScreenState extends State<BusinessStep3GalleryScreen>
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const BusinessStepHeader(currentStep: 3, title: "Business Gallery"),
+      appBar: BusinessStepHeader(currentStep: 3, title: "Business Gallery".tr),
       body: SafeArea(
         child: Column(
           children: [
@@ -64,7 +65,7 @@ class _BusinessStep3GalleryScreenState extends State<BusinessStep3GalleryScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Showcase your business with additional photos. This step is optional.",
+                      "Showcase your business with additional photos. This step is optional.".tr,
                       style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                         color: const Color(0xFF6B7280),
                         height: 1.4,
@@ -105,7 +106,7 @@ class _BusinessStep3GalleryScreenState extends State<BusinessStep3GalleryScreen>
                                     ),
                                     SizedBox(height: 12.h),
                                     Text(
-                                      "Upload Business Photos",
+                                      "Upload Business Photos".tr,
                                       style: TextStyle(
                                         color: const Color(0xFF1F2937),
                                         fontSize: 14.sp,
@@ -189,7 +190,7 @@ class _BusinessStep3GalleryScreenState extends State<BusinessStep3GalleryScreen>
                           ),
                     SizedBox(height: 16.h),
                     Text(
-                      "Add up to 10 photos (PNG, JPG, or WEBP), maximum 5MB per image.",
+                      "Add up to 10 photos (PNG, JPG, or WEBP), maximum 5MB per image.".tr,
                       style: TextStyle(
                         color: const Color(0xFF9CA3AF),
                         fontSize: 12.sp,
@@ -205,7 +206,7 @@ class _BusinessStep3GalleryScreenState extends State<BusinessStep3GalleryScreen>
               children: [
                 if (images.isEmpty) ...[
                   Text(
-                    "You can skip this step",
+                    "You can skip this step".tr,
                     style: TextStyle(
                       color: const Color(0xFF9CA3AF),
                       fontSize: 14.sp,
@@ -217,7 +218,7 @@ class _BusinessStep3GalleryScreenState extends State<BusinessStep3GalleryScreen>
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
                   child: BusinessButton(
-                    text: "Continue",
+                    text: "Continue".tr,
                     onTap: () {
                       NavigationService.navigateTo(
                         Routes.businessStep4Location,

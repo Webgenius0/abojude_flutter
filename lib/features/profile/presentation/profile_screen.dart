@@ -107,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
                 child: Text(
-                  'Profile',
+                  'Profile'.tr,
                   style: GoogleFonts.inter(
                     fontSize: 22.sp,
                     fontWeight: FontWeight.bold,
@@ -248,11 +248,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(height: 24.h),
 
               // 4. Section: My Content
-              _buildSectionTitle('My Content'),
+              _buildSectionTitle('My Content'.tr),
               _buildGroupCard([
                 _buildTile(
                   icon: Icons.list_alt_rounded,
-                  title: 'My Listings',
+                  title: 'My Listings'.tr,
                   onTap: () {
                     Get.to(() => const MyListingsScreen());
                   },
@@ -260,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildDivider(),
                 _buildTile(
                   icon: Icons.favorite_border_rounded,
-                  title: 'Favorites',
+                  title: 'Favorites'.tr,
                   onTap: () {
                     Get.to(() => const FavoritesScreen());
                   },
@@ -268,11 +268,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ]),
 
               // 5. Section: Account
-              _buildSectionTitle('Account'),
+              _buildSectionTitle('Account'.tr),
               _buildGroupCard([
                 _buildTile(
                   icon: Icons.person_outline_rounded,
-                  title: 'Edit Profile',
+                  title: 'Edit Profile'.tr,
                   onTap: () {
                     Get.to(
                       () => EditProfileScreen(
@@ -285,7 +285,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildDivider(),
                 _buildTile(
                   icon: Icons.lock_outline_rounded,
-                  title: 'Change Password',
+                  title: 'Change Password'.tr,
                   onTap: () {
                     Get.to(() => const ChangePasswordScreen());
                   },
@@ -293,7 +293,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildDivider(),
                 _buildTile(
                   icon: Icons.language_rounded,
-                  title: 'Language',
+                  title: 'Language'.tr,
                   trailing: Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 10.w,
@@ -304,7 +304,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Text(
-                      'English',
+                      Get.locale?.languageCode == 'ar' ? 'العربية' : 'English',
                       style: GoogleFonts.inter(
                         color: const Color(0xFF0F3D7A),
                         fontSize: 11.sp,
@@ -319,7 +319,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildDivider(),
                 _buildTile(
                   icon: Icons.person_remove_outlined,
-                  title: 'Block User',
+                  title: 'Block User'.tr,
                   onTap: () {
                     Get.to(() => const BlockedUsersScreen());
                   },
@@ -327,7 +327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildDivider(),
                 _buildTile(
                   icon: Icons.notifications_none_rounded,
-                  title: 'Notification Settings',
+                  title: 'Notification Settings'.tr,
                   onTap: () {
                     Get.to(() => const NotificationSettingsScreen());
                   },
@@ -335,7 +335,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildDivider(),
                 _buildTile(
                   icon: Icons.delete_outline_rounded,
-                  title: 'Delete Account',
+                  title: 'Delete Account'.tr,
                   titleColor: Colors.red[400],
                   iconColor: Colors.red[300],
                   onTap: () => _showDeleteAccountDialog(context),
@@ -343,11 +343,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ]),
 
               // 6. Section: Support
-              _buildSectionTitle('Support'),
+              _buildSectionTitle('Support'.tr),
               _buildGroupCard([
                 _buildTile(
                   icon: Icons.headset_mic_outlined,
-                  title: 'Contact Us',
+                  title: 'Contact Us'.tr,
                   onTap: () {
                     Get.to(() => const ContactUsScreen());
                   },
@@ -355,7 +355,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildDivider(),
                 _buildTile(
                   icon: Icons.info_outline_rounded,
-                  title: 'About Wasel Canada',
+                  title: 'About Wasel Canada'.tr,
                   onTap: () {
                     Get.to(() => const AboutWaselCanadaScreen());
                   },
@@ -363,7 +363,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildDivider(),
                 _buildTile(
                   icon: Icons.shield_outlined,
-                  title: 'Privacy Policy',
+                  title: 'Privacy Policy'.tr,
                   onTap: () {
                     Get.to(PrivacyPolicyScreen());
                   },
@@ -371,7 +371,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildDivider(),
                 _buildTile(
                   icon: Icons.description_outlined,
-                  title: 'Terms of Service',
+                  title: 'Terms of Service'.tr,
                   onTap: () {
                     Get.to(TermsOfServiceScreen());
                   },
@@ -446,7 +446,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Padding(
       padding: EdgeInsets.only(left: 20.w, bottom: 8.h, top: 16.h),
       child: Text(
-        title,
+        title.tr,
         style: GoogleFonts.inter(
           fontSize: 13.sp,
           color: Colors.grey[500],
@@ -508,7 +508,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Title
             Expanded(
               child: Text(
-                title,
+                title.tr,
                 style: GoogleFonts.inter(
                   color: titleColor ?? Colors.black87,
                   fontSize: 14.5.sp,
@@ -562,7 +562,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             SizedBox(width: 8.w),
             Text(
-              'Log Out',
+              'Log Out'.tr,
               style: GoogleFonts.inter(
                 color: Colors.red[400],
                 fontSize: 14.sp,
@@ -588,7 +588,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
           title: Text(
-            'Log Out',
+            'Log Out'.tr,
             style: GoogleFonts.inter(
               fontWeight: FontWeight.bold,
               fontSize: 18.sp,
@@ -596,14 +596,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           content: Text(
-            'Are you sure you want to log out of Wasel Canada?',
+            'Are you sure you want to log out of Wasel Canada?'.tr,
             style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey[600]),
           ),
           actions: [
             // Cancel Button
             CupertinoDialogAction(
               child: Text(
-                'Cancel',
+                'Cancel'.tr,
                 style: GoogleFonts.inter(
                   color: Colors.grey[600],
                   fontWeight: FontWeight.w600,
@@ -640,7 +640,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
               },
               child: Text(
-                'Log Out',
+                'Log Out'.tr,
                 style: GoogleFonts.inter(
                   color: Colors.red[500],
                   fontWeight: FontWeight.bold,
@@ -687,7 +687,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _buildWarningIcon(),
               SizedBox(height: 16.h),
               Text(
-                'Delete Account Permanently?',
+                'Delete Account Permanently?'.tr,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontWeight: FontWeight.w700,
@@ -697,7 +697,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               SizedBox(height: 12.h),
               Text(
-                'Are you sure you want to permanently delete your account? This action cannot be undone. Your profile, listings, messages, favorites, and account data will be permanently removed.',
+                'Are you sure you want to permanently delete your account? This action cannot be undone. Your profile, listings, messages, favorites, and account data will be permanently removed.'.tr,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontSize: 13.sp,
@@ -721,7 +721,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _showPasswordConfirmDialog(context);
                 },
                 child: Text(
-                  'Continue Delete',
+                  'Continue Delete'.tr,
                   style: GoogleFonts.inter(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
@@ -741,7 +741,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(
-                  'Cancel',
+                  'Cancel'.tr,
                   style: GoogleFonts.inter(
                     color: const Color(0xFF374151),
                     fontWeight: FontWeight.w700,
@@ -785,7 +785,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(height: 16.h),
                       Center(
                         child: Text(
-                          'Confirm Your Password',
+                          'Confirm Your Password'.tr,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
                             fontWeight: FontWeight.w700,
@@ -797,7 +797,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(height: 6.h),
                       Center(
                         child: Text(
-                          'For security reasons, please enter your password to continue.',
+                          'For security reasons, please enter your password to continue.'.tr,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
                             fontSize: 12.sp,
@@ -808,7 +808,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       SizedBox(height: 20.h),
                       Text(
-                        'Password',
+                        'Password'.tr,
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w600,
                           fontSize: 13.sp,
@@ -824,7 +824,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: Colors.black87,
                         ),
                         decoration: InputDecoration(
-                          hintText: 'Enter your password',
+                          hintText: 'Enter your password'.tr,
                           hintStyle: GoogleFonts.inter(
                             fontSize: 13.sp,
                             color: const Color(0xFF9CA3AF),
@@ -869,7 +869,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'Password is required';
+                            return 'Password is required'.tr;
                           }
                           return null;
                         },
@@ -888,7 +888,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                         child: Text(
-                          'Your account will be permanently deleted after successful verification.',
+                          'Your account will be permanently deleted after successful verification.'.tr,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
                             fontSize: 12.sp,
@@ -940,7 +940,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                   )
                                 : Text(
-                                    'Delete Permanently',
+                                    'Delete Permanently'.tr,
                                     style: GoogleFonts.inter(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w700,
@@ -967,7 +967,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ); // go back to warning dialog
                         },
                         child: Text(
-                          'Back',
+                          'Back'.tr,
                           style: GoogleFonts.inter(
                             color: const Color(0xFF374151),
                             fontWeight: FontWeight.w700,

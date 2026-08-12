@@ -90,7 +90,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Listing Details',
+          'Listing Details'.tr,
           style: TextStyle(
             color: Colors.black,
             fontSize: 16.sp,
@@ -277,7 +277,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Description',
+            'Description'.tr,
             style: TextStyle(
               fontSize: 15.sp,
               fontWeight: FontWeight.bold,
@@ -838,7 +838,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                 ),
                 SizedBox(width: 10.w),
                 Text(
-                  'Send Message',
+                  'Send Message'.tr,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14.sp,

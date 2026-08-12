@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 
 class LocationSuccessCard extends StatelessWidget {
   final String province;
@@ -64,7 +65,7 @@ class LocationSuccessCard extends StatelessWidget {
                 ),
                 SizedBox(height: 2.h),
                 Text(
-                  'Your location has been selected',
+                  'Your location has been selected'.tr,
                   style: GoogleFonts.inter(
                     fontSize: 13.sp,
                     color: const Color(0xFF6B7280),

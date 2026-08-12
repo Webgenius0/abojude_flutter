@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/helpers/toast.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_listing_model.dart';
@@ -45,7 +46,7 @@ class _JobStep1PhotosScreenState extends State<JobStep1PhotosScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const JobStepHeader(currentStep: 1, title: "Job Photo Thumbnail"),
+      appBar: JobStepHeader(currentStep: 1, title: "Job Photo Thumbnail".tr),
       body: SafeArea(
         child: Column(
           children: [
@@ -56,7 +57,7 @@ class _JobStep1PhotosScreenState extends State<JobStep1PhotosScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Add a photo to your job posting. This photo will be the main thumbnail.",
+                      "Add a photo to your job posting. This photo will be the main thumbnail.".tr,
                       style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                         color: const Color(0xFF6B7280),
                         height: 1.4,
@@ -92,7 +93,7 @@ class _JobStep1PhotosScreenState extends State<JobStep1PhotosScreen> {
                                         ),
                                         SizedBox(height: 10.h),
                                         Text(
-                                          "Add Photo",
+                                          "Add Photo".tr,
                                           style: TextFontStyle
                                               .textStyle14IbmPlexSansW400
                                               .copyWith(
@@ -153,7 +154,7 @@ class _JobStep1PhotosScreenState extends State<JobStep1PhotosScreen> {
                     ),
                     SizedBox(height: 24.h),
                     Text(
-                      "Upload Photo (PNG, JPG, or WEBP), maximum 5MB image.",
+                      "Upload Photo (PNG, JPG, or WEBP), maximum 5MB image.".tr,
                       style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                         color: const Color(0xFF9CA3AF),
                         fontSize: 13.sp,
@@ -170,7 +171,7 @@ class _JobStep1PhotosScreenState extends State<JobStep1PhotosScreen> {
                 text: "Continue",
                 onTap: () {
                   if (_model.image == null) {
-                    ToastUtil.showShortToast("Please add a photo.");
+                    ToastUtil.showShortToast("Please add a photo.".tr);
                     return;
                   }
                   NavigationService.navigateTo(

@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '/helpers/all_routes.dart';
 import 'helpers/di.dart';
 import 'helpers/language.dart';
+import 'constants/app_constants.dart';
 import 'helpers/navigation_service.dart';
 import 'helpers/register_provider.dart';
 import 'networks/dio/dio.dart';
@@ -81,6 +82,8 @@ class UtillScreenMobile extends StatelessWidget {
           ),
           debugShowCheckedModeBanner: false,
           translations: LocalString(),
+          locale: Locale(appData.read(kKeyLanguage) ?? 'en'),
+          fallbackLocale: const Locale('en', 'US'),
           builder: (context, widget) {
             return MediaQuery(data: MediaQuery.of(context), child: widget!);
           },

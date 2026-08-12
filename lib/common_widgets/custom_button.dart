@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:get/get.dart';
+
 class CustomButton extends StatelessWidget {
   final String text;
   final Widget icon;
@@ -49,7 +51,7 @@ class CustomButton extends StatelessWidget {
                     icon,
                     SizedBox(width: 12.w),
                     Text(
-                      text,
+                      text.tr,
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,

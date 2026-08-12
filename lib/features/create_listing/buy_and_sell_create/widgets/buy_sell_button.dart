@@ -2,6 +2,8 @@ import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:get/get.dart';
+
 class BuySellButton extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
@@ -27,7 +29,7 @@ class BuySellButton extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            text,
+            text.tr,
             style: TextFontStyle.textStyle16InterW600.copyWith(
               color: Colors.white,
               fontSize: 16.sp,

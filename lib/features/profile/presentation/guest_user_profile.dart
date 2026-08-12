@@ -32,7 +32,7 @@ class _GuestUserProfileState extends State<GuestUserProfile> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
                 child: Text(
-                  'Profile',
+                  'Profile'.tr,
                   style: GoogleFonts.inter(
                     fontSize: 22.sp,
                     fontWeight: FontWeight.bold,
@@ -84,7 +84,7 @@ class _GuestUserProfileState extends State<GuestUserProfile> {
                 child: Column(
                   children: [
                     Text(
-                      'Sign In/Create Account Now',
+                      'Sign In/Create Account Now'.tr,
                       style: GoogleFonts.inter(
                         color: const Color(0xFF0F3D7A),
                         fontSize: 18.sp,
@@ -95,7 +95,7 @@ class _GuestUserProfileState extends State<GuestUserProfile> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 32.w),
                       child: Text(
-                        'Please sign in or create an account to access your profile, manage activities, and enjoy the full Wasel Canada experience.',
+                        'Please sign in or create an account to access your profile, manage activities, and enjoy the full Wasel Canada experience.'.tr,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter(
                           color: Colors.grey[500],
@@ -116,7 +116,7 @@ class _GuestUserProfileState extends State<GuestUserProfile> {
                   children: [
                     // Sign In Button
                     _buildButton(
-                      text: 'Sign In',
+                      text: 'Sign In'.tr,
                       backgroundColor: const Color(0xFF0F3D7A),
                       textColor: Colors.white,
                       onPressed: () {
@@ -127,7 +127,7 @@ class _GuestUserProfileState extends State<GuestUserProfile> {
 
                     // Create Account Button
                     _buildButton(
-                      text: 'Create Account',
+                      text: 'Create Account'.tr,
                       backgroundColor: Colors.white,
                       textColor: const Color(0xFF0F3D7A),
                       borderColor: const Color(0xFFE2E8F0),
@@ -144,7 +144,7 @@ class _GuestUserProfileState extends State<GuestUserProfile> {
               Padding(
                 padding: EdgeInsets.only(left: 20.w, bottom: 8.h),
                 child: Text(
-                  'Settings and Support',
+                  'Settings and Support'.tr,
                   style: GoogleFonts.inter(
                     fontSize: 13.sp,
                     color: Colors.grey[500],
@@ -157,7 +157,7 @@ class _GuestUserProfileState extends State<GuestUserProfile> {
               _buildGroupCard([
                 _buildTile(
                   icon: Icons.language_rounded,
-                  title: 'Language',
+                  title: 'Language'.tr,
                   trailing: Container(
                     padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
                     decoration: BoxDecoration(
@@ -165,7 +165,7 @@ class _GuestUserProfileState extends State<GuestUserProfile> {
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Text(
-                      'English',
+                      Get.locale?.languageCode == 'ar' ? 'العربية' : 'English',
                       style: GoogleFonts.inter(
                         color: const Color(0xFF0F3D7A),
                         fontSize: 11.sp,
@@ -180,7 +180,7 @@ class _GuestUserProfileState extends State<GuestUserProfile> {
                 _buildDivider(),
                 _buildTile(
                   icon: Icons.headset_mic_outlined,
-                  title: 'Contact Us',
+                  title: 'Contact Us'.tr,
                   onTap: () {
                     Get.to(() => const ContactUsScreen());
                   },
@@ -188,7 +188,7 @@ class _GuestUserProfileState extends State<GuestUserProfile> {
                 _buildDivider(),
                 _buildTile(
                   icon: Icons.info_outline_rounded,
-                  title: 'About Wasel Canada',
+                  title: 'About Wasel Canada'.tr,
                   onTap: () {
                     Get.to(() => const AboutWaselCanadaScreen());
                   },
@@ -196,13 +196,13 @@ class _GuestUserProfileState extends State<GuestUserProfile> {
                 _buildDivider(),
                 _buildTile(
                   icon: Icons.shield_outlined,
-                  title: 'Privacy Policy',
+                  title: 'Privacy Policy'.tr,
                   onTap: () {},
                 ),
                 _buildDivider(),
                 _buildTile(
                   icon: Icons.description_outlined,
-                  title: 'Terms of Service',
+                  title: 'Terms of Service'.tr,
                   onTap: () {},
                 ),
               ]),
@@ -320,7 +320,7 @@ class _GuestUserProfileState extends State<GuestUserProfile> {
             // Title
             Expanded(
               child: Text(
-                title,
+                title.tr,
                 style: GoogleFonts.inter(
                   color: titleColor ?? Colors.black87,
                   fontSize: 14.5.sp,
@@ -390,7 +390,7 @@ class _GuestUserProfileState extends State<GuestUserProfile> {
           onTap: onPressed,
           child: Center(
             child: Text(
-              text,
+              text.tr,
               style: GoogleFonts.inter(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,

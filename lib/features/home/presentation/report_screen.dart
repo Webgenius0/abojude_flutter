@@ -234,8 +234,8 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget build(BuildContext context) {
     final options = widget.isReportUser ? _userOptions : _listingOptions;
     final titleText = widget.isReportUser
-        ? 'Report this user'
-        : 'Report this listing';
+        ? 'Report this user'.tr
+        : 'Report this listing'.tr;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -290,8 +290,8 @@ class _ReportScreenState extends State<ReportScreen> {
                       SizedBox(height: 8.h),
                       Text(
                         widget.isReportUser
-                            ? 'Please select the reason for reporting user "${widget.targetName}":'
-                            : 'Please select the reason for reporting listing "${widget.targetName}":',
+                            ? 'Please select the reason for reporting user'.tr + ' "${widget.targetName}":'
+                            : 'Please select the reason for reporting listing'.tr + ' "${widget.targetName}":',
                         style: GoogleFonts.inter(
                           fontSize: 13.sp,
                           color: const Color(0xFF6B7280),
@@ -305,9 +305,9 @@ class _ReportScreenState extends State<ReportScreen> {
                         itemCount: options.length,
                         itemBuilder: (context, index) {
                           final option = options[index];
-                          final optionTitle = option['title']!;
-                          final description = option['description']!;
-                          final isSelected = _selectedOption == optionTitle;
+                          final optionTitle = option['title']!.tr;
+                          final description = option['description']!.tr;
+                          final isSelected = _selectedOption == option['title']!;
 
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -315,7 +315,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               InkWell(
                                 onTap: () {
                                   setState(() {
-                                    _selectedOption = optionTitle;
+                                    _selectedOption = option['title']!;
                                   });
                                 },
                                 child: Padding(
@@ -379,10 +379,10 @@ class _ReportScreenState extends State<ReportScreen> {
                                                 height: 1.4,
                                               ),
                                             ),
-                                            if (optionTitle == 'Other') ...[
+                                            if (option['title'] == 'Other') ...[
                                               SizedBox(height: 16.h),
                                               Text(
-                                                'Tell us more',
+                                                'Tell us more'.tr,
                                                 style: GoogleFonts.inter(
                                                   fontSize: 13.sp,
                                                   fontWeight: FontWeight.w600,
@@ -402,7 +402,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                 ),
                                                 decoration: InputDecoration(
                                                   hintText:
-                                                      'Enter details here...',
+                                                      'Enter details here...'.tr,
                                                   hintStyle: GoogleFonts.inter(
                                                     fontSize: 13.sp,
                                                     color: const Color(
@@ -512,7 +512,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               ),
                             )
                           : Text(
-                              'Submit Report',
+                              'Submit Report'.tr,
                               style: GoogleFonts.inter(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w700,
@@ -528,7 +528,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                       onPressed: () => Get.back(),
                       child: Text(
-                        'Cancel',
+                        'Cancel'.tr,
                         style: GoogleFonts.inter(
                           color: const Color(0xFF4B5563),
                           fontWeight: FontWeight.w700,

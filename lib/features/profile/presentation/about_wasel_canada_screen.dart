@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 import 'package:abojude_flutter/features/terms_of_service_screen/model/terms_and_condition_model.dart';
 
@@ -61,9 +62,9 @@ class _AboutWaselCanadaScreenState extends State<AboutWaselCanadaScreen> {
           title: StreamBuilder<TermsAndConditionModel>(
             stream: aboutPageRxObj.getTermsAndConditionData,
             builder: (context, snapshot) {
-              final title = snapshot.data?.data?.title ?? 'About Wasel Canada';
+              final title = snapshot.data?.data?.title ?? 'About Wasel Canada'.tr;
               return Text(
-                title,
+                title.tr,
                 style: GoogleFonts.inter(
                   color: Colors.black87,
                   fontSize: 18.sp,
@@ -92,7 +93,7 @@ class _AboutWaselCanadaScreenState extends State<AboutWaselCanadaScreen> {
                 if (snapshot.hasError) {
                   return Center(
                     child: Text(
-                      'Failed to load about page information.',
+                      'Failed to load about page information.'.tr,
                       style: TextStyle(color: Colors.grey.shade600, fontSize: 16.sp),
                     ),
                   );
@@ -101,7 +102,7 @@ class _AboutWaselCanadaScreenState extends State<AboutWaselCanadaScreen> {
                 if (!snapshot.hasData || snapshot.data?.data == null) {
                   return Center(
                     child: Text(
-                      'No data available.',
+                      'No data available.'.tr,
                       style: TextStyle(color: Colors.grey.shade600, fontSize: 16.sp),
                     ),
                   );
