@@ -517,6 +517,7 @@ final class LocalString extends Translations {
       "Attach Screenshot (Optional)": "Attach Screenshot (Optional)",
     },
     'ar': {
+      "Categories": "الفئات",
       "Language Settings": "إعدادات اللغة",
       "Choose the language used throughout the application.":
           "اختر اللغة المستخدمة في التطبيق.",

@@ -232,7 +232,10 @@ final class RouteGenerator {
                 widget: const SetNewPassword(),
                 settings: settings,
               )
-            : CupertinoPageRoute(builder: (context) => const SetNewPassword());
+            : CupertinoPageRoute(
+                builder: (context) => const SetNewPassword(),
+                settings: settings,
+              );
 
       case Routes.createListingScreen:
         return Platform.isAndroid
