@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -69,7 +70,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
 
                   // --------------- Title ---------------
                   Text(
-                    'Forgot Password',
+                    'Forgot Password'.tr,
                     style: GoogleFonts.inter(
                       fontSize: 28.sp,
                       fontWeight: FontWeight.bold,
@@ -81,7 +82,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
 
                   // --------------- Subtitle ---------------
                   Text(
-                    'Enter your email to reset your password and get back to making change',
+                    'Enter your email to reset your password and get back to making change'.tr,
                     style: GoogleFonts.inter(
                       fontSize: 15.sp,
                       color: const Color(0xFF6B7280),
@@ -100,13 +101,13 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter your email address';
+                        return 'Please enter your email address'.tr;
                       }
                       final emailRegex = RegExp(
                         r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
                       );
                       if (!emailRegex.hasMatch(value.trim())) {
-                        return 'Please enter a valid email address';
+                        return 'Please enter a valid email address'.tr;
                       }
                       return null;
                     },
@@ -152,7 +153,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                     ),
                                   )
                                 : Text(
-                                    'Continue',
+                                    'Continue'.tr,
                                     style: GoogleFonts.inter(
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.w600,
@@ -188,7 +189,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            label,
+            label.tr,
             style: GoogleFonts.inter(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
@@ -205,7 +206,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               color: const Color(0xFF1F2937),
             ),
             decoration: InputDecoration(
-              hintText: hintText,
+              hintText: hintText.tr,
               hintStyle: GoogleFonts.inter(
                 fontSize: 15.sp,
                 color: const Color(0xFF9CA3AF),

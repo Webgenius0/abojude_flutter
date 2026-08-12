@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
+import '../../../helpers/di.dart';
+import '../../../constants/app_constants.dart';
+import '../../../networks/dio/dio.dart';
 
 class LanguageScreen extends StatefulWidget {
   const LanguageScreen({super.key});
@@ -12,11 +16,21 @@ class LanguageScreen extends StatefulWidget {
 class _LanguageScreenState extends State<LanguageScreen> {
   String _selectedLanguageCode = 'en';
 
-  void _saveChanges() {
+  @override
+  void initState() {
+    super.initState();
+    _selectedLanguageCode = appData.read(kKeyLanguage) ?? 'en';
+  }
+
+  void _saveChanges() async {
+    await appData.write(kKeyLanguage, _selectedLanguageCode);
+    Get.updateLocale(Locale(_selectedLanguageCode));
+    DioSingleton.instance.updateLanguage(_selectedLanguageCode);
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Language changed to ${_selectedLanguageCode == 'en' ? 'English' : 'Arabic'} successfully!',
+          'Language changed to'.tr + ' ' + (_selectedLanguageCode == 'en' ? 'English'.tr : 'Arabic'.tr) + ' ' + 'successfully!'.tr,
         ),
         backgroundColor: const Color(0xFF2B8A3E),
         behavior: SnackBarBehavior.floating,
@@ -69,7 +83,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     SizedBox(height: 10.h),
                     // Title
                     Text(
-                      'Language Settings',
+                      'Language Settings'.tr,
                       style: GoogleFonts.inter(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.bold,
@@ -79,7 +93,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     SizedBox(height: 12.h),
                     // Description
                     Text(
-                      'Choose the language used throughout the application.',
+                      'Choose the language used throughout the application.'.tr,
                       style: GoogleFonts.inter(
                         fontSize: 14.sp,
                         color: Colors.grey[500],
@@ -91,15 +105,15 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     // English Option Card
                     _buildLanguageCard(
                       langCode: 'en',
-                      title: 'English',
-                      subtitle: 'English',
+                      title: 'English'.tr,
+                      subtitle: 'English'.tr,
                     ),
                     SizedBox(height: 16.h),
 
                     // Arabic Option Card
                     _buildLanguageCard(
                       langCode: 'ar',
-                      title: 'Arabic',
+                      title: 'Arabic'.tr,
                       subtitle: 'العربية',
                     ),
 
@@ -107,7 +121,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     // Footnote
                     Center(
                       child: Text(
-                        'Language changes will update the app interface instantly.',
+                        'Language changes will update the app interface instantly.'.tr,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter(
                           fontSize: 12.sp,
@@ -137,7 +151,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     elevation: 0,
                   ),
                   child: Text(
-                    'Save Changes',
+                    'Save Changes'.tr,
                     style: GoogleFonts.inter(
                       color: Colors.white,
                       fontSize: 16.sp,

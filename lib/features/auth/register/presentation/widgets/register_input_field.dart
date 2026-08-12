@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
 class RegisterInputField extends StatelessWidget {
   final String label;
@@ -33,7 +34,7 @@ class RegisterInputField extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            label,
+            label.tr,
             style: GoogleFonts.inter(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
@@ -51,7 +52,7 @@ class RegisterInputField extends StatelessWidget {
               color: const Color(0xFF1F2937),
             ),
             decoration: InputDecoration(
-              hintText: hintText,
+              hintText: hintText.tr,
               hintStyle: GoogleFonts.inter(
                 fontSize: 15.sp,
                 color: const Color(0xFF9CA3AF),

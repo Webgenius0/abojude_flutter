@@ -57,7 +57,7 @@ class JobSuccessScreen extends StatelessWidget {
 
                       // Title
                       Text(
-                        "Listing Submitted\nSuccessfully",
+                        "Listing Submitted\nSuccessfully".tr,
                         textAlign: TextAlign.center,
                         style: TextFontStyle.textStyle22IbmPlexSansW600
                             .copyWith(
@@ -70,7 +70,7 @@ class JobSuccessScreen extends StatelessWidget {
 
                       // Description
                       Text(
-                        "Your job opportunity has been submitted and is currently awaiting admin approval. It will become visible to other users once approved.",
+                        "Your job opportunity has been submitted and is currently awaiting admin approval. It will become visible to other users once approved.".tr,
                         textAlign: TextAlign.center,
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(
@@ -94,25 +94,25 @@ class JobSuccessScreen extends StatelessWidget {
                               icon: Icons.access_time_outlined,
                               iconBg: const Color(0xFFEFF6FF),
                               iconColor: const Color(0xFF3B82F6),
-                              title: "Review Time",
-                              subtitle: "Usually within 24 hours",
+                              title: "Review Time".tr,
+                              subtitle: "Usually within 24 hours".tr,
                             ),
                             const Divider(color: Color(0xFFF3F4F6), height: 1),
                             _buildStatusItem(
                               icon: Icons.notifications_none_outlined,
                               iconBg: const Color(0xFFECFDF5),
                               iconColor: const Color(0xFF10B981),
-                              title: "Notification",
+                              title: "Notification".tr,
                               subtitle:
-                                  "You'll be notified when approved or rejected",
+                                  "You'll be notified when approved or rejected".tr,
                             ),
                             const Divider(color: Color(0xFFF3F4F6), height: 1),
                             _buildStatusItem(
                               icon: Icons.visibility_off_outlined,
                               iconBg: const Color(0xFFFEF2F2),
                               iconColor: const Color(0xFFEF4444),
-                              title: "Visibility",
-                              subtitle: "Hidden from public until approved",
+                              title: "Visibility".tr,
+                              subtitle: "Hidden from public until approved".tr,
                             ),
                           ],
                         ),
@@ -134,7 +134,7 @@ class JobSuccessScreen extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          "Status: Pending Approval",
+                          "Status: Pending Approval".tr,
                           style: TextStyle(
                             color: const Color(0xFFEA580C),
                             fontSize: 13.sp,
@@ -167,7 +167,7 @@ class JobSuccessScreen extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          "Back to Home",
+                          "Back to Home".tr,
                           style: TextFontStyle.textStyle16InterW600.copyWith(
                             color: Colors.white,
                             fontSize: 15.sp,
@@ -197,7 +197,7 @@ class JobSuccessScreen extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          "View My Listings",
+                          "View My Listings".tr,
                           style: TextFontStyle.textStyle16InterW600.copyWith(
                             color: const Color(0xFF4B5563),
                             fontSize: 15.sp,
@@ -238,7 +238,7 @@ class JobSuccessScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  title.tr,
                   style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
                     fontSize: 14.sp,
                     color: AppColor.c2E3227,
@@ -246,7 +246,7 @@ class JobSuccessScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  subtitle,
+                  subtitle.tr,
                   style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                     fontSize: 12.sp,
                     color: const Color(0xFF797A7C),

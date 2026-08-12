@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'register_input_field.dart';
+import 'package:get/get.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -50,7 +51,7 @@ class _RegisterFormState extends State<RegisterForm> {
             keyboardType: TextInputType.name,
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return 'Please enter your full name';
+                return 'Please enter your full name'.tr;
               }
               return null;
             },
@@ -64,11 +65,11 @@ class _RegisterFormState extends State<RegisterForm> {
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return 'Please enter your email address';
+                return 'Please enter your email address'.tr;
               }
               final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
               if (!emailRegex.hasMatch(value.trim())) {
-                return 'Please enter a valid email address';
+                return 'Please enter a valid email address'.tr;
               }
               return null;
             },
@@ -96,10 +97,10 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter a password';
+                return 'Please enter a password'.tr;
               }
               if (value.length < 6) {
-                return 'Password must be at least 6 characters';
+                return 'Password must be at least 6 characters'.tr;
               }
               return null;
             },
@@ -127,10 +128,10 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please repeat your password';
+                return 'Please repeat your password'.tr;
               }
               if (value != _passwordController.text) {
-                return 'Passwords do not match';
+                return 'Passwords do not match'.tr;
               }
               return null;
             },
@@ -180,7 +181,7 @@ class _RegisterFormState extends State<RegisterForm> {
                             ),
                           )
                         : Text(
-                            'Create Account',
+                            'Create Account'.tr,
                             style: GoogleFonts.inter(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
@@ -200,7 +201,7 @@ class _RegisterFormState extends State<RegisterForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Already have an account? ',
+                'Already have an account? '.tr,
                 style: GoogleFonts.inter(
                   fontSize: 14.sp,
                   color: const Color(0xFF4B5563),
@@ -212,7 +213,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   Navigator.pop(context);
                 },
                 child: Text(
-                  'Sign In',
+                  'Sign In'.tr,
                   style: GoogleFonts.inter(
                     fontSize: 14.sp,
                     color: const Color(0xFF1B8E5A),

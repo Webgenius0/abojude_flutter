@@ -1,5 +1,6 @@
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
+import 'package:get/get.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,16 +39,16 @@ class _NavigationMenuState extends State<NavigationMenu> {
     final shouldExit = await showDialog<bool>(
       context: context,
       builder: (context) => CupertinoAlertDialog(
-        title: const Text('Exit App?'),
-        content: const Text('Are you sure you want to exit the app?'),
+        title: Text('Exit App?'.tr),
+        content: Text('Are you sure you want to exit the app?'.tr),
         actions: [
           CupertinoDialogAction(
-            child: const Text('Cancel'),
+            child: Text('Cancel'.tr),
             onPressed: () => Navigator.of(context).pop(false),
           ),
           CupertinoDialogAction(
             isDestructiveAction: true,
-            child: const Text('Exit'),
+            child: Text('Exit'.tr),
             onPressed: () => Navigator.of(context).pop(true),
           ),
         ],
@@ -158,7 +159,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
             ),
             const SizedBox(height: 2),
             Text(
-              label,
+              label.tr,
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,

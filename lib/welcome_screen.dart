@@ -9,6 +9,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:abojude_flutter/assets_helper/app_images.dart';
+import 'package:get/get.dart';
+import 'package:abojude_flutter/features/profile/presentation/language_screen.dart';
 // import 'package:abojude_flutter/helpers/navigation_service.dart';
 // import 'package:abojude_flutter/helpers/all_routes.dart';
 
@@ -52,34 +54,41 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       // Language Selector at top-right
                       Align(
                         alignment: Alignment.topRight,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12.w,
-                            vertical: 6.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20.r),
-                            border: Border.all(color: const Color(0xFFE5E7EB)),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'English',
-                                style: GoogleFonts.inter(
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: const Color(0xFF374151),
+                        child: GestureDetector(
+                          onTap: () => Get.to(() => const LanguageScreen()),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.w,
+                              vertical: 6.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20.r),
+                              border: Border.all(
+                                color: const Color(0xFFE5E7EB),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  Get.locale?.languageCode == 'ar'
+                                      ? 'العربية'
+                                      : 'English',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: const Color(0xFF374151),
+                                  ),
                                 ),
-                              ),
-                              SizedBox(width: 4.w),
-                              Icon(
-                                Icons.keyboard_arrow_down,
-                                size: 14.sp,
-                                color: const Color(0xFF6B7280),
-                              ),
-                            ],
+                                SizedBox(width: 4.w),
+                                Icon(
+                                  Icons.keyboard_arrow_down,
+                                  size: 14.sp,
+                                  color: const Color(0xFF6B7280),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -102,7 +111,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
                 // --------------- Title ---------------
                 Text(
-                  'Welcome to Wasel Canada',
+                  'Welcome to Wasel Canada'.tr,
                   style: GoogleFonts.inter(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
@@ -114,7 +123,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
                 // --------------- Subtitle ---------------
                 Text(
-                  'Buy, Sell, Find Jobs, Discover Businesses, and Connect with Services across Canada.',
+                  'Buy, Sell, Find Jobs, Discover Businesses, and Connect with Services across Canada.'
+                      .tr,
                   style: GoogleFonts.inter(
                     fontSize: 15.sp,
                     color: const Color(0xFF6B7280),
@@ -155,11 +165,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     // Google Auth Action
                   },
                   border: Border.all(color: const Color(0xFFE5E7EB)),
-                  text: 'Continue with Google',
+                  text: 'Continue with Google'.tr,
                 ),
                 SizedBox(height: 14.h),
                 CustomButton(
-                  text: 'Continue with Apple',
+                  text: 'Continue with Apple'.tr,
                   icon: SvgPicture.asset(
                     'assets/icons/apple.svg',
                     width: 22.w,
@@ -176,7 +186,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   valueListenable: guestUserRxObj.isLoading,
                   builder: (context, isLoading, child) {
                     return CustomButton(
-                      text: 'Continue as Guest',
+                      text: 'Continue as Guest'.tr,
                       backgroundColor: const Color(0xFFF3F4F6),
                       isLoading: isLoading,
                       icon: SvgPicture.asset(
@@ -213,7 +223,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16.w),
                         child: Text(
-                          'OR',
+                          'OR'.tr,
                           style: GoogleFonts.inter(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w600,
@@ -230,7 +240,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
                 // --------------- Sign Up Button ---------------
                 CustomButton(
-                  text: 'Sign Up with Email',
+                  text: 'Sign Up with Email'.tr,
                   backgroundColor: const Color(0xFF03045E),
                   textColor: Colors.white,
                   icon: Image.asset(
@@ -250,7 +260,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Already have an account? ',
+                      'Already have an account? '.tr,
                       style: GoogleFonts.inter(
                         fontSize: 14.sp,
                         color: const Color(0xFF4B5563),
@@ -262,7 +272,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         NavigationService.navigateTo(Routes.loginScreen);
                       },
                       child: Text(
-                        'Sign In',
+                        'Sign In'.tr,
                         style: GoogleFonts.inter(
                           fontSize: 14.sp,
                           color: const Color(0xFF1B8E5A),
@@ -299,7 +309,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ),
           SizedBox(width: 16.w),
           Text(
-            text,
+            text.tr,
             style: GoogleFonts.inter(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,

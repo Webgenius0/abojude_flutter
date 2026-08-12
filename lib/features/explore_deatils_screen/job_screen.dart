@@ -114,7 +114,7 @@ class _JobScreenState extends State<JobScreen> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Listing Details',
+          'Listing Details'.tr,
           style: TextStyle(
             color: Colors.black,
             fontSize: 16.sp,
@@ -579,7 +579,7 @@ class _JobScreenState extends State<JobScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Description',
+            'Description'.tr,
             style: TextStyle(
               fontSize: 15.sp,
               fontWeight: FontWeight.bold,
@@ -1072,7 +1072,7 @@ class _JobScreenState extends State<JobScreen> {
                   .white, // Remove if your PNG already has the correct color
             ),
             label: Text(
-              'Message',
+              'Message'.tr,
               style: TextStyle(
                 fontSize: 15.sp,
                 fontWeight: FontWeight.bold,

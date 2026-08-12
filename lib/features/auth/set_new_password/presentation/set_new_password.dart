@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:get/get.dart';
 
 class SetNewPassword extends StatefulWidget {
   const SetNewPassword({super.key});
@@ -94,7 +95,7 @@ class _SetNewPasswordState extends State<SetNewPassword> {
 
                     // --------------- Title ---------------
                     Text(
-                      'Password Updated!',
+                      'Password Updated!'.tr,
                       style: GoogleFonts.inter(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
@@ -105,7 +106,7 @@ class _SetNewPasswordState extends State<SetNewPassword> {
 
                     // --------------- Subtitle ---------------
                     Text(
-                      'Your password has been changed.\nYou’re all set to log in now.',
+                      'Your password has been changed.\nYou’re all set to log in now.'.tr,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                         fontSize: 15.sp,
@@ -132,7 +133,7 @@ class _SetNewPasswordState extends State<SetNewPassword> {
                         ),
                         child: Center(
                           child: Text(
-                            'Login Now',
+                            'Login Now'.tr,
                             style: GoogleFonts.inter(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
@@ -197,7 +198,7 @@ class _SetNewPasswordState extends State<SetNewPassword> {
 
                   // --------------- Title ---------------
                   Text(
-                    'New Password',
+                    'New Password'.tr,
                     style: GoogleFonts.inter(
                       fontSize: 28.sp,
                       fontWeight: FontWeight.bold,
@@ -209,7 +210,7 @@ class _SetNewPasswordState extends State<SetNewPassword> {
 
                   // --------------- Subtitle ---------------
                   Text(
-                    'Create a new password to continue your journey with Wasel Canada',
+                    'Create a new password to continue your journey with Wasel Canada'.tr,
                     style: GoogleFonts.inter(
                       fontSize: 15.sp,
                       color: const Color(0xFF6B7280),
@@ -242,10 +243,10 @@ class _SetNewPasswordState extends State<SetNewPassword> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your new password';
+                        return 'Please enter your new password'.tr;
                       }
                       if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
+                        return 'Password must be at least 6 characters'.tr;
                       }
                       return null;
                     },
@@ -274,10 +275,10 @@ class _SetNewPasswordState extends State<SetNewPassword> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please repeat your new password';
+                        return 'Please repeat your new password'.tr;
                       }
                       if (value != _passwordController.text) {
-                        return 'The password field confirmation does not match.';
+                        return 'The password field confirmation does not match.'.tr;
                       }
                       return null;
                     },
@@ -330,7 +331,7 @@ class _SetNewPasswordState extends State<SetNewPassword> {
                                     ),
                                   )
                                 : Text(
-                                    'Continue',
+                                    'Continue'.tr,
                                     style: GoogleFonts.inter(
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.w600,
@@ -368,7 +369,7 @@ class _SetNewPasswordState extends State<SetNewPassword> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            label,
+            label.tr,
             style: GoogleFonts.inter(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
@@ -386,7 +387,7 @@ class _SetNewPasswordState extends State<SetNewPassword> {
               color: const Color(0xFF1F2937),
             ),
             decoration: InputDecoration(
-              hintText: hintText,
+              hintText: hintText.tr,
               hintStyle: GoogleFonts.inter(
                 fontSize: 15.sp,
                 color: const Color(0xFF9CA3AF),

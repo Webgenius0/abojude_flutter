@@ -478,7 +478,7 @@ class _MessageScreenState extends State<MessageScreen> {
                               ),
                               const SizedBox(width: 10),
                               Text(
-                                'Report User',
+                                'Report User'.tr,
                                 style: GoogleFonts.inter(
                                   fontSize: 14,
                                   color: Colors.black87,
@@ -499,7 +499,7 @@ class _MessageScreenState extends State<MessageScreen> {
                               ),
                               const SizedBox(width: 10),
                               Text(
-                                'Block User',
+                                'Block User'.tr,
                                 style: GoogleFonts.inter(
                                   fontSize: 14,
                                   color: Colors.black87,
@@ -547,7 +547,7 @@ class _MessageScreenState extends State<MessageScreen> {
                   if (displayMessages.isEmpty) {
                     return Center(
                       child: Text(
-                        'No messages yet',
+                        'No messages yet'.tr,
                         style: TextStyle(
                           color: Colors.grey[500],
                           fontSize: 15,
@@ -1022,15 +1022,15 @@ class _MessageScreenState extends State<MessageScreen> {
                   textCapitalization: TextCapitalization.sentences,
                   onSubmitted: (_) => _sendMessage(),
                   style: const TextStyle(fontSize: 14.5, color: Colors.black87),
-                  decoration: const InputDecoration(
-                    hintText: 'Type message here...',
-                    hintStyle: TextStyle(
+                  decoration: InputDecoration(
+                    hintText: 'Type message here...'.tr,
+                    hintStyle: const TextStyle(
                       color: Colors.grey,
                       fontSize: 14.5,
                       fontWeight: FontWeight.w400,
                     ),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(vertical: 0),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 0),
                   ),
                 ),
               ),
@@ -1090,7 +1090,7 @@ class _MessageScreenState extends State<MessageScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Block ${widget.chat.name}?',
+                'Block'.tr + ' ${widget.chat.name}?',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontWeight: FontWeight.w700,
@@ -1100,7 +1100,7 @@ class _MessageScreenState extends State<MessageScreen> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Are you sure you want to block ${widget.chat.name}? You will no longer receive messages or see listings from this user.',
+                'Are you sure you want to block'.tr + ' ${widget.chat.name}? ' + 'You will no longer receive messages or see listings from this user.'.tr,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontSize: 13,
@@ -1124,7 +1124,7 @@ class _MessageScreenState extends State<MessageScreen> {
                   _performBlockUser();
                 },
                 child: Text(
-                  'Block User',
+                  'Block User'.tr,
                   style: GoogleFonts.inter(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
@@ -1144,7 +1144,7 @@ class _MessageScreenState extends State<MessageScreen> {
                 ),
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(
-                  'Cancel',
+                  'Cancel'.tr,
                   style: GoogleFonts.inter(
                     color: const Color(0xFF374151),
                     fontWeight: FontWeight.w700,

@@ -1,6 +1,7 @@
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class ServiceStepHeader extends StatelessWidget implements PreferredSizeWidget {
   final int currentStep;
@@ -58,7 +59,7 @@ class ServiceStepHeader extends StatelessWidget implements PreferredSizeWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Services',
+                        'Services'.tr,
                         style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                           color: const Color(0xFF797A7C),
                           fontSize: 13.sp,
@@ -66,7 +67,7 @@ class ServiceStepHeader extends StatelessWidget implements PreferredSizeWidget {
                       ),
                       SizedBox(height: 2.h),
                       Text(
-                        title,
+                        title.tr,
                         style: TextFontStyle.textStyle22IbmPlexSansW600.copyWith(
                           fontSize: 18.sp,
                         ),
@@ -83,7 +84,7 @@ class ServiceStepHeader extends StatelessWidget implements PreferredSizeWidget {
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Text(
-                  '$currentStep of 5',
+                  '$currentStep'.tr + ' ' + 'of'.tr + ' 5'.tr,
                   style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
                     fontSize: 14.sp,
                     color: const Color(0xFF1D3B71),

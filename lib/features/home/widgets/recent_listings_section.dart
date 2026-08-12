@@ -3,6 +3,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:abojude_flutter/features/home/model/recent_post_list_model.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 import 'listing_card.dart';
+import 'package:get/get.dart';
 
 class RecentListingsSection extends StatefulWidget {
   final Function(Datum item)? onFavoriteToggle;
@@ -125,7 +126,7 @@ class _RecentListingsSectionState extends State<RecentListingsSection> {
       child: Row(
         children: [
           Text(
-            title,
+            title.tr,
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -140,7 +141,7 @@ class _RecentListingsSectionState extends State<RecentListingsSection> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                 child: Text(
-                  seeAllText,
+                  seeAllText.tr,
                   style: const TextStyle(
                     fontSize: 13,
                     color: navyBlue,

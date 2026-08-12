@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/helpers/toast.dart';
@@ -48,7 +49,7 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: BuySellStepHeader(currentStep: 4, title: "Contact"),
+      appBar: BuySellStepHeader(currentStep: 4, title: "Contact".tr),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -61,13 +62,13 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Choose how buyers can reach you. Enable at least one contact method.",
+                        "Choose how buyers can reach you. Enable at least one contact method.".tr,
                         style: TextFontStyle.textStyle14IbmPlexSansW400,
                       ),
                       SizedBox(height: 24.h),
 
                       // Phone Number Field
-                      _buildLabel("Phone Number"),
+                      _buildLabel("Phone Number".tr),
                       TextFormField(
                         controller: _phoneController,
                         keyboardType: TextInputType.phone,
@@ -80,7 +81,7 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
                       SizedBox(height: 20.h),
 
                       // WhatsApp Number Field
-                      _buildLabel("What's App Number"),
+                      _buildLabel("What's App Number".tr),
                       TextFormField(
                         controller: _whatsAppController,
                         keyboardType: TextInputType.phone,
@@ -93,7 +94,7 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
                       SizedBox(height: 20.h),
 
                       // Email Field
-                      _buildLabel("Email Address"),
+                      _buildLabel("Email Address".tr),
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
@@ -101,12 +102,12 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
                         style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                           color: AppColor.c2E3227,
                         ),
-                        decoration: _buildInputDecoration("your@email.com"),
+                        decoration: _buildInputDecoration("your@email.com".tr),
                         validator: (value) {
                           if (value != null && value.trim().isNotEmpty) {
                             final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
                             if (!emailRegex.hasMatch(value.trim())) {
-                              return "Please enter a valid email address";
+                              return "Please enter a valid email address".tr;
                             }
                           }
                           return null;
@@ -132,14 +133,14 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Enable in-App Chat",
+                                    "Enable in-App Chat".tr,
                                     style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
                                       fontSize: 15.sp,
                                     ),
                                   ),
                                   SizedBox(height: 4.h),
                                   Text(
-                                    "Allow buyers to message you in the app",
+                                    "Allow buyers to message you in the app".tr,
                                     style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                                       fontSize: 13.sp,
                                     ),
@@ -178,13 +179,13 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
                                 final phone = _phoneController.text.trim();
                                 final whatsapp = _whatsAppController.text.trim();
                                 final email = _emailController.text.trim();
-
+ 
                                 if (phone.isEmpty &&
                                     whatsapp.isEmpty &&
                                     email.isEmpty &&
                                     !_enableInAppChat) {
                                   ToastUtil.showShortToast(
-                                    "Please provide or enable at least one contact method.",
+                                    "Please provide or enable at least one contact method.".tr,
                                   );
                                   return;
                                 }

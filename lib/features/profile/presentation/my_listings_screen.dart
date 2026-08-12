@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
 class MyListingsScreen extends StatefulWidget {
@@ -90,7 +91,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
               ),
             ),
             title: Text(
-              'My Listings',
+              'My Listings'.tr,
               style: GoogleFonts.inter(
                 color: Colors.black87,
                 fontSize: 18.sp,
@@ -248,10 +249,10 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildStatItem(listingsVal, 'Listings', const Color(0xFF0F3D7A)),
-          _buildStatItem(viewsVal, 'View', const Color(0xFF2B8A3E)),
-          _buildStatItem(wishesVal, 'Favorites', const Color(0xFFE03131)),
-          _buildStatItem(messagesVal, 'Message', const Color(0xFFF0A020)),
+          _buildStatItem(listingsVal, 'Listings'.tr, const Color(0xFF0F3D7A)),
+          _buildStatItem(viewsVal, 'View'.tr, const Color(0xFF2B8A3E)),
+          _buildStatItem(wishesVal, 'Favorites'.tr, const Color(0xFFE03131)),
+          _buildStatItem(messagesVal, 'Message'.tr, const Color(0xFFF0A020)),
         ],
       ),
     );
@@ -301,10 +302,10 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
         labelStyle: GoogleFonts.inter(fontSize: 14.sp, fontWeight: FontWeight.bold),
         unselectedLabelStyle: GoogleFonts.inter(fontSize: 14.sp, fontWeight: FontWeight.w500),
         tabs: [
-          _buildTabWithBadge('All', allCount),
-          _buildTabWithBadge('Pending', pendingCount),
-          _buildTabWithBadge('Active', activeCount),
-          _buildTabWithBadge('Expired', expiredCount),
+          _buildTabWithBadge('All'.tr, allCount),
+          _buildTabWithBadge('Pending'.tr, pendingCount),
+          _buildTabWithBadge('Active'.tr, activeCount),
+          _buildTabWithBadge('Expired'.tr, expiredCount),
         ],
       ),
     );
@@ -326,7 +327,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
             constraints: BoxConstraints(minWidth: 18.w, minHeight: 18.h),
             child: Center(
               child: Text(
-                '$count',
+                '$count'.tr,
                 style: GoogleFonts.inter(
                   fontSize: 10.sp,
                   fontWeight: FontWeight.bold,
@@ -366,7 +367,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
                       ),
                       SizedBox(height: 12.h),
                       Text(
-                        'No listings found in $filterStatus',
+                        'No listings found in'.tr + ' ' + filterStatus.tr,
                         style: GoogleFonts.inter(
                           color: Colors.grey[500],
                           fontSize: 14.sp,
@@ -375,7 +376,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
                       ),
                       SizedBox(height: 6.h),
                       Text(
-                        'Pull down to refresh',
+                        'Pull down to refresh'.tr,
                         style: GoogleFonts.inter(
                           color: Colors.grey[400],
                           fontSize: 12.sp,
@@ -466,7 +467,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
 
                 // Title
                 Text(
-                  'Delete Listing?',
+                  'Delete Listing?'.tr,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.inter(
                     fontSize: 20.sp,
@@ -478,7 +479,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
 
                 // Description
                 Text(
-                  'Are you sure you want to delete this listing? This action cannot be undone.',
+                  'Are you sure you want to delete this listing? This action cannot be undone.'.tr,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.inter(
                     fontSize: 13.sp,
@@ -528,7 +529,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
                       SizedBox(width: 10.w),
                       Expanded(
                         child: Text(
-                          post.displayTitle.isNotEmpty ? post.displayTitle : (post.title ?? 'Listing Item'),
+                          post.displayTitle.isNotEmpty ? post.displayTitle : (post.title ?? 'Listing Item'.tr),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.inter(
@@ -559,7 +560,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
                           ),
                           onPressed: () => Navigator.of(context).pop(),
                           child: Text(
-                            'Cancel',
+                            'Cancel'.tr,
                             style: GoogleFonts.inter(
                               color: const Color(0xFF374151),
                               fontSize: 14.sp,
@@ -586,7 +587,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
                             _deleteListing(post);
                           },
                           child: Text(
-                            'Delete',
+                            'Delete'.tr,
                             style: GoogleFonts.inter(
                               color: Colors.white,
                               fontSize: 14.sp,
@@ -614,7 +615,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Listing deleted successfully',
+          'Listing deleted successfully'.tr,
           style: GoogleFonts.inter(fontSize: 14.sp),
         ),
         behavior: SnackBarBehavior.floating,
@@ -665,7 +666,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
                   Icon(Icons.access_time_rounded, color: const Color(0xFFB7791F), size: 14.sp),
                   SizedBox(width: 6.w),
                   Text(
-                    'Awaiting admin review - not yet visible to others',
+                    'Awaiting admin review - not yet visible to others'.tr,
                     style: GoogleFonts.inter(
                       color: const Color(0xFFB7791F),
                       fontSize: 11.sp,
@@ -782,7 +783,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
                             ),
                             SizedBox(width: 8.w),
                             Text(
-                              'Delete',
+                              'Delete'.tr,
                               style: GoogleFonts.inter(
                                 color: Colors.red,
                                 fontSize: 14.sp,
@@ -853,7 +854,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
             SizedBox(width: 3.w),
           ],
           Text(
-            status,
+            status.tr,
             style: GoogleFonts.inter(
               color: fg,
               fontSize: 10.sp,
@@ -871,7 +872,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> with SingleTickerPr
         Icon(icon, color: Colors.grey[400], size: 16.sp),
         SizedBox(width: 6.w),
         Text(
-          '$val',
+          '$val'.tr,
           style: GoogleFonts.inter(
             color: Colors.grey[500],
             fontSize: 12.sp,

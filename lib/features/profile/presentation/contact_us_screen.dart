@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:get/utils.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 import 'package:abojude_flutter/features/profile/widgets/contact_us_widgets.dart';
 
@@ -102,44 +102,44 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                       SizedBox(height: 32.h),
                       const ContactFormTitle(),
                       SizedBox(height: 24.h),
-                      const ContactFormLabel(text: 'Your Email Address'),
+                      ContactFormLabel(text: 'Your Email Address'.tr),
                       ContactTextField(
                         controller: _emailController,
                         readOnly: true,
-                        hintText: 'Enter your email address',
+                        hintText: 'Enter your email address'.tr,
                         icon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty)
-                            return 'Please enter your email';
+                            return 'Please enter your email'.tr;
                           if (!GetUtils.isEmail(value))
-                            return 'Please enter a valid email';
+                            return 'Please enter a valid email'.tr;
                           return null;
                         },
                       ),
-                      const ContactFormSubtext(
-                        text: "We'll send the response to this email address",
+                      ContactFormSubtext(
+                        text: "We'll send the response to this email address".tr,
                       ),
                       SizedBox(height: 20.h),
-                      const ContactFormLabel(text: 'Subject (Optional)'),
+                      ContactFormLabel(text: 'Subject (Optional)'.tr),
                       ContactTextField(
                         controller: _subjectController,
-                        hintText: 'Enter your subject...',
+                        hintText: 'Enter your subject...'.tr,
                         icon: Icons.title_rounded,
                       ),
                       SizedBox(height: 20.h),
-                      const ContactFormLabel(text: 'Describe Your Issue'),
+                      ContactFormLabel(text: 'Describe Your Issue'.tr),
                       ContactMultiLineField(
                         controller: _issueController,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty)
-                            return 'Please describe your issue';
+                            return 'Please describe your issue'.tr;
                           return null;
                         },
                       ),
                       SizedBox(height: 20.h),
-                      const ContactFormLabel(
-                        text: 'Attach Screenshot (Optional)',
+                      ContactFormLabel(
+                        text: 'Attach Screenshot (Optional)'.tr,
                       ),
                       ContactAttachmentArea(
                         screenshotFile: _screenshotFile,

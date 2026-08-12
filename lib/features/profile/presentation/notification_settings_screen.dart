@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart'; // Added for CupertinoSwitch
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 
 class NotificationSettingsScreen extends StatefulWidget {
@@ -156,7 +157,7 @@ class _NotificationSettingsScreenState
                           SizedBox(height: 10.h),
                           // Title
                           Text(
-                            'Notification Settings',
+                            'Notification Settings'.tr,
                             style: GoogleFonts.inter(
                               fontSize: 24.sp,
                               fontWeight: FontWeight.bold,
@@ -166,7 +167,7 @@ class _NotificationSettingsScreenState
                           SizedBox(height: 12.h),
                           // Description
                           Text(
-                            'Control which updates and activities you want to receive',
+                            'Control which updates and activities you want to receive'.tr,
                             style: GoogleFonts.inter(
                               fontSize: 14.sp,
                               color: Colors.grey[500],
@@ -181,7 +182,7 @@ class _NotificationSettingsScreenState
                           SizedBox(height: 24.h),
                           // Subtitle Label
                           Text(
-                            'Notification Types',
+                            'Notification Types'.tr,
                             style: GoogleFonts.inter(
                               fontSize: 13.sp,
                               color: Colors.grey[500],
@@ -282,7 +283,7 @@ class _NotificationSettingsScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Enable Notifications',
+                  'Enable Notifications'.tr,
                   style: GoogleFonts.inter(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.bold,
@@ -291,7 +292,7 @@ class _NotificationSettingsScreenState
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  '$_enabledCount of 3 enabled',
+                  '$_enabledCount'.tr + ' ' + 'of'.tr + ' ' + '3'.tr + ' ' + 'enabled'.tr,
                   style: GoogleFonts.inter(
                     fontSize: 13.sp,
                     color: Colors.grey[400],
@@ -342,7 +343,7 @@ class _NotificationSettingsScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  title.tr,
                   style: GoogleFonts.inter(
                     fontSize: 14.5.sp,
                     fontWeight: FontWeight.bold,
@@ -351,7 +352,7 @@ class _NotificationSettingsScreenState
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  subtitle,
+                  subtitle.tr,
                   style: GoogleFonts.inter(
                     fontSize: 12.5.sp,
                     color: Colors.grey[400],
@@ -394,7 +395,7 @@ class _NotificationSettingsScreenState
           SizedBox(width: 12.w),
           Expanded(
             child: Text(
-              'Changes to your notification preferences are saved automatically.',
+              'Changes to your notification preferences are saved automatically.'.tr,
               style: GoogleFonts.inter(
                 color: const Color(0xFFB7791F),
                 fontSize: 12.sp,

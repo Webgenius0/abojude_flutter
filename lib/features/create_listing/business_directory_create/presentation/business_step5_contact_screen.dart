@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/helpers/toast.dart';
@@ -52,9 +53,9 @@ class _BusinessStep5ContactScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const BusinessStepHeader(
+      appBar: BusinessStepHeader(
         currentStep: 5,
-        title: "Contact Information",
+        title: "Contact Information".tr,
       ),
       body: SafeArea(
         child: Form(
@@ -71,14 +72,14 @@ class _BusinessStep5ContactScreenState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Configure how customers can contact your business. Add at least one contact channel.",
+                        "Configure how customers can contact your business. Add at least one contact channel.".tr,
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(color: const Color(0xFF6B7280)),
                       ),
                       SizedBox(height: 24.h),
 
                       // Phone Number Field
-                      _buildLabel("Phone Number"),
+                      _buildLabel("Phone Number".tr),
                       SizedBox(height: 8.h),
                       TextFormField(
                         controller: _phoneController,
@@ -90,7 +91,7 @@ class _BusinessStep5ContactScreenState
                       SizedBox(height: 20.h),
 
                       // WhatsApp Number Field
-                      _buildLabel("WhatsApp Number"),
+                      _buildLabel("WhatsApp Number".tr),
                       SizedBox(height: 8.h),
                       TextFormField(
                         controller: _whatsAppController,
@@ -102,7 +103,7 @@ class _BusinessStep5ContactScreenState
                       SizedBox(height: 20.h),
 
                       // Email Address Field
-                      _buildLabel("Email Address"),
+                      _buildLabel("Email Address".tr),
                       SizedBox(height: 8.h),
                       TextFormField(
                         controller: _emailController,
@@ -118,7 +119,7 @@ class _BusinessStep5ContactScreenState
                               r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
                             );
                             if (!emailRegExp.hasMatch(value.trim())) {
-                              return "Please enter a valid email address";
+                              return "Please enter a valid email address".tr;
                             }
                           }
                           return null;
@@ -141,7 +142,7 @@ class _BusinessStep5ContactScreenState
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Enable In-App Chat",
+                                    "Enable In-App Chat".tr,
                                     style: TextStyle(
                                       color: const Color(0xFF1F2937),
                                       fontSize: 14.sp,
@@ -150,7 +151,7 @@ class _BusinessStep5ContactScreenState
                                   ),
                                   SizedBox(height: 4.h),
                                   Text(
-                                    "Allow users to send messages directly through the app.",
+                                    "Allow users to send messages directly through the app.".tr,
                                     style: TextStyle(
                                       color: const Color(0xFF6B7280),
                                       fontSize: 12.sp,
@@ -182,7 +183,7 @@ class _BusinessStep5ContactScreenState
                   valueListenable: createBusinessRxObj.isLoading,
                   builder: (context, isLoading, child) {
                     return BusinessButton(
-                      text: isLoading ? "Submitting..." : "Continue",
+                      text: isLoading ? "Submitting...".tr : "Continue".tr,
                       onTap: isLoading
                           ? () {}
                           : () {
@@ -196,7 +197,7 @@ class _BusinessStep5ContactScreenState
                                     email.isEmpty &&
                                     !_enableInAppChat) {
                                   ToastUtil.showShortToast(
-                                    "Please configure at least one active contact channel.",
+                                    "Please configure at least one active contact channel.".tr,
                                   );
                                   return;
                                 }
@@ -210,7 +211,7 @@ class _BusinessStep5ContactScreenState
                                     .createBusiness(model: widget.model)
                                     .then((res) {
                                   ToastUtil.showShortToast(
-                                    res.message ?? "Listing drafted successfully",
+                                    res.message ?? "Listing drafted successfully".tr,
                                   );
                                   NavigationService.navigateTo(
                                     Routes.businessStep6Review,
@@ -218,7 +219,7 @@ class _BusinessStep5ContactScreenState
                                   );
                                 }).catchError((e) {
                                   ToastUtil.showShortToast(
-                                    "Failed to draft listing.",
+                                    "Failed to draft listing.".tr,
                                   );
                                 });
                               }
@@ -238,7 +239,7 @@ class _BusinessStep5ContactScreenState
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
       child: Text(
-        labelText,
+        labelText.tr,
         style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
           fontSize: 14.sp,
         ),
@@ -248,7 +249,7 @@ class _BusinessStep5ContactScreenState
 
   InputDecoration _buildInputDecoration(String hint) {
     return InputDecoration(
-      hintText: hint,
+      hintText: hint.tr,
       hintStyle: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
         color: const Color(0xFF9CA3AF),
       ),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 
 class RegisterVerifyScreen extends StatefulWidget {
   final String? email;
@@ -110,7 +111,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                 // --------------- Title ---------------
                 Center(
                   child: Text(
-                    'Verify Your Email',
+                    'Verify Your Email'.tr,
                     style: GoogleFonts.inter(
                       fontSize: 24.sp,
                       fontWeight: FontWeight.bold,
@@ -125,7 +126,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Text(
-                    'To ensure the safety and reliability of our community, please enter the 4-digit OTP sent to $emailAddress',
+                    'To ensure the safety and reliability of our community, please enter the 4-digit OTP sent to '.tr + emailAddress,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
                       fontSize: 15.sp,
@@ -185,7 +186,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                   _hasError = true;
                                 });
                                 ToastUtil.showShortToast(
-                                  'Please enter the complete 4-digit OTP code',
+                                  'Please enter the complete 4-digit OTP code'.tr,
                                 );
                               } else {
                                 setState(() {
@@ -226,7 +227,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                   ),
                                 )
                               : Text(
-                                  'Verify Email',
+                                  'Verify Email'.tr,
                                   style: GoogleFonts.inter(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w600,
@@ -246,7 +247,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Didn't receive code? ",
+                      "Didn't receive code? ".tr,
                       style: GoogleFonts.inter(
                         fontSize: 14.sp,
                         color: const Color(0xFF4B5563),
@@ -273,7 +274,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                   );
                                 },
                                 child: Text(
-                                  'Resend',
+                                  'Resend'.tr,
                                   style: GoogleFonts.inter(
                                     fontSize: 14.sp,
                                     color: const Color(0xFF1B8E5A),

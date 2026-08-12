@@ -1,6 +1,7 @@
 import 'package:abojude_flutter/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/helpers/toast.dart';
@@ -70,7 +71,7 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const ServiceStepHeader(currentStep: 2, title: "Service Info"),
+      appBar: ServiceStepHeader(currentStep: 2, title: "Service Info".tr),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -86,18 +87,18 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Service Title Field
-                      _buildLabel("Service Title"),
+                      _buildLabel("Service Title".tr),
                       TextFormField(
                         controller: _titleController,
                         textInputAction: TextInputAction.next,
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration(
-                          "Enter service title",
+                          "Enter service title".tr,
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "Please enter a service title";
+                            return "Please enter a service title".tr;
                           }
                           return null;
                         },
@@ -105,7 +106,7 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
                       UIHelper.verticalSpace(20),
 
                       // Service Description Field
-                      _buildLabel("Service Description"),
+                      _buildLabel("Service Description".tr),
                       TextFormField(
                         controller: _descriptionController,
                         maxLines: 5,
@@ -113,11 +114,11 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration(
-                          "Describe your service, experience, and what clients can expect...",
+                          "Describe your service, experience, and what clients can expect...".tr,
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "Please describe your service";
+                            return "Please describe your service".tr;
                           }
                           return null;
                         },
@@ -125,7 +126,7 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
                       SizedBox(height: 20.h),
 
                       // Service Areas Section
-                      _buildLabel("Service Areas"),
+                      _buildLabel("Service Areas".tr),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -136,7 +137,7 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
                               style: TextFontStyle.textStyle14IbmPlexSansW400
                                   .copyWith(color: AppColor.c2E3227),
                               decoration: _buildInputDecoration(
-                                "Enter your service areas",
+                                "Enter your service areas".tr,
                               ),
                               onFieldSubmitted: (_) => _addArea(),
                             ),
@@ -158,7 +159,7 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        "List all cities and areas you serve, separated by commas.",
+                        "List all cities and areas you serve, separated by commas.".tr,
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(
                               color: const Color(0xFF9CA3AF),
@@ -223,12 +224,12 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
                 child: ServiceButton(
-                  text: "Continue",
+                  text: "Continue".tr,
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
                       if (_serviceAreas.isEmpty) {
                         ToastUtil.showShortToast(
-                          "Please add at least one service area.",
+                          "Please add at least one service area.".tr,
                         );
                         return;
                       }
@@ -257,7 +258,7 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
       padding: EdgeInsets.only(bottom: 8.h),
       child: RichText(
         text: TextSpan(
-          text: labelText,
+          text: labelText.tr,
           style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
             fontSize: 14.sp,
           ),
@@ -274,7 +275,7 @@ class _ServiceStep2InfoScreenState extends State<ServiceStep2InfoScreen> {
 
   InputDecoration _buildInputDecoration(String hint) {
     return InputDecoration(
-      hintText: hint,
+      hintText: hint.tr,
       hintStyle: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
         color: const Color(0xFF9CA3AF),
       ),

@@ -1,6 +1,7 @@
 import 'package:abojude_flutter/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
@@ -59,7 +60,7 @@ class _ServiceStep3LocationScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const ServiceStepHeader(currentStep: 3, title: "Location"),
+      appBar: ServiceStepHeader(currentStep: 3, title: "Location".tr),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -75,7 +76,7 @@ class _ServiceStep3LocationScreenState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Province/Territory Dropdown
-                      _buildLabel("Province/Territory"),
+                      _buildLabel("Province/Territory".tr),
                       StreamBuilder<GetProvinceModel>(
                         stream: getProvinceRxObj.getProvinceData,
                         builder: (context, provinceSnapshot) {
@@ -89,7 +90,7 @@ class _ServiceStep3LocationScreenState
                             initialValue: _selectedProvince,
                             dropdownColor: Colors.white,
                             hint: Text(
-                              "Select province",
+                              "Select province".tr,
                               style: TextFontStyle.textStyle14IbmPlexSansW400
                                   .copyWith(color: const Color(0xFF9CA3AF)),
                             ),
@@ -111,7 +112,7 @@ class _ServiceStep3LocationScreenState
                             }).toList(),
                             validator: (value) {
                               if (value == null) {
-                                return "Please select a province";
+                                return "Please select a province".tr;
                               }
                               return null;
                             },
@@ -132,7 +133,7 @@ class _ServiceStep3LocationScreenState
                       SizedBox(height: 20.h),
 
                       // City Selector
-                      _buildLabel("City"),
+                      _buildLabel("City".tr),
                       StreamBuilder<GetCityModel>(
                         stream: getCityRxObj.getCityData,
                         builder: (context, citySnapshot) {
@@ -156,8 +157,8 @@ class _ServiceStep3LocationScreenState
                                     .copyWith(color: AppColor.c2E3227),
                                 decoration: _buildInputDecoration().copyWith(
                                   hintText: _selectedProvince == null
-                                      ? "Select province first"
-                                      : "Select city",
+                                      ? "Select province first".tr
+                                      : "Select city".tr,
                                   hintStyle: TextFontStyle
                                       .textStyle14IbmPlexSansW400
                                       .copyWith(color: const Color(0xFF9CA3AF)),
@@ -169,7 +170,7 @@ class _ServiceStep3LocationScreenState
                                 validator: (value) {
                                   if (_selectedCity == null ||
                                       _selectedCity!.isEmpty) {
-                                    return "Please select a city";
+                                    return "Please select a city".tr;
                                   }
                                   return null;
                                 },
@@ -181,7 +182,7 @@ class _ServiceStep3LocationScreenState
                       UIHelper.verticalSpace(20),
 
                       // Address Field (Optional)
-                      _buildLabel("Address (Optional)", isRequired: false),
+                      _buildLabel("Address (Optional)".tr, isRequired: false),
                       TextFormField(
                         controller: _addressController,
                         maxLines: 4,
@@ -189,7 +190,7 @@ class _ServiceStep3LocationScreenState
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(color: AppColor.c2E3227),
                         decoration: InputDecoration(
-                          hintText: "Street address or neighbourhood",
+                          hintText: "Street address or neighbourhood".tr,
                           hintStyle: TextFontStyle.textStyle14IbmPlexSansW400
                               .copyWith(color: const Color(0xFF9CA3AF)),
                           contentPadding: EdgeInsets.symmetric(
@@ -222,7 +223,7 @@ class _ServiceStep3LocationScreenState
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
                 child: ServiceButton(
-                  text: "Continue",
+                  text: "Continue".tr,
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
                       widget.model.province = _selectedProvince!;
@@ -249,7 +250,7 @@ class _ServiceStep3LocationScreenState
       padding: EdgeInsets.only(bottom: 8.h),
       child: RichText(
         text: TextSpan(
-          text: labelText,
+          text: labelText.tr,
           style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
             fontSize: 14.sp,
           ),
@@ -383,7 +384,7 @@ class _CitySearchBottomSheetState extends State<_CitySearchBottomSheet> {
           ),
           SizedBox(height: 16.h),
           Text(
-            "Select City",
+            "Select City".tr,
             style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
               fontSize: 18.sp,
             ),
@@ -397,7 +398,7 @@ class _CitySearchBottomSheetState extends State<_CitySearchBottomSheet> {
               color: AppColor.c2E3227,
             ),
             decoration: InputDecoration(
-              hintText: "Search city...",
+              hintText: "Search city...".tr,
               hintStyle: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                 color: const Color(0xFF9CA3AF),
               ),
@@ -429,7 +430,7 @@ class _CitySearchBottomSheetState extends State<_CitySearchBottomSheet> {
             child: _filteredCities.isEmpty
                 ? Center(
                     child: Text(
-                      "No cities found",
+                      "No cities found".tr,
                       style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                         color: const Color(0xFF9CA3AF),
                       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 
 class RegisterHeader extends StatelessWidget {
   const RegisterHeader({super.key});
@@ -35,7 +36,7 @@ class RegisterHeader extends StatelessWidget {
 
         // --------------- Title ---------------
         Text(
-          'Create Account',
+          'Create Account'.tr,
           style: GoogleFonts.inter(
             fontSize: 28.sp,
             fontWeight: FontWeight.bold,
@@ -47,7 +48,7 @@ class RegisterHeader extends StatelessWidget {
 
         // --------------- Subtitle ---------------
         Text(
-          'Join the community and start exploring local opportunities.',
+          'Join the community and start exploring local opportunities.'.tr,
           style: GoogleFonts.inter(
             fontSize: 15.sp,
             color: const Color(0xFF6B7280),

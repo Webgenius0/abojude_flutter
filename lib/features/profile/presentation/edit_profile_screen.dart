@@ -4,6 +4,7 @@ import 'package:abojude_flutter/features/auth/register/model/get_province_model.
 import 'package:abojude_flutter/features/auth/register/widgets/location_dropdown.dart';
 import 'package:abojude_flutter/features/profile/model/get_profile_model.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -175,7 +176,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(height: 10.h),
                 // Title
                 Text(
-                  'Edit Profile',
+                  'Edit Profile'.tr,
                   style: GoogleFonts.inter(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
@@ -185,7 +186,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(height: 8.h),
                 // Description
                 Text(
-                  'Keep your profile up to date by modifying your information.',
+                  'Keep your profile up to date by modifying your information.'.tr,
                   style: GoogleFonts.inter(
                     fontSize: 14.sp,
                     color: Colors.grey[500],
@@ -263,10 +264,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(height: 36.h),
 
                 // --------------- Full Name ---------------
-                _buildLabel('Full Name'),
+                _buildLabel('Full Name'.tr),
                 _buildTextField(
                   controller: _nameController,
-                  hintText: 'Enter your full name',
+                  hintText: 'Enter your full name'.tr,
                   icon: Padding(
                     padding: EdgeInsets.all(10.w),
                     child: SvgPicture.asset(
@@ -281,7 +282,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your name';
+                      return 'Please enter your name'.tr;
                     }
                     return null;
                   },
@@ -296,13 +297,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     if (provinceSnapshot.connectionState ==
                             ConnectionState.waiting &&
                         !provinceSnapshot.hasData) {
-                      return _buildLoadingDropdown('Province/Territory');
+                      return _buildLoadingDropdown('Province/Territory'.tr);
                     }
 
                     // Error state
                     if (provinceSnapshot.hasError &&
                         !provinceSnapshot.hasData) {
-                      return _buildErrorDropdown('Province/Territory');
+                      return _buildErrorDropdown('Province/Territory'.tr);
                     }
 
                     final provinceModel = provinceSnapshot.data;
@@ -323,11 +324,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       children: [
                         // Province dropdown
                         LocationDropdownField(
-                          label: 'Province/Territory',
+                          label: 'Province/Territory'.tr,
                           value: provinceNames.contains(_selectedProvince)
                               ? _selectedProvince
                               : null,
-                          hintText: 'Select province',
+                          hintText: 'Select province'.tr,
                           items: provinceNames,
                           onChanged: (value) {
                             setState(() {
@@ -358,9 +359,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         // City dropdown
                         if (_selectedProvince == null)
                           LocationDropdownField(
-                            label: 'City',
+                            label: 'City'.tr,
                             value: null,
-                            hintText: 'Select province first',
+                            hintText: 'Select province first'.tr,
                             items: null,
                             onChanged: null,
                             prefixIcon: Padding(
@@ -384,7 +385,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               if (citySnapshot.connectionState ==
                                       ConnectionState.waiting &&
                                   !citySnapshot.hasData) {
-                                return _buildLoadingDropdown('City');
+                                return _buildLoadingDropdown('City'.tr);
                               }
 
                               final cityModel = citySnapshot.data;
@@ -405,11 +406,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               }
 
                               return LocationDropdownField(
-                                label: 'City',
+                                label: 'City'.tr,
                                 value: cityNames.contains(_selectedCity)
                                     ? _selectedCity
                                     : null,
-                                hintText: 'Select city',
+                                hintText: 'Select city'.tr,
                                 items: cityNames,
                                 onChanged: (value) {
                                   setState(() {
@@ -469,7 +470,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                               )
                             : Text(
-                                'Save Changes',
+                                'Save Changes'.tr,
                                 style: GoogleFonts.inter(
                                   color: Colors.white,
                                   fontSize: 16.sp,
@@ -497,7 +498,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
       child: Text(
-        text,
+        text.tr,
         style: GoogleFonts.inter(
           fontSize: 14.sp,
           color: Colors.black87,
@@ -520,7 +521,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       validator: validator,
       style: GoogleFonts.inter(fontSize: 15.sp, color: Colors.black87),
       decoration: InputDecoration(
-        hintText: hintText,
+        hintText: hintText.tr,
         hintStyle: TextStyle(color: Colors.grey[400], fontSize: 15.sp),
         prefixIcon: icon,
         filled: true,
@@ -556,7 +557,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
+          label.tr,
           style: GoogleFonts.inter(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
@@ -592,7 +593,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
+          label.tr,
           style: GoogleFonts.inter(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
@@ -609,7 +610,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           child: Center(
             child: Text(
-              'Failed to load — tap to retry',
+              'Failed to load — tap to retry'.tr,
               style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.red),
             ),
           ),

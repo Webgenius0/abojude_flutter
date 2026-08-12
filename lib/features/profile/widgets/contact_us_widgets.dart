@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 
 class ContactAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -49,7 +50,7 @@ class ContactHeaderSection extends StatelessWidget {
       children: [
         SizedBox(height: 10.h),
         Text(
-          'Contact Support',
+          'Contact Support'.tr,
           style: GoogleFonts.inter(
             fontSize: 24.sp,
             fontWeight: FontWeight.bold,
@@ -58,7 +59,7 @@ class ContactHeaderSection extends StatelessWidget {
         ),
         SizedBox(height: 8.h),
         Text(
-          'Describe your issue clearly so our support team can assist you faster.',
+          'Describe your issue clearly so our support team can assist you faster.'.tr,
           style: GoogleFonts.inter(
             fontSize: 14.sp,
             color: Colors.grey[500],
@@ -76,7 +77,7 @@ class ContactFormTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Support Request Form',
+      'Support Request Form'.tr,
       style: GoogleFonts.inter(
         fontSize: 16.sp,
         fontWeight: FontWeight.bold,
@@ -95,7 +96,7 @@ class ContactFormSubtext extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: 6.h, left: 4.w),
       child: Text(
-        text,
+        text.tr,
         style: GoogleFonts.inter(color: Colors.grey[400], fontSize: 12.sp),
       ),
     );
@@ -108,7 +109,7 @@ class ContactTipSubtext extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Tip: Include as much detail as possible about your issue. Screenshots, error messages, and step-by-step descriptions help our team resolve your issue faster.',
+      'Tip: Include as much detail as possible about your issue. Screenshots, error messages, and step-by-step descriptions help our team resolve your issue faster.'.tr,
       style: GoogleFonts.inter(
         color: Colors.grey[400],
         fontSize: 12.sp,
@@ -164,7 +165,7 @@ class ContactSubmitButton extends StatelessWidget {
                         ),
                         SizedBox(width: 8.w),
                         Text(
-                          'Send Support Request',
+                          'Send Support Request'.tr,
                           style: GoogleFonts.inter(
                             color: Colors.white,
                             fontSize: 15.sp,
@@ -220,7 +221,7 @@ class ContactResponseTimeCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Email Support Response',
+                  'Email Support Response'.tr,
                   style: GoogleFonts.inter(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.bold,
@@ -229,7 +230,7 @@ class ContactResponseTimeCard extends StatelessWidget {
                 ),
                 SizedBox(height: 6.h),
                 Text(
-                  "Our support team typically responds within 24-48 hours. You'll receive a response at your registered email address.",
+                  "Our support team typically responds within 24-48 hours. You'll receive a response at your registered email address.".tr,
                   style: GoogleFonts.inter(
                     fontSize: 12.5.sp,
                     color: Colors.grey[500],
@@ -254,7 +255,7 @@ class ContactFormLabel extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
       child: Text(
-        text,
+        text.tr,
         style: GoogleFonts.inter(
           fontSize: 14.sp,
           color: Colors.black87,
@@ -295,7 +296,7 @@ class ContactTextField extends StatelessWidget {
         color: readOnly ? Colors.grey[700] : Colors.black87,
       ),
       decoration: InputDecoration(
-        hintText: hintText,
+        hintText: hintText.tr,
         hintStyle: TextStyle(color: Colors.grey[400], fontSize: 15.sp),
         prefixIcon: Icon(icon, color: Colors.grey[400], size: 20.sp),
         filled: true,
@@ -345,7 +346,7 @@ class ContactMultiLineField extends StatelessWidget {
       style: GoogleFonts.inter(fontSize: 15.sp, color: Colors.black87),
       decoration: InputDecoration(
         hintText:
-            'Please describe your issue or question in detail. Include any relevant information that will help our support team assist you better...',
+            'Please describe your issue or question in detail. Include any relevant information that will help our support team assist you better...'.tr,
         hintStyle: TextStyle(
           color: Colors.grey[400],
           fontSize: 14.sp,
@@ -456,7 +457,7 @@ class ContactAttachmentArea extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              'Click to upload screenshot',
+              'Click to upload screenshot'.tr,
               style: GoogleFonts.inter(
                 color: Colors.black87,
                 fontSize: 14.sp,
@@ -465,7 +466,7 @@ class ContactAttachmentArea extends StatelessWidget {
             ),
             SizedBox(height: 4.h),
             Text(
-              'PNG, JPG up to 10MB',
+              'PNG, JPG up to 10MB'.tr,
               style: GoogleFonts.inter(
                 color: Colors.grey[400],
                 fontSize: 12.sp,

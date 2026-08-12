@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_listing_model.dart';
 import 'package:abojude_flutter/features/create_listing/jobs_create/widgets/job_step_header.dart';
@@ -47,7 +48,7 @@ class _JobStep2InfoScreenState extends State<JobStep2InfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const JobStepHeader(currentStep: 2, title: "Job Info"),
+      appBar: JobStepHeader(currentStep: 2, title: "Job Info".tr),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -60,17 +61,17 @@ class _JobStep2InfoScreenState extends State<JobStep2InfoScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Job Title Field
-                      _buildLabel("Job Title"),
+                      _buildLabel("Job Title".tr),
                       TextFormField(
                         controller: _titleController,
                         textInputAction: TextInputAction.next,
                         style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                           color: AppColor.c2E3227,
                         ),
-                        decoration: _buildInputDecoration("Enter job title"),
+                        decoration: _buildInputDecoration("Enter job title".tr),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "Please enter a job title";
+                            return "Please enter a job title".tr;
                           }
                           return null;
                         },
@@ -78,17 +79,17 @@ class _JobStep2InfoScreenState extends State<JobStep2InfoScreen> {
                       SizedBox(height: 20.h),
 
                       // Company Name Field
-                      _buildLabel("Company Name"),
+                      _buildLabel("Company Name".tr),
                       TextFormField(
                         controller: _companyController,
                         textInputAction: TextInputAction.next,
                         style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                           color: AppColor.c2E3227,
                         ),
-                        decoration: _buildInputDecoration("Enter company name"),
+                        decoration: _buildInputDecoration("Enter company name".tr),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "Please enter a company name";
+                            return "Please enter a company name".tr;
                           }
                           return null;
                         },
@@ -96,7 +97,7 @@ class _JobStep2InfoScreenState extends State<JobStep2InfoScreen> {
                       SizedBox(height: 20.h),
 
                       // Description Field
-                      _buildLabel("Job Description"),
+                      _buildLabel("Job Description".tr),
                       TextFormField(
                         controller: _descriptionController,
                         maxLines: 5,
@@ -105,11 +106,11 @@ class _JobStep2InfoScreenState extends State<JobStep2InfoScreen> {
                           color: AppColor.c2E3227,
                         ),
                         decoration: _buildInputDecoration(
-                          "Describe the role, requirements, and responsibilities...",
+                          "Describe the role, requirements, and responsibilities...".tr,
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "Please describe the job role";
+                            return "Please describe the job role".tr;
                           }
                           return null;
                         },
@@ -117,7 +118,7 @@ class _JobStep2InfoScreenState extends State<JobStep2InfoScreen> {
                       SizedBox(height: 20.h),
 
                       // Job Type Section
-                      _buildLabel("Job Type"),
+                      _buildLabel("Job Type".tr),
                       Wrap(
                         spacing: 8.w,
                         runSpacing: 10.h,
@@ -140,7 +141,7 @@ class _JobStep2InfoScreenState extends State<JobStep2InfoScreen> {
                                 ),
                               ),
                               child: Text(
-                                type,
+                                type.tr,
                                 style: TextStyle(
                                   color: isSelected ? Colors.white : const Color(0xFF4B5563),
                                   fontSize: 13.sp,
@@ -187,7 +188,7 @@ class _JobStep2InfoScreenState extends State<JobStep2InfoScreen> {
       padding: EdgeInsets.only(bottom: 8.h),
       child: RichText(
         text: TextSpan(
-          text: labelText,
+          text: labelText.tr,
           style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
             fontSize: 14.sp,
           ),
@@ -204,7 +205,7 @@ class _JobStep2InfoScreenState extends State<JobStep2InfoScreen> {
 
   InputDecoration _buildInputDecoration(String hint) {
     return InputDecoration(
-      hintText: hint,
+      hintText: hint.tr,
       hintStyle: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
         color: const Color(0xFF9CA3AF),
       ),

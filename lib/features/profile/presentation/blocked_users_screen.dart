@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 import 'package:abojude_flutter/helpers/loading_helper.dart';
 import 'package:abojude_flutter/features/profile/model/block_user_list_model.dart';
@@ -83,7 +84,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
                   child: const Icon(Icons.block, color: Colors.green),
                 ),
                 title: Text(
-                  'Block ${user.name ?? "User"}',
+                  'Block'.tr + ' ' + (user.name ?? "User".tr),
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
                     color: Colors.black87,
@@ -105,7 +106,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
                   child: const Icon(Icons.close, color: Colors.grey),
                 ),
                 title: Text(
-                  'Cancel',
+                  'Cancel'.tr,
                   style: GoogleFonts.inter(color: Colors.black54),
                 ),
                 onTap: () => Navigator.pop(context),
@@ -170,7 +171,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
               SizedBox(height: 10.h),
               // Title
               Text(
-                'Blocked Users',
+                'Blocked Users'.tr,
                 style: GoogleFonts.inter(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.bold,
@@ -180,7 +181,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
               SizedBox(height: 12.h),
               // Description
               Text(
-                'Manage blocked profiles, privacy restrictions, and connection safety settings.',
+                'Manage blocked profiles, privacy restrictions, and connection safety settings.'.tr,
                 style: GoogleFonts.inter(
                   fontSize: 14.sp,
                   color: Colors.grey[500],
@@ -226,9 +227,9 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
   }
 
   Widget _buildBlockedUserCard(Datum user) {
-    final name = user.name ?? 'User';
+    final name = user.name ?? 'User'.tr;
     final initials = _getInitials(name);
-    final blockedTime = user.timeAgo ?? 'Blocked recently';
+    final blockedTime = user.timeAgo ?? 'Blocked recently'.tr;
 
     return Container(
       margin: EdgeInsets.only(bottom: 14.h),
@@ -316,7 +317,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
           ),
           SizedBox(height: 16.h),
           Text(
-            'No Blocked Users',
+            'No Blocked Users'.tr,
             style: GoogleFonts.inter(
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,
@@ -325,7 +326,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
           ),
           SizedBox(height: 8.h),
           Text(
-            'Profiles you block will appear here.',
+            'Profiles you block will appear here.'.tr,
             style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.grey[400]),
           ),
         ],

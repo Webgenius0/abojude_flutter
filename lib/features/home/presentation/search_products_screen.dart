@@ -136,7 +136,7 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Search Products',
+          'Search Products'.tr,
           style: GoogleFonts.inter(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,
@@ -164,7 +164,7 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
                 onChanged: _onSearchChanged,
                 textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
-                  hintText: 'Search products...',
+                  hintText: 'Search products...'.tr,
                   hintStyle: GoogleFonts.inter(
                     color: Colors.grey,
                     fontSize: 14.sp,

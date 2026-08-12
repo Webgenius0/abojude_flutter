@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/assets_helper/app_fonts.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
 import 'package:abojude_flutter/features/create_listing/business_directory_create/widgets/business_listing_model.dart';
@@ -76,7 +77,7 @@ class _BusinessHoursSetterScreenState extends State<BusinessHoursSetterScreen> {
           ),
         ),
         title: Text(
-          widget.dayName,
+          widget.dayName.tr,
           style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
             fontSize: 18.sp,
           ),
@@ -93,7 +94,7 @@ class _BusinessHoursSetterScreenState extends State<BusinessHoursSetterScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Set your business hours here. Head to your calendar if you need to adjust hours for a single day.",
+                      "Set your business hours here. Head to your calendar if you need to adjust hours for a single day.".tr,
                       style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                         color: const Color(0xFF6B7280),
                         height: 1.4,
@@ -102,7 +103,7 @@ class _BusinessHoursSetterScreenState extends State<BusinessHoursSetterScreen> {
                     SizedBox(height: 32.h),
 
                     // Opening Hours dropdown
-                    _buildLabel("Opening Hours"),
+                    _buildLabel("Opening Hours".tr),
                     SizedBox(height: 8.h),
                     DropdownButtonFormField<String>(
                       initialValue: _openingTime,
@@ -134,7 +135,7 @@ class _BusinessHoursSetterScreenState extends State<BusinessHoursSetterScreen> {
                     SizedBox(height: 24.h),
 
                     // Closing Time dropdown
-                    _buildLabel("Closing Time"),
+                    _buildLabel("Closing Time".tr),
                     SizedBox(height: 8.h),
                     DropdownButtonFormField<String>(
                       initialValue: _closingTime,
@@ -170,7 +171,7 @@ class _BusinessHoursSetterScreenState extends State<BusinessHoursSetterScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
               child: BusinessButton(
-                text: "Save",
+                text: "Save".tr,
                 onTap: () {
                   Navigator.pop(
                     context,
@@ -193,7 +194,7 @@ class _BusinessHoursSetterScreenState extends State<BusinessHoursSetterScreen> {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
       child: Text(
-        labelText,
+        labelText.tr,
         style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
           fontSize: 14.sp,
         ),

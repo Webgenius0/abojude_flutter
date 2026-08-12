@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   // --------------- Title ---------------
                   Text(
-                    'Welcome Back',
+                    'Welcome Back'.tr,
                     style: GoogleFonts.inter(
                       fontSize: 28.sp,
                       fontWeight: FontWeight.bold,
@@ -90,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   // --------------- Subtitle ---------------
                   Text(
-                    'Sign in to your Wasel Canada account',
+                    'Sign in to your Wasel Canada account'.tr,
                     style: GoogleFonts.inter(
                       fontSize: 15.sp,
                       color: const Color(0xFF6B7280),
@@ -109,13 +109,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter your email address';
+                        return 'Please enter your email address'.tr;
                       }
                       final emailRegex = RegExp(
                         r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
                       );
                       if (!emailRegex.hasMatch(value.trim())) {
-                        return 'Please enter a valid email address';
+                        return 'Please enter a valid email address'.tr;
                       }
                       return null;
                     },
@@ -144,10 +144,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
+                        return 'Please enter your password'.tr;
                       }
                       if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
+                        return 'Password must be at least 6 characters'.tr;
                       }
                       return null;
                     },
@@ -192,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             SizedBox(width: 8.w),
                             Text(
-                              'Remember me',
+                              'Remember me'.tr,
                               style: GoogleFonts.inter(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w500,
@@ -209,7 +209,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         },
                         child: Text(
-                          'Forget password?',
+                          'Forget password?'.tr,
                           style: GoogleFonts.inter(
                             fontSize: 14.sp,
                             color: const Color(0xFF1B8E5A),
@@ -258,7 +258,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   )
                                 : Text(
-                                    'Login',
+                                    'Login'.tr,
                                     style: GoogleFonts.inter(
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.w600,
@@ -285,7 +285,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16.w),
                           child: Text(
-                            'OR',
+                            'OR'.tr,
                             style: GoogleFonts.inter(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w600,
@@ -314,11 +314,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Google Auth Action
                     },
                     border: Border.all(color: const Color(0xFFE5E7EB)),
-                    text: 'Continue with Google',
+                    text: 'Continue with Google'.tr,
                   ),
                   SizedBox(height: 14.h),
                   CustomButton(
-                    text: 'Continue with Apple',
+                    text: 'Continue with Apple'.tr,
                     icon: SvgPicture.asset(
                       'assets/icons/apple.svg',
                       width: 22.w,
@@ -337,7 +337,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Don\'t have an account? ',
+                        'Don\'t have an account? '.tr,
                         style: GoogleFonts.inter(
                           fontSize: 14.sp,
                           color: const Color(0xFF4B5563),
@@ -349,7 +349,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           NavigationService.navigateTo(Routes.registerScreen);
                         },
                         child: Text(
-                          'Sign UP',
+                          'Sign UP'.tr,
                           style: GoogleFonts.inter(
                             fontSize: 14.sp,
                             color: const Color(0xFF1B8E5A),
@@ -386,7 +386,7 @@ class _LoginScreenState extends State<LoginScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            label,
+            label.tr,
             style: GoogleFonts.inter(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
@@ -404,7 +404,7 @@ class _LoginScreenState extends State<LoginScreen> {
               color: const Color(0xFF1F2937),
             ),
             decoration: InputDecoration(
-              hintText: hintText,
+              hintText: hintText.tr,
               hintStyle: GoogleFonts.inter(
                 fontSize: 15.sp,
                 color: const Color(0xFF9CA3AF),

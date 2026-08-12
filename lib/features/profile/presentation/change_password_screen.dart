@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -98,7 +99,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       SizedBox(height: 10.h),
                       // Title
                       Text(
-                        'Change Password',
+                        'Change Password'.tr,
                         style: GoogleFonts.inter(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.bold,
@@ -108,7 +109,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       SizedBox(height: 12.h),
                       // Description
                       Text(
-                        'Protect your account by updating your password. Enter your current password and set a new one to keep your account safe.',
+                        'Protect your account by updating your password. Enter your current password and set a new one to keep your account safe.'.tr,
                         style: GoogleFonts.inter(
                           fontSize: 14.sp,
                           color: Colors.grey[500],
@@ -118,10 +119,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       SizedBox(height: 32.h),
 
                       // Current Password
-                      _buildLabel('Current Password'),
+                      _buildLabel('Current Password'.tr),
                       _buildPasswordField(
                         controller: _currentPasswordController,
-                        hintText: 'Enter your current password',
+                        hintText: 'Enter your current password'.tr,
                         obscureText: _obscureCurrent,
                         onToggleVisibility: () {
                           setState(() {
@@ -130,7 +131,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'The current password field is required.';
+                            return 'The current password field is required.'.tr;
                           }
                           return null;
                         },
@@ -138,10 +139,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       SizedBox(height: 20.h),
 
                       // New Password
-                      _buildLabel('New Password'),
+                      _buildLabel('New Password'.tr),
                       _buildPasswordField(
                         controller: _newPasswordController,
-                        hintText: 'Enter your new password',
+                        hintText: 'Enter your new password'.tr,
                         obscureText: _obscureNew,
                         onToggleVisibility: () {
                           setState(() {
@@ -150,10 +151,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'The new password field is required.';
+                            return 'The new password field is required.'.tr;
                           }
                           if (value.length < 6) {
-                            return 'Password must be at least 6 characters long';
+                            return 'Password must be at least 6 characters long'.tr;
                           }
                           return null;
                         },
@@ -161,10 +162,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       SizedBox(height: 20.h),
 
                       // Confirm Password
-                      _buildLabel('Confirm Password'),
+                      _buildLabel('Confirm Password'.tr),
                       _buildPasswordField(
                         controller: _confirmPasswordController,
-                        hintText: 'Enter your confirm password',
+                        hintText: 'Enter your confirm password'.tr,
                         obscureText: _obscureConfirm,
                         onToggleVisibility: () {
                           setState(() {
@@ -173,10 +174,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'The confirm password field is required.';
+                            return 'The confirm password field is required.'.tr;
                           }
                           if (value != _newPasswordController.text) {
-                            return 'The confirm password field must match new password.';
+                            return 'The confirm password field must match new password.'.tr;
                           }
                           return null;
                         },
@@ -218,7 +219,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               ),
                             )
                           : Text(
-                              'Save Changes',
+                              'Save Changes'.tr,
                               style: GoogleFonts.inter(
                                 color: Colors.white,
                                 fontSize: 16.sp,
@@ -240,7 +241,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
       child: Text(
-        text,
+        text.tr,
         style: GoogleFonts.inter(
           fontSize: 14.sp,
           color: Colors.black87,
@@ -263,7 +264,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       validator: validator,
       style: GoogleFonts.inter(fontSize: 15.sp, color: Colors.black87),
       decoration: InputDecoration(
-        hintText: hintText,
+        hintText: hintText.tr,
         hintStyle: TextStyle(color: Colors.grey[400], fontSize: 15.sp),
         prefixIcon: Icon(
           Icons.lock_outline_rounded,

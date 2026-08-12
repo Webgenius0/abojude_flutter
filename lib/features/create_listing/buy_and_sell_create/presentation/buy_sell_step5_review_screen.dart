@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/assets_helper/app_colors.dart';
@@ -35,7 +36,7 @@ class _BuySellStep5ReviewScreenState extends State<BuySellStep5ReviewScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: BuySellStepHeader(currentStep: 5, title: "Review & Submit"),
+      appBar: BuySellStepHeader(currentStep: 5, title: "Review & Submit".tr),
       body: SafeArea(
         child: StreamBuilder<BuyAndSellGetPostDraftModel>(
           stream: buyAndSellGetPostDraftRxObj.getPostDraftData,
@@ -59,7 +60,7 @@ class _BuySellStep5ReviewScreenState extends State<BuySellStep5ReviewScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Review your listing details before submitting for approval.",
+                          "Review your listing details before submitting for approval.".tr,
                           style: TextFontStyle.textStyle14IbmPlexSansW400,
                         ),
                         SizedBox(height: 24.h),
@@ -260,7 +261,7 @@ class _BuySellStep5ReviewScreenState extends State<BuySellStep5ReviewScreen> {
 
                         // Before You Submit Box
                         Text(
-                          "Before You Submit",
+                          "Before You Submit".tr,
                           style: TextFontStyle.textStyle16IbmPlexSansW600
                               .copyWith(fontSize: 15.sp),
                         ),
@@ -360,7 +361,7 @@ class _BuySellStep5ReviewScreenState extends State<BuySellStep5ReviewScreen> {
           ),
           Expanded(
             child: Text(
-              text,
+              text.tr,
               style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                 fontSize: 13.sp,
                 color: const Color(0xFF78350F),

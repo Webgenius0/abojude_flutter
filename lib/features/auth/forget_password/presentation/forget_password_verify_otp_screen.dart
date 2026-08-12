@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 
 class ForgetPasswordVerifyOtpScreen extends StatefulWidget {
   final String email;
@@ -87,7 +88,7 @@ class _ForgetPasswordVerifyOtpScreenState
 
                 // --------------- Title ---------------
                 Text(
-                  'OTP Verification',
+                  'OTP Verification'.tr,
                   style: GoogleFonts.inter(
                     fontSize: 28.sp,
                     fontWeight: FontWeight.bold,
@@ -101,7 +102,8 @@ class _ForgetPasswordVerifyOtpScreenState
                 Text.rich(
                   TextSpan(
                     text:
-                        'To ensure the safety and reliability of our community, please enter the 4-digit OTP sent to ',
+                        'To ensure the safety and reliability of our community, please enter the 4-digit OTP sent to '
+                            .tr,
                     style: GoogleFonts.inter(
                       fontSize: 15.sp,
                       color: const Color(0xFF6B7280),
@@ -170,7 +172,8 @@ class _ForgetPasswordVerifyOtpScreenState
                                   _hasError = true;
                                 });
                                 ToastUtil.showShortToast(
-                                  'Please enter the complete 4-digit OTP code',
+                                  'Please enter the complete 4-digit OTP code'
+                                      .tr,
                                 );
                               } else {
                                 setState(() {
@@ -215,7 +218,7 @@ class _ForgetPasswordVerifyOtpScreenState
                                   ),
                                 )
                               : Text(
-                                  'Verify',
+                                  'Verify'.tr,
                                   style: GoogleFonts.inter(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w600,
@@ -235,7 +238,7 @@ class _ForgetPasswordVerifyOtpScreenState
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Didn't receive code? ",
+                      "Didn't receive code? ".tr,
                       style: GoogleFonts.inter(
                         fontSize: 14.sp,
                         color: const Color(0xFF4B5563),
@@ -262,7 +265,7 @@ class _ForgetPasswordVerifyOtpScreenState
                                   );
                                 },
                                 child: Text(
-                                  'Resend',
+                                  'Resend'.tr,
                                   style: GoogleFonts.inter(
                                     fontSize: 14.sp,
                                     color: const Color(0xFF1B8E5A),
