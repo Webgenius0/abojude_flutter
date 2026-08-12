@@ -29,69 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
   static const Color lightGreen = Color(0xFF4CAF50);
   static const Color bgGrey = Color(0xFFF5F5F5);
 
-  final List<Map<String, dynamic>> _banners = [
-    {
-      'tag': 'TRUSTED SERVICES',
-      'title': 'Find Trusted',
-      'highlight': 'Services Near You',
-      'subtitle':
-          'From home repairs to cleaning, connect with reliable professionals for every need.',
-      'stats': [
-        'Verified\nProfessionals',
-        'Quality\nService',
-        'Save Time\n& Effort',
-        'Satisfaction\nGuaranteed',
-      ],
-      'statIcons': [
-        Icons.verified_user,
-        Icons.star,
-        Icons.access_time,
-        Icons.thumb_up,
-      ],
-      'bgColor': Color(0xFF1B4332),
-    },
-    {
-      'tag': 'HOME REPAIRS',
-      'title': 'Expert Repair',
-      'highlight': 'At Your Doorstep',
-      'subtitle':
-          'Skilled technicians ready to fix plumbing, electrical, and more.',
-      'stats': [
-        'Licensed\nExperts',
-        'Fast\nResponse',
-        'Affordable\nRates',
-        '5-Star\nRatings',
-      ],
-      'statIcons': [
-        Icons.construction,
-        Icons.bolt,
-        Icons.attach_money,
-        Icons.grade,
-      ],
-      'bgColor': Color(0xFF1A237E),
-    },
-    {
-      'tag': 'CLEANING',
-      'title': 'Spotless Homes',
-      'highlight': 'Every Single Time',
-      'subtitle':
-          'Professional cleaning services for homes, offices, and commercial spaces.',
-      'stats': [
-        'Eco\nFriendly',
-        'Deep\nClean',
-        'Flexible\nSchedule',
-        '100%\nSafe',
-      ],
-      'statIcons': [
-        Icons.eco,
-        Icons.cleaning_services,
-        Icons.calendar_month,
-        Icons.security,
-      ],
-      'bgColor': Color(0xFF004D40),
-    },
-  ];
-
   final List<Map<String, dynamic>> _featuredItems = [
     {
       'price': '\$1,199',

@@ -6,12 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
-
 import 'package:abojude_flutter/networks/api_acess.dart';
 import 'package:abojude_flutter/features/profile/model/get_wishes_list_model.dart';
-
 import 'package:abojude_flutter/features/explore_deatils_screen/business_screen.dart';
-import 'package:abojude_flutter/features/explore_deatils_screen/job_screen.dart';
 import 'package:abojude_flutter/features/explore_deatils_screen/services_screen.dart';
 import 'package:abojude_flutter/features/home/presentation/product_details_screen.dart';
 
@@ -134,7 +131,9 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                             color: Colors.white,
                             shape: BoxShape.circle,
                             border: Border.all(
-                                color: const Color(0xFFF1F3F5), width: 1.5),
+                              color: const Color(0xFFF1F3F5),
+                              width: 1.5,
+                            ),
                           ),
                           child: const Icon(
                             Icons.chevron_left_rounded,
@@ -158,7 +157,9 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                           padding: EdgeInsets.only(right: 16.w),
                           child: Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 10.w, vertical: 6.h),
+                              horizontal: 10.w,
+                              vertical: 6.h,
+                            ),
                             decoration: BoxDecoration(
                               color: const Color(0xFFFFECEC),
                               borderRadius: BorderRadius.circular(16.r),
@@ -197,9 +198,13 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                           indicatorColor: const Color(0xFF0F3D7A),
                           indicatorWeight: 2,
                           labelStyle: GoogleFonts.inter(
-                              fontSize: 14.sp, fontWeight: FontWeight.bold),
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
                           unselectedLabelStyle: GoogleFonts.inter(
-                              fontSize: 14.sp, fontWeight: FontWeight.w500),
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
                           tabs: const [
                             Tab(text: 'All'),
                             Tab(text: 'Buy & Sell'),
@@ -216,10 +221,22 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                           controller: _tabController,
                           children: [
                             _buildFavoritesGrid(allItems, 'All', showShimmer),
-                            _buildFavoritesGrid(allItems, 'Buy & Sell', showShimmer),
+                            _buildFavoritesGrid(
+                              allItems,
+                              'Buy & Sell',
+                              showShimmer,
+                            ),
                             _buildFavoritesGrid(allItems, 'Jobs', showShimmer),
-                            _buildFavoritesGrid(allItems, 'Business', showShimmer),
-                            _buildFavoritesGrid(allItems, 'Services', showShimmer),
+                            _buildFavoritesGrid(
+                              allItems,
+                              'Business',
+                              showShimmer,
+                            ),
+                            _buildFavoritesGrid(
+                              allItems,
+                              'Services',
+                              showShimmer,
+                            ),
                           ],
                         ),
                       ),
@@ -236,7 +253,10 @@ class _FavoritesScreenState extends State<FavoritesScreen>
 
   // Grid builder
   Widget _buildFavoritesGrid(
-      List<Datum> allItems, String categoryFilter, bool showShimmer) {
+    List<Datum> allItems,
+    String categoryFilter,
+    bool showShimmer,
+  ) {
     if (showShimmer) {
       return _buildShimmerGrid();
     }
@@ -276,7 +296,8 @@ class _FavoritesScreenState extends State<FavoritesScreen>
 
     return GridView.builder(
       physics: const AlwaysScrollableScrollPhysics(
-          parent: BouncingScrollPhysics()),
+        parent: BouncingScrollPhysics(),
+      ),
       padding: EdgeInsets.all(16.r),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -423,7 +444,8 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(11.r),
                     ),
-                    child: formattedImageUrl != null &&
+                    child:
+                        formattedImageUrl != null &&
                             formattedImageUrl.isNotEmpty
                         ? CachedNetworkImage(
                             imageUrl: formattedImageUrl,
@@ -431,9 +453,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                             placeholder: (context, url) => Shimmer.fromColors(
                               baseColor: Colors.grey[300]!,
                               highlightColor: Colors.grey[100]!,
-                              child: Container(
-                                color: Colors.white,
-                              ),
+                              child: Container(color: Colors.white),
                             ),
                             errorWidget: (context, url, error) => Container(
                               color: const Color(0xFFF8F9FA),
@@ -445,10 +465,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                           )
                         : Container(
                             color: const Color(0xFFF8F9FA),
-                            child: const Icon(
-                              Icons.image,
-                              color: Colors.grey,
-                            ),
+                            child: const Icon(Icons.image, color: Colors.grey),
                           ),
                   ),
 
@@ -459,7 +476,9 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                       left: 8.w,
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 6.w, vertical: 3.h),
+                          horizontal: 6.w,
+                          vertical: 3.h,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFFF0A020),
                           borderRadius: BorderRadius.circular(4.r),
@@ -488,7 +507,9 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                       left: 8.w,
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 8.w, vertical: 3.h),
+                          horizontal: 8.w,
+                          vertical: 3.h,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.black.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(10.r),
@@ -566,7 +587,9 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                   // Category tag
                   Container(
                     padding: EdgeInsets.symmetric(
-                        horizontal: 8.w, vertical: 3.h),
+                      horizontal: 8.w,
+                      vertical: 3.h,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFF1F3F5),
                       borderRadius: BorderRadius.circular(6.r),
@@ -585,8 +608,11 @@ class _FavoritesScreenState extends State<FavoritesScreen>
                   // Location info row
                   Row(
                     children: [
-                      Icon(Icons.location_on_outlined,
-                          color: Colors.grey[400], size: 12.sp),
+                      Icon(
+                        Icons.location_on_outlined,
+                        color: Colors.grey[400],
+                        size: 12.sp,
+                      ),
                       SizedBox(width: 3.w),
                       Expanded(
                         child: Text(
