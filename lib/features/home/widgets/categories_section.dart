@@ -7,6 +7,9 @@ import 'package:dio/dio.dart';
 import 'package:abojude_flutter/features/home/model/get_category_list_model.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 
+import '../../../helpers/all_routes.dart';
+import '../../../helpers/navigation_service.dart';
+
 class CategoriesSection extends StatelessWidget {
   const CategoriesSection({super.key});
 
@@ -53,6 +56,17 @@ class CategoriesSection extends StatelessWidget {
                     final lowerLabel = label.toLowerCase();
                     if (lowerLabel.contains('buy') ||
                         lowerLabel.contains('sell')) {
+ 
+                       NavigationService.navigateTo(
+                        Routes.buySellStep1Photos,
+                      );
+                    } else if (lowerLabel.contains('job')) {
+                      NavigationService.navigateTo(Routes.jobStep1Photos);
+                    } else if (lowerLabel.contains('business') ||
+                        lowerLabel.contains('directory')) {
+                      NavigationService.navigateTo(
+                          Routes.businessStep1Photos);
+ 
                       // Get.to(
                       //   () => const CategoryListingScreen(
                       //     categoryName: 'Buy & Sell',
@@ -74,6 +88,7 @@ class CategoriesSection extends StatelessWidget {
                       //     categorySlug: 'business',
                       //   ),
                       // );
+ 
                     } else if (lowerLabel.contains('service')) {
                       // Get.to(
                       //   () => const CategoryListingScreen(

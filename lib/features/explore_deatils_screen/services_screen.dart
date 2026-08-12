@@ -8,7 +8,8 @@ import 'package:abojude_flutter/features/message_screeen/message_screen.dart';
 import '../message_screeen/message_screeen_list.dart';
 
 class ServicesScreen extends StatefulWidget {
-  const ServicesScreen({super.key});
+  final int? postId;
+  const ServicesScreen({super.key, this.postId});
 
   @override
   State<ServicesScreen> createState() => _ServicesScreenState();
@@ -29,14 +30,16 @@ class _ServicesScreenState extends State<ServicesScreen> {
       'title': 'Shop Vancouver',
       'category': 'Business',
       'location': 'Toronto, Manitoba',
-      'imageUrl': 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=200',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=200',
       'isFavorited': false,
     },
     {
       'title': 'Shop Vancouver',
       'category': 'Business',
       'location': 'Toronto, Manitoba',
-      'imageUrl': 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=200',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=200',
       'isFavorited': false,
     },
   ];
@@ -83,14 +86,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
         backgroundColor: Colors.white,
         elevation: 0.5,
         leading: IconButton(
-          icon:   Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black54,
-            size: 20.sp,
-          ),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.black54, size: 20.sp),
           onPressed: () => Get.back(),
         ),
-        title:   Text(
+        title: Text(
           'Listing Details',
           style: TextStyle(
             color: Colors.black,
@@ -129,9 +128,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
             ),
             onPressed: () {
               Get.to(
-                () => const ReportScreen(
+                () => ReportScreen(
                   targetName: 'Professional House Cleaning Services',
                   isReportUser: false,
+                  postId: widget.postId,
                 ),
               );
             },
@@ -257,11 +257,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                 style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
               ),
               SizedBox(width: 16.w),
-              Icon(
-                Icons.access_time,
-                size: 14.sp,
-                color: Colors.grey[600],
-              ),
+              Icon(Icons.access_time, size: 14.sp, color: Colors.grey[600]),
               SizedBox(width: 4.w),
               Text(
                 '12 hours ago',
@@ -508,7 +504,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   value: '+1-416-555-1234',
                   onTap: () => _launchPhone('+1-416-555-1234'),
                 ),
-                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Color(0xFFE5E7EB),
+                ),
                 _buildContactTile(
                   icon: Icons.chat_bubble_outline_outlined,
                   iconColor: const Color(0xFF10B981),
@@ -517,7 +517,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   value: '+1-416-555-1234',
                   onTap: () => _launchWhatsApp('+1-416-555-1234'),
                 ),
-                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Color(0xFFE5E7EB),
+                ),
                 _buildContactTile(
                   icon: Icons.mail_outline,
                   iconColor: const Color(0xFF2563EB),
@@ -526,14 +530,20 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   value: 'alnouri@example.com',
                   onTap: () => _launchEmail('alnour@example.com'),
                 ),
-                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Color(0xFFE5E7EB),
+                ),
                 _buildContactTile(
                   icon: Icons.location_on_outlined,
                   iconColor: const Color(0xFFEA580C),
                   bgColor: const Color(0xFFFFF7ED),
                   title: 'Address',
                   value: 'Scarborough, Ontario',
-                  onTap: () => _launchUrl('https://maps.google.com/?q=Scarborough,Ontario'),
+                  onTap: () => _launchUrl(
+                    'https://maps.google.com/?q=Scarborough,Ontario',
+                  ),
                 ),
               ],
             ),
@@ -559,10 +569,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
           children: [
             Container(
               padding: EdgeInsets.all(8.w),
-              decoration: BoxDecoration(
-                color: bgColor,
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
               child: Icon(icon, size: 18.sp, color: iconColor),
             ),
             SizedBox(width: 12.w),
@@ -681,17 +688,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   bottom: 6.h,
                   left: 8.w,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 6.w,
+                      vertical: 2.h,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(0.4),
                       borderRadius: BorderRadius.circular(4.r),
                     ),
                     child: Text(
                       '4 days ago',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 8.sp,
-                      ),
+                      style: TextStyle(color: Colors.white, fontSize: 8.sp),
                     ),
                   ),
                 ),
@@ -707,10 +714,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                         color: Colors.white,
                         shape: BoxShape.circle,
                         boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 2,
-                          ),
+                          BoxShadow(color: Colors.black12, blurRadius: 2),
                         ],
                       ),
                       child: Icon(
@@ -751,7 +755,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       ),
                       child: Text(
                         category,
-                        style: TextStyle(fontSize: 9.sp, color: const Color(0xFF4B5563)),
+                        style: TextStyle(
+                          fontSize: 9.sp,
+                          color: const Color(0xFF4B5563),
+                        ),
                       ),
                     ),
                     SizedBox(height: 6.h),
@@ -766,7 +773,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
                         Expanded(
                           child: Text(
                             location,
-                            style: TextStyle(fontSize: 9.sp, color: Colors.grey),
+                            style: TextStyle(
+                              fontSize: 9.sp,
+                              color: Colors.grey,
+                            ),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),

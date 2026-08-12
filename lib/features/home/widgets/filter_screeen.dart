@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:abojude_flutter/networks/api_acess.dart';
+import 'package:abojude_flutter/features/home/model/get_category_list_model.dart';
+import 'package:abojude_flutter/features/auth/register/model/get_province_model.dart';
+import 'package:abojude_flutter/features/auth/register/model/get_city_model.dart';
 
 class FilterOptions {
   String category;
@@ -75,40 +79,6 @@ class FilterBottomSheet extends StatefulWidget {
 class _FilterBottomSheetState extends State<FilterBottomSheet> {
   late FilterOptions _filters;
 
-  final List<String> _categories = [
-    'All',
-    'Buy & Sell',
-    'Jobs',
-    'Services',
-    'Business Directory',
-  ];
-
-  final List<String> _provinces = [
-    'Alberta',
-    'British Columbia',
-    'Manitoba',
-    'New Brunswick',
-    'Newfoundland and Labrador',
-    'Nova Scotia',
-    'Ontario',
-    'Prince Edward Island',
-    'Quebec',
-    'Saskatchewan',
-  ];
-
-  final Map<String, List<String>> _citiesByProvince = {
-    'Alberta': ['Calgary', 'Edmonton', 'Red Deer', 'Lethbridge'],
-    'British Columbia': ['Vancouver', 'Victoria', 'Kelowna', 'Surrey'],
-    'Manitoba': ['Winnipeg', 'Brandon', 'Steinbach'],
-    'New Brunswick': ['Moncton', 'Saint John', 'Fredericton'],
-    'Newfoundland and Labrador': ["St. John's", 'Corner Brook'],
-    'Nova Scotia': ['Halifax', 'Sydney', 'Truro'],
-    'Ontario': ['Toronto', 'Ottawa', 'Mississauga', 'Hamilton', 'London'],
-    'Prince Edward Island': ['Charlottetown', 'Summerside'],
-    'Quebec': ['Montreal', 'Quebec City', 'Laval', 'Gatineau'],
-    'Saskatchewan': ['Saskatoon', 'Regina', 'Prince Albert'],
-  };
-
   final List<String> _sortOptions = [
     'Featured',
     'Newest First',
@@ -130,6 +100,11 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     if (_filters.maxPrice != null) {
       _maxPriceController.text = _filters.maxPrice!.toStringAsFixed(0);
     }
+    getCategoryListRxObj.getCategoryListRx();
+    getProvinceRxObj.getProvinceRx();
+    if (_filters.province != null) {
+      getCityRxObj.getCityRx(_filters.province!);
+    }
   }
 
   @override
@@ -147,7 +122,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     });
   }
 
-  void _applyFilters() {
+  bool _isFiltering = false;
+
+  void _applyFilters() async {
     final min = double.tryParse(_minPriceController.text);
     final max = double.tryParse(_maxPriceController.text);
 
@@ -158,8 +135,80 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       clearMaxPrice: _maxPriceController.text.isEmpty,
     );
 
-    widget.onApply(applied);
-    Navigator.of(context).pop();
+    setState(() {
+      _isFiltering = true;
+    });
+
+    try {
+      List<String>? categorySlugs;
+      if (applied.category != 'All' && applied.category.isNotEmpty) {
+        if (applied.category == 'Buy & Sell') {
+          categorySlugs = ['buy-sell'];
+        } else if (applied.category == 'Jobs') {
+          categorySlugs = ['jobs'];
+        } else if (applied.category == 'Business Directory') {
+          categorySlugs = ['business-directory'];
+        } else if (applied.category == 'Services') {
+          categorySlugs = ['services'];
+        } else {
+          categorySlugs = [
+            applied.category
+                .toLowerCase()
+                .replaceAll(' ', '-')
+                .replaceAll('&', 'and'),
+          ];
+        }
+      }
+
+      String? sortByVal;
+      if (applied.sortBy == 'Featured') {
+        sortByVal = 'featured';
+      } else if (applied.sortBy == 'Newest First') {
+        sortByVal = 'newest';
+      } else if (applied.sortBy == 'Oldest First') {
+        sortByVal = 'oldest';
+      } else if (applied.sortBy == 'Price: Low to High') {
+        sortByVal = 'price_low_high';
+      } else if (applied.sortBy == 'Price: High to Low') {
+        sortByVal = 'price_high_low';
+      }
+
+      if (categorySlugs == null &&
+          applied.province == null &&
+          applied.city == null &&
+          applied.minPrice == null &&
+          applied.maxPrice == null &&
+          sortByVal == null) {
+        await getRecentPostListRxObj.getRecentPostListRx();
+      } else {
+        await getRecentPostListRxObj.filterRecentPostListRx(
+          categorySlugs: categorySlugs,
+          province: applied.province,
+          city: applied.city,
+          minPrice: applied.minPrice?.toInt(),
+          maxPrice: applied.maxPrice?.toInt(),
+          sortBy: sortByVal,
+        );
+      }
+
+      widget.onApply(applied);
+      _clearAll();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to apply filters: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isFiltering = false;
+        });
+      }
+    }
   }
 
   @override
@@ -254,86 +303,114 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   }
 
   Widget _buildCategorySection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _sectionLabel('Category'),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: _categories.map((cat) {
-            final selected = _filters.category == cat;
-            return GestureDetector(
-              onTap: () => setState(() => _filters = _filters.copyWith(category: cat)),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 180),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  color: selected ? const Color(0xFF1A3A6B) : Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: selected ? const Color(0xFF1A3A6B) : const Color(0xFFD1D5DB),
+    return StreamBuilder<CategoryListModel>(
+      stream: getCategoryListRxObj.getCategoryListData,
+      builder: (context, snapshot) {
+        final List<String> categories = ['All'];
+        if (snapshot.hasData && snapshot.data?.data != null) {
+          categories.addAll(snapshot.data!.data!.map((c) => c.name ?? '').where((n) => n.isNotEmpty));
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _sectionLabel('Category'),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: categories.map((cat) {
+                final selected = _filters.category == cat;
+                return GestureDetector(
+                  onTap: () => setState(() => _filters = _filters.copyWith(category: cat)),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 180),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: selected ? const Color(0xFF1A3A6B) : Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: selected ? const Color(0xFF1A3A6B) : const Color(0xFFD1D5DB),
+                      ),
+                    ),
+                    child: Text(
+                      cat,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: selected ? Colors.white : const Color(0xFF374151),
+                      ),
+                    ),
                   ),
-                ),
-                child: Text(
-                  cat,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: selected ? Colors.white : const Color(0xFF374151),
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
+                );
+              }).toList(),
+            ),
+          ],
+        );
+      }
     );
   }
 
   Widget _buildProvinceSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _sectionLabel('Province'),
-        const SizedBox(height: 10),
-        _buildDropdown(
-          value: _filters.province,
-          hint: 'Select province',
-          prefixIcon: Icons.map_outlined,
-          items: _provinces,
-          onChanged: (val) => setState(() {
-            _filters = _filters.copyWith(
-              province: val,
-              clearCity: true,
-            );
-          }),
-        ),
-      ],
+    return StreamBuilder<GetProvinceModel>(
+      stream: getProvinceRxObj.getProvinceData,
+      builder: (context, snapshot) {
+        final List<String> provinces = [];
+        if (snapshot.hasData && snapshot.data?.data != null) {
+          provinces.addAll(snapshot.data!.data!);
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _sectionLabel('Province'),
+            const SizedBox(height: 10),
+            _buildDropdown(
+              value: _filters.province,
+              hint: 'Select province',
+              prefixIcon: Icons.map_outlined,
+              items: provinces,
+              onChanged: (val) => setState(() {
+                _filters = _filters.copyWith(
+                  province: val,
+                  clearCity: true,
+                );
+                if (val != null) {
+                  getCityRxObj.getCityRx(val);
+                }
+              }),
+            ),
+          ],
+        );
+      }
     );
   }
 
   Widget _buildCitySection() {
-    final cities = _filters.province != null ? (_citiesByProvince[_filters.province] ?? []) : <String>[];
     final enabled = _filters.province != null;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _sectionLabel('City'),
-        const SizedBox(height: 10),
-        _buildDropdown(
-          value: _filters.city,
-          hint: enabled ? 'Select city' : 'Select province first',
-          prefixIcon: Icons.navigation_outlined,
-          items: cities,
-          enabled: enabled,
-          onChanged: enabled
-              ? (val) => setState(() => _filters = _filters.copyWith(city: val))
-              : null,
-        ),
-      ],
+    return StreamBuilder<GetCityModel>(
+      stream: getCityRxObj.getCityData,
+      builder: (context, snapshot) {
+        final List<String> cities = [];
+        if (snapshot.hasData && snapshot.data?.data != null && enabled) {
+          cities.addAll(snapshot.data!.data!);
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _sectionLabel('City'),
+            const SizedBox(height: 10),
+            _buildDropdown(
+              value: _filters.city,
+              hint: enabled ? 'Select city' : 'Select province first',
+              prefixIcon: Icons.navigation_outlined,
+              items: cities,
+              enabled: enabled,
+              onChanged: enabled
+                  ? (val) => setState(() => _filters = _filters.copyWith(city: val))
+                  : null,
+            ),
+          ],
+        );
+      }
     );
   }
 
@@ -357,7 +434,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         child: ButtonTheme(
           alignedDropdown: true,
           child: DropdownButton<String>(
-            value: value,
+            value: (value != null && items.contains(value)) ? value : null,
             isExpanded: true,
             dropdownColor: Colors.white,        // ← Fixed black background
             menuMaxHeight: 300,
@@ -491,7 +568,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       width: double.infinity,
       height: 52,
       child: ElevatedButton(
-        onPressed: _applyFilters,
+        onPressed: _isFiltering ? () {} : _applyFilters,
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF1A3A6B),
           foregroundColor: Colors.white,
@@ -500,12 +577,28 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           ),
           elevation: 0,
         ),
-        child: const Text(
-          'Apply Filters',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (_isFiltering) ...[
+              const SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2,
+                ),
+              ),
+              const SizedBox(width: 12),
+            ],
+            Text(
+              _isFiltering ? 'Filtering...' : 'Apply Filters',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ),
     );

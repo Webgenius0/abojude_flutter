@@ -1,3 +1,6 @@
+import 'package:abojude_flutter/features/profile/model/get_profile_model.dart';
+import 'package:abojude_flutter/features/auth/register/presentation/select_location_screen.dart';
+import 'package:abojude_flutter/features/home/presentation/search_products_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,6 +15,8 @@ import 'package:abojude_flutter/features/home/model/add_list_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:abojude_flutter/helpers/di.dart';
+import 'package:abojude_flutter/constants/app_constants.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -191,6 +196,11 @@ class _HomeScreenState extends State<HomeScreen> {
     getRecentPostListRxObj.getRecentPostListRx();
     getFeaturedListingsRxObj.getFeaturedListingsRx();
     adsListRxObj.getAdsListRx();
+
+    final bool isGuest = appData.read(kKeyIsExploring) ?? false;
+    if (!isGuest) {
+      getProfileRxObj.getProfile();
+    }
   }
 
   void _applyFilters() {
@@ -305,35 +315,57 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   FilterOptions _activeFilters = FilterOptions();
+
+  Future<void> _onRefresh() async {
+    setState(() {
+      _activeFilters = FilterOptions();
+    });
+    await Future.wait([
+      getCategoryListRxObj.getCategoryListRx(),
+      getRecentPostListRxObj.getRecentPostListRx(),
+      getFeaturedListingsRxObj.getFeaturedListingsRx(),
+      adsListRxObj.getAdsListRx(),
+    ]);
+    final bool isGuest = appData.read(kKeyIsExploring) ?? false;
+    if (!isGuest) {
+      await getProfileRxObj.getProfile();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgGrey,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              _buildSearchBar(),
-              const SizedBox(height: 16),
-              _buildBannerCarousel(),
-              const SizedBox(height: 20),
-              FeaturedListingsSection(
-                onFavoriteToggle: (item) {
-                  setState(() {});
-                },
-              ),
-              const SizedBox(height: 20),
-              const CategoriesSection(),
-              const SizedBox(height: 20),
-              RecentListingsSection(
-                onFavoriteToggle: (item) {
-                  setState(() {});
-                },
-              ),
-              const SizedBox(height: 30),
-            ],
+        child: RefreshIndicator(
+          onRefresh: _onRefresh,
+          color: const Color(0xFF1B2D6B),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(),
+                _buildSearchBar(),
+                const SizedBox(height: 16),
+                _buildBannerCarousel(),
+                const SizedBox(height: 20),
+                FeaturedListingsSection(
+                  onFavoriteToggle: (item) {
+                    setState(() {});
+                  },
+                ),
+                const SizedBox(height: 20),
+                const CategoriesSection(),
+                const SizedBox(height: 20),
+                RecentListingsSection(
+                  onFavoriteToggle: (item) {
+                    setState(() {});
+                  },
+                ),
+                const SizedBox(height: 30),
+              ],
+            ),
           ),
         ),
       ),
@@ -419,23 +451,65 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ─── Location Row ─────────────────────────────────────────
   Widget _buildLocationRow() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: const [
-          Icon(Icons.location_on_outlined, color: Colors.black87, size: 18),
-          SizedBox(width: 4),
-          Text(
-            'Thompson, Manitoba',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.black87,
-            ),
+    final bool isGuest = appData.read(kKeyIsExploring) ?? false;
+
+    Widget buildRow(String locationText) {
+      return GestureDetector(
+        onTap: () {
+          Get.to(() => SelectLocationScreen(isGuest: isGuest));
+        },
+        child: Container(
+          color: Colors.transparent, // expand tap area
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.location_on_outlined,
+                color: Colors.black87,
+                size: 18,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                locationText,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: Colors.black54, size: 18),
+            ],
           ),
-          Icon(Icons.chevron_right, color: Colors.black54, size: 18),
-        ],
-      ),
+        ),
+      );
+    }
+
+    if (isGuest) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: buildRow('Guest User'),
+      );
+    }
+
+    return StreamBuilder<GetProfileModel>(
+      stream: getProfileRxObj.getProfileData,
+      builder: (context, snapshot) {
+        String locationText = 'Thompson, Manitoba';
+        if (snapshot.hasData && snapshot.data?.data != null) {
+          final profile = snapshot.data!.data!;
+          final city = profile.city ?? '';
+          final province = profile.province ?? '';
+          if (city.isNotEmpty && province.isNotEmpty) {
+            locationText = '$city, $province';
+          } else if (city.isNotEmpty) {
+            locationText = city;
+          } else if (province.isNotEmpty) {
+            locationText = province;
+          }
+        }
+        return buildRow(locationText);
+      },
     );
   }
 
@@ -453,16 +527,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    showFilterBottomSheet(
-                      context,
-                      currentFilters: _activeFilters,
-                      onApply: (filters) {
-                        setState(() {
-                          _activeFilters = filters;
-                          _applyFilters(); // your existing filter method
-                        });
-                      },
-                    );
+                    Get.to(() => const SearchProductsScreen());
                   },
                   child: Container(
                     height: 50,
@@ -478,6 +543,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     child: const TextField(
+                      readOnly: true,
+                      enabled: false,
                       decoration: InputDecoration(
                         hintText: 'What are you looking for?',
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 14),

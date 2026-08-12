@@ -103,7 +103,6 @@ class _JobScreenState extends State<JobScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     print('____________ProdudId________${widget.postId}');
     return Scaffold(
       backgroundColor: Colors.white,
@@ -111,11 +110,7 @@ class _JobScreenState extends State<JobScreen> {
         backgroundColor: Colors.white,
         elevation: 0.5,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black54,
-            size: 20.sp,
-          ),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.black54, size: 20.sp),
           onPressed: () => Get.back(),
         ),
         title: Text(
@@ -143,9 +138,7 @@ class _JobScreenState extends State<JobScreen> {
               size: 20,
             ),
             onPressed: () {
-              Share.share(
-                'Check out position: https://example.com',
-              );
+              Share.share('Check out position: https://example.com');
             },
           ),
           IconButton(
@@ -156,9 +149,10 @@ class _JobScreenState extends State<JobScreen> {
             ),
             onPressed: () {
               Get.to(
-                () => const ReportScreen(
+                () => ReportScreen(
                   targetName: 'Listing Position',
                   isReportUser: false,
+                  postId: widget.postId,
                 ),
               );
             },
@@ -182,7 +176,7 @@ class _JobScreenState extends State<JobScreen> {
                     children: [
                       SingleChildScrollView(
                         physics: const AlwaysScrollableScrollPhysics(),
-                        padding: EdgeInsets.only(bottom: 90.h),
+                        padding: EdgeInsets.only(bottom: 120.h),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -205,7 +199,7 @@ class _JobScreenState extends State<JobScreen> {
           : Stack(
               children: [
                 SingleChildScrollView(
-                  padding: EdgeInsets.only(bottom: 90.h),
+                  padding: EdgeInsets.only(bottom: 120.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -325,17 +319,27 @@ class _JobScreenState extends State<JobScreen> {
             },
             itemBuilder: (context, index) {
               final imgUrl = coverList[index];
-              return CachedNetworkImage(
-                imageUrl: imgUrl,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(color: Colors.white),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  color: Colors.grey[200],
-                  child: Icon(Icons.image, size: 48.r, color: Colors.grey[400]),
+              return GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  _openImageZoomView(context, coverList, index);
+                },
+                child: CachedNetworkImage(
+                  imageUrl: imgUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(color: Colors.white),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.grey[200],
+                    child: Icon(
+                      Icons.image,
+                      size: 48.r,
+                      color: Colors.grey[400],
+                    ),
+                  ),
                 ),
               );
             },
@@ -365,6 +369,104 @@ class _JobScreenState extends State<JobScreen> {
     );
   }
 
+  void _openImageZoomView(
+    BuildContext context,
+    List<String> images,
+    int initialIndex,
+  ) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (context) {
+          int currentIndex = initialIndex;
+          bool isSwipeEnabled = true;
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return Scaffold(
+                backgroundColor: Colors.black,
+                body: Stack(
+                  children: [
+                    PageView.builder(
+                      itemCount: images.length,
+                      physics: isSwipeEnabled
+                          ? const BouncingScrollPhysics()
+                          : const NeverScrollableScrollPhysics(),
+                      controller: PageController(initialPage: initialIndex),
+                      onPageChanged: (index) {
+                        setState(() {
+                          currentIndex = index;
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        return ZoomableImage(
+                          imageUrl: images[index],
+                          onZoomChanged: (zoomed) {
+                            if (isSwipeEnabled == zoomed) {
+                              setState(() {
+                                isSwipeEnabled = !zoomed;
+                              });
+                            }
+                          },
+                        );
+                      },
+                    ),
+                    SafeArea(
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: GestureDetector(
+                            onTap: () => Navigator.pop(context),
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.5),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.close,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (images.length > 1)
+                      Positioned(
+                        bottom: 40,
+                        left: 0,
+                        right: 0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            images.length,
+                            (index) => Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: currentIndex == index
+                                    ? Colors.white
+                                    : Colors.white.withOpacity(0.4),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildHeaderDetails(PostDetailsData? details) {
     final category = details?.categoryName ?? 'Jobs';
     final title = details?.title ?? 'Senior Flutter Developer';
@@ -375,9 +477,9 @@ class _JobScreenState extends State<JobScreen> {
 
     String? priceStr;
     if (details?.price != null && details!.price!.isNotEmpty) {
-      priceStr = details.price!.startsWith('£') || details.price!.startsWith('\$')
+      priceStr = details.price!.startsWith('\$')
           ? details.price!
-          : '£${details.price}';
+          : '\$${details.price}';
     }
 
     return Padding(
@@ -423,11 +525,7 @@ class _JobScreenState extends State<JobScreen> {
                 style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
               ),
               SizedBox(width: 16.w),
-              Icon(
-                Icons.access_time,
-                size: 14.sp,
-                color: Colors.grey[600],
-              ),
+              Icon(Icons.access_time, size: 14.sp, color: Colors.grey[600]),
               SizedBox(width: 4.w),
               Text(
                 timeAgo,
@@ -471,7 +569,8 @@ class _JobScreenState extends State<JobScreen> {
   }
 
   Widget _buildDescription(PostDetailsData? details) {
-    final description = details?.description ??
+    final description =
+        details?.description ??
         'We are looking for a Senior Flutter Developer to join our team in building premium, high-performance mobile applications. The ideal candidate has experience with state management, custom animations, responsive UI layouts, and REST API integration.';
 
     return Padding(
@@ -502,8 +601,14 @@ class _JobScreenState extends State<JobScreen> {
   }
 
   Widget _buildJobSpecifications(PostDetailsData? details) {
-    List<String> specs = ['Full-Time', 'Remote / Hybrid', '3+ Years Exp', 'Flutter & Dart'];
-    if (details?.specifications != null && details!.specifications!.isNotEmpty) {
+    List<String> specs = [
+      'Full-Time',
+      'Remote / Hybrid',
+      '3+ Years Exp',
+      'Flutter & Dart',
+    ];
+    if (details?.specifications != null &&
+        details!.specifications!.isNotEmpty) {
       specs = details.specifications!.entries
           .map((e) => "${e.key}: ${e.value}")
           .toList();
@@ -564,15 +669,25 @@ class _JobScreenState extends State<JobScreen> {
   }
 
   Widget _buildSellerCard(PostDetailsData? details) {
-    final name = details?.user?.name ?? 'Sarah Ahmed';
+    final name = (details?.userName != null && details!.userName!.trim().isNotEmpty)
+        ? details.userName!
+        : ((details?.user?.name != null && details!.user!.name!.trim().isNotEmpty)
+            ? details.user!.name!
+            : (details == null ? 'Loading...' : 'User'));
     final avatar = _formatImageUrl(details?.user?.avatar);
     final location = (details?.city != null || details?.province != null)
         ? "${details?.city ?? ''}${details?.city != null && details?.province != null ? ', ' : ''}${details?.province ?? ''}"
-        : 'Toronto, Ontario';
+        : (details == null ? 'Loading...' : 'Location not specified');
 
     final initials = name.trim().isNotEmpty
-        ? name.trim().split(RegExp(r'\s+')).take(2).map((e) => e[0]).join().toUpperCase()
-        : 'SA';
+        ? name
+              .trim()
+              .split(RegExp(r'\s+'))
+              .take(2)
+              .map((e) => e[0])
+              .join()
+              .toUpperCase()
+        : 'US';
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
@@ -604,7 +719,10 @@ class _JobScreenState extends State<JobScreen> {
                       height: 40.r,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        image: DecorationImage(image: provider, fit: BoxFit.cover),
+                        image: DecorationImage(
+                          image: provider,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     placeholder: (context, url) => Container(
@@ -676,7 +794,8 @@ class _JobScreenState extends State<JobScreen> {
   Widget _buildContactInfo(PostDetailsData? details) {
     final phone = details?.phone ?? details?.user?.phone ?? '+1-416-555-1234';
     final whatsapp = details?.whatsapp ?? phone;
-    final email = details?.email ?? details?.user?.email ?? 'recruiting@example.com';
+    final email =
+        details?.email ?? details?.user?.email ?? 'recruiting@example.com';
     final location = (details?.city != null || details?.province != null)
         ? "${details?.city ?? ''}${details?.city != null && details?.province != null ? ', ' : ''}${details?.province ?? ''}"
         : 'Downtown Toronto, Ontario';
@@ -710,7 +829,11 @@ class _JobScreenState extends State<JobScreen> {
                   value: phone,
                   onTap: () => _launchPhone(phone),
                 ),
-                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Color(0xFFE5E7EB),
+                ),
                 _buildContactTile(
                   icon: Icons.chat_bubble_outline_outlined,
                   iconColor: const Color(0xFF10B981),
@@ -719,7 +842,11 @@ class _JobScreenState extends State<JobScreen> {
                   value: whatsapp,
                   onTap: () => _launchWhatsApp(whatsapp),
                 ),
-                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Color(0xFFE5E7EB),
+                ),
                 _buildContactTile(
                   icon: Icons.mail_outline,
                   iconColor: const Color(0xFF2563EB),
@@ -728,14 +855,19 @@ class _JobScreenState extends State<JobScreen> {
                   value: email,
                   onTap: () => _launchEmail(email),
                 ),
-                const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Color(0xFFE5E7EB),
+                ),
                 _buildContactTile(
                   icon: Icons.location_on_outlined,
                   iconColor: const Color(0xFFEA580C),
                   bgColor: const Color(0xFFFFF7ED),
                   title: 'Address',
                   value: location,
-                  onTap: () => _launchUrl('https://maps.google.com/?q=$location'),
+                  onTap: () =>
+                      _launchUrl('https://maps.google.com/?q=$location'),
                 ),
               ],
             ),
@@ -761,10 +893,7 @@ class _JobScreenState extends State<JobScreen> {
           children: [
             Container(
               padding: EdgeInsets.all(8.w),
-              decoration: BoxDecoration(
-                color: bgColor,
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
               child: Icon(icon, size: 18.sp, color: iconColor),
             ),
             SizedBox(width: 12.w),
@@ -912,16 +1041,19 @@ class _JobScreenState extends State<JobScreen> {
               Get.to(
                 () => MessageScreen(
                   chat: ChatMessage(
-                    id: details?.userId?.toString() ?? details?.id?.toString() ?? '1',
+                    id:
+                        details?.userId?.toString() ??
+                        details?.id?.toString() ??
+                        '1',
                     name: name,
                     initials: name.trim().isNotEmpty
                         ? name
-                        .trim()
-                        .split(RegExp(r'\s+'))
-                        .take(2)
-                        .map((e) => e[0])
-                        .join()
-                        .toUpperCase()
+                              .trim()
+                              .split(RegExp(r'\s+'))
+                              .take(2)
+                              .map((e) => e[0])
+                              .join()
+                              .toUpperCase()
                         : 'SK',
                     lastMessage: 'Inquiry regarding listing',
                     time: 'Just now',
@@ -936,7 +1068,8 @@ class _JobScreenState extends State<JobScreen> {
               'assets/icons/message-02.png',
               width: 20.w,
               height: 20.h,
-              color: Colors.white, // Remove if your PNG already has the correct color
+              color: Colors
+                  .white, // Remove if your PNG already has the correct color
             ),
             label: Text(
               'Message',
@@ -953,6 +1086,70 @@ class _JobScreenState extends State<JobScreen> {
                 borderRadius: BorderRadius.circular(10.r),
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ZoomableImage extends StatefulWidget {
+  final String imageUrl;
+  final ValueChanged<bool> onZoomChanged;
+
+  const ZoomableImage({
+    super.key,
+    required this.imageUrl,
+    required this.onZoomChanged,
+  });
+
+  @override
+  State<ZoomableImage> createState() => _ZoomableImageState();
+}
+
+class _ZoomableImageState extends State<ZoomableImage> {
+  final TransformationController _transformationController =
+      TransformationController();
+
+  @override
+  void dispose() {
+    _transformationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InteractiveViewer(
+      transformationController: _transformationController,
+      panEnabled: true,
+      minScale: 1.0,
+      maxScale: 4.0,
+      onInteractionUpdate: (details) {
+        final double scale = _transformationController.value
+            .getMaxScaleOnAxis();
+        if (scale > 1.0) {
+          widget.onZoomChanged(true);
+        } else {
+          widget.onZoomChanged(false);
+        }
+      },
+      onInteractionEnd: (details) {
+        final double scale = _transformationController.value
+            .getMaxScaleOnAxis();
+        if (scale <= 1.0) {
+          widget.onZoomChanged(false);
+        }
+      },
+      child: Center(
+        child: CachedNetworkImage(
+          imageUrl: widget.imageUrl,
+          fit: BoxFit.contain,
+          placeholder: (context, url) =>
+              const CircularProgressIndicator(color: Colors.white),
+          errorWidget: (context, url, error) => const Icon(
+            Icons.image_not_supported,
+            color: Colors.white,
+            size: 50,
           ),
         ),
       ),
