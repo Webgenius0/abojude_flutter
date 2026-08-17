@@ -48,18 +48,16 @@ class FilterOptions {
 
 // Show Filter Bottom Sheet
 void showFilterBottomSheet(
-    BuildContext context, {
-      required FilterOptions currentFilters,
-      required ValueChanged<FilterOptions> onApply,
-    }) {
+  BuildContext context, {
+  required FilterOptions currentFilters,
+  required ValueChanged<FilterOptions> onApply,
+}) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) => FilterBottomSheet(
-      currentFilters: currentFilters,
-      onApply: onApply,
-    ),
+    builder: (_) =>
+        FilterBottomSheet(currentFilters: currentFilters, onApply: onApply),
   );
 }
 
@@ -199,9 +197,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to apply filters: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to apply filters: $e')));
       }
     } finally {
       if (mounted) {
@@ -295,7 +293,11 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             const SizedBox(width: 14),
             GestureDetector(
               onTap: () => Navigator.of(context).pop(),
-              child: const Icon(Icons.close, size: 20, color: Color(0xFF374151)),
+              child: const Icon(
+                Icons.close,
+                size: 20,
+                color: Color(0xFF374151),
+              ),
             ),
           ],
         ),
@@ -309,7 +311,11 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       builder: (context, snapshot) {
         final List<String> categories = ['All'];
         if (snapshot.hasData && snapshot.data?.data != null) {
-          categories.addAll(snapshot.data!.data!.map((c) => c.name ?? '').where((n) => n.isNotEmpty));
+          categories.addAll(
+            snapshot.data!.data!
+                .map((c) => c.name ?? '')
+                .where((n) => n.isNotEmpty),
+          );
         }
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -322,15 +328,22 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               children: categories.map((cat) {
                 final selected = _filters.category == cat;
                 return GestureDetector(
-                  onTap: () => setState(() => _filters = _filters.copyWith(category: cat)),
+                  onTap: () => setState(
+                    () => _filters = _filters.copyWith(category: cat),
+                  ),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 180),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       color: selected ? const Color(0xFF1A3A6B) : Colors.white,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: selected ? const Color(0xFF1A3A6B) : const Color(0xFFD1D5DB),
+                        color: selected
+                            ? const Color(0xFF1A3A6B)
+                            : const Color(0xFFD1D5DB),
                       ),
                     ),
                     child: Text(
@@ -338,7 +351,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: selected ? Colors.white : const Color(0xFF374151),
+                        color: selected
+                            ? Colors.white
+                            : const Color(0xFF374151),
                       ),
                     ),
                   ),
@@ -347,7 +362,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             ),
           ],
         );
-      }
+      },
     );
   }
 
@@ -370,10 +385,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               prefixIcon: Icons.map_outlined,
               items: provinces,
               onChanged: (val) => setState(() {
-                _filters = _filters.copyWith(
-                  province: val,
-                  clearCity: true,
-                );
+                _filters = _filters.copyWith(province: val, clearCity: true);
                 if (val != null) {
                   getCityRxObj.getCityRx(val);
                 }
@@ -381,7 +393,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             ),
           ],
         );
-      }
+      },
     );
   }
 
@@ -401,17 +413,18 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             const SizedBox(height: 10),
             _buildDropdown(
               value: _filters.city,
-              hint: enabled ? 'Select city' : 'Select province first',
+              hint: enabled ? 'Select city'.tr : 'Select province first'.tr,
               prefixIcon: Icons.navigation_outlined,
               items: cities,
               enabled: enabled,
               onChanged: enabled
-                  ? (val) => setState(() => _filters = _filters.copyWith(city: val))
+                  ? (val) =>
+                        setState(() => _filters = _filters.copyWith(city: val))
                   : null,
             ),
           ],
         );
-      }
+      },
     );
   }
 
@@ -437,10 +450,13 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           child: DropdownButton<String>(
             value: (value != null && items.contains(value)) ? value : null,
             isExpanded: true,
-            dropdownColor: Colors.white,        // ← Fixed black background
+            dropdownColor: Colors.white, // ← Fixed black background
             menuMaxHeight: 300,
-            icon: const Icon(Icons.keyboard_arrow_down,
-                color: Color(0xFF9CA3AF), size: 20),
+            icon: const Icon(
+              Icons.keyboard_arrow_down,
+              color: Color(0xFF9CA3AF),
+              size: 20,
+            ),
             hint: Row(
               children: [
                 const SizedBox(width: 4),
@@ -455,16 +471,10 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 ),
               ],
             ),
-            style: const TextStyle(
-              fontSize: 14,
-              color: Color(0xFF111827),
-            ),
+            style: const TextStyle(fontSize: 14, color: Color(0xFF111827)),
             onChanged: enabled ? onChanged : null,
             items: items
-                .map((item) => DropdownMenuItem(
-              value: item,
-              child: Text(item),
-            ))
+                .map((item) => DropdownMenuItem(value: item, child: Text(item)))
                 .toList(),
           ),
         ),
@@ -483,14 +493,14 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             Expanded(
               child: _buildPriceField(
                 controller: _minPriceController,
-                hint: 'Min \$',
+                hint: 'Min \$'.tr,
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: _buildPriceField(
                 controller: _maxPriceController,
-                hint: 'Max \$',
+                hint: 'Max \$'.tr,
               ),
             ),
           ],
@@ -519,7 +529,10 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           hintText: hint,
           hintStyle: const TextStyle(fontSize: 14, color: Color(0xFF9CA3AF)),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 14,
+            vertical: 14,
+          ),
         ),
       ),
     );
@@ -537,19 +550,25 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           children: _sortOptions.map((opt) {
             final selected = _filters.sortBy == opt;
             return GestureDetector(
-              onTap: () => setState(() => _filters = _filters.copyWith(sortBy: opt)),
+              onTap: () =>
+                  setState(() => _filters = _filters.copyWith(sortBy: opt)),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 180),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: selected ? const Color(0xFF1A3A6B) : Colors.white,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: selected ? const Color(0xFF1A3A6B) : const Color(0xFFD1D5DB),
+                    color: selected
+                        ? const Color(0xFF1A3A6B)
+                        : const Color(0xFFD1D5DB),
                   ),
                 ),
                 child: Text(
-                  opt,
+                  opt.tr,
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
@@ -594,10 +613,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             ],
             Text(
               _isFiltering ? 'Filtering...'.tr : 'Apply Filters'.tr,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
           ],
         ),

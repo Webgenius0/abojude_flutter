@@ -109,7 +109,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       SizedBox(height: 12.h),
                       // Description
                       Text(
-                        'Protect your account by updating your password. Enter your current password and set a new one to keep your account safe.'.tr,
+                        'Protect your account by updating your password. Enter your current password and set a new one to keep your account safe.'
+                            .tr,
                         style: GoogleFonts.inter(
                           fontSize: 14.sp,
                           color: Colors.grey[500],
@@ -154,7 +155,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             return 'The new password field is required.'.tr;
                           }
                           if (value.length < 6) {
-                            return 'Password must be at least 6 characters long'.tr;
+                            return 'Password must be at least 6 characters long'
+                                .tr;
                           }
                           return null;
                         },
@@ -177,7 +179,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             return 'The confirm password field is required.'.tr;
                           }
                           if (value != _newPasswordController.text) {
-                            return 'The confirm password field must match new password.'.tr;
+                            return 'The confirm password field must match new password.'
+                                .tr;
                           }
                           return null;
                         },

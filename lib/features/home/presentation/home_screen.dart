@@ -558,7 +558,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return StreamBuilder<GetProfileModel>(
       stream: getProfileRxObj.getProfileData,
       builder: (context, snapshot) {
-        String locationText = 'Thompson, Manitoba';
+        String locationText = 'Set your location';
         if (snapshot.hasData && snapshot.data?.data != null) {
           final profile = snapshot.data!.data!;
           final city = profile.city ?? '';
@@ -610,14 +610,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       enabled: false,
                       decoration: InputDecoration(
                         hintText: 'What are you looking for?'.tr,
-                        hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
+                        hintStyle: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                        ),
                         prefixIcon: const Icon(
                           Icons.search,
                           color: Colors.grey,
                           size: 22,
                         ),
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                        ),
                       ),
                     ),
                   ),

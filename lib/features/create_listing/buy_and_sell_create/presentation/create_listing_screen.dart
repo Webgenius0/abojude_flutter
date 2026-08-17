@@ -6,6 +6,7 @@ import 'package:abojude_flutter/helpers/all_routes.dart';
 import 'package:abojude_flutter/helpers/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:abojude_flutter/features/home/model/get_category_list_model.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
@@ -63,13 +64,13 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
                 children: [
                   // Title
                   Text(
-                    "Create Listing",
+                    "Create Listing".tr,
                     style: TextFontStyle.textStyle22IbmPlexSansW600,
                   ),
                   SizedBox(height: 8.h),
                   // Subtitle
                   Text(
-                    "Choose the type of listing you would like to create.",
+                    "Choose the type of listing you would like to create.".tr,
                     style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                       fontSize: 18.sp,
                     ),
@@ -93,8 +94,13 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
                       String subtitleText = subtitle;
                       VoidCallback onTap = () {};
 
-                      if (lowerLabel.contains('buy') ||
-                          lowerLabel.contains('sell')) {
+                       final slug = cat.slug?.toLowerCase() ?? '';
+                      if (slug.contains('buy') ||
+                          slug.contains('sell') ||
+                          lowerLabel.contains('buy') ||
+                          lowerLabel.contains('sell') ||
+                          lowerLabel.contains('شراء') ||
+                          lowerLabel.contains('بيع')) {
                         defaultIconPath = AppIcons.buySell;
                         if (subtitleText.isEmpty) {
                           subtitleText = "List items for sale or trade";
@@ -102,15 +108,21 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
                         onTap = () => NavigationService.navigateTo(
                           Routes.buySellStep1Photos,
                         );
-                      } else if (lowerLabel.contains('job')) {
+                      } else if (slug.contains('job') ||
+                          lowerLabel.contains('job') ||
+                          lowerLabel.contains('وظائف')) {
                         defaultIconPath = AppIcons.job;
                         if (subtitleText.isEmpty) {
                           subtitleText = "Post a job opportunity";
                         }
                         onTap = () =>
                             NavigationService.navigateTo(Routes.jobStep1Photos);
-                      } else if (lowerLabel.contains('business') ||
-                          lowerLabel.contains('directory')) {
+                      } else if (slug.contains('business') ||
+                          slug.contains('directory') ||
+                          lowerLabel.contains('business') ||
+                          lowerLabel.contains('directory') ||
+                          lowerLabel.contains('أعمال') ||
+                          lowerLabel.contains('دليل')) {
                         defaultIconPath = AppIcons.business;
                         if (subtitleText.isEmpty) {
                           subtitleText = "Add your business profile";
@@ -118,7 +130,9 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
                         onTap = () => NavigationService.navigateTo(
                           Routes.businessStep1Photos,
                         );
-                      } else if (lowerLabel.contains('service')) {
+                      } else if (slug.contains('service') ||
+                          lowerLabel.contains('service') ||
+                          lowerLabel.contains('خدمات')) {
                         defaultIconPath = AppIcons.service;
                         if (subtitleText.isEmpty) {
                           subtitleText = "Offer your professional services";

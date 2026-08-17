@@ -31,15 +31,21 @@ class ChatMessage {
   });
 
   factory ChatMessage.fromDatum(Datum datum) {
-    final name = (datum.otherUser?.name != null && datum.otherUser!.name!.trim().isNotEmpty)
+    final name =
+        (datum.otherUser?.name != null &&
+            datum.otherUser!.name!.trim().isNotEmpty)
         ? datum.otherUser!.name!.trim()
         : 'User';
     final initials = _getInitials(name);
     final lastMsg = datum.lastMessage?.message ?? '';
-    final timeStr = datum.lastMessage?.timeAgo ?? _formatDate(datum.updatedAt ?? datum.createdAt);
+    final timeStr =
+        datum.lastMessage?.timeAgo ??
+        _formatDate(datum.updatedAt ?? datum.createdAt);
 
     return ChatMessage(
-      id: datum.id?.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),
+      id:
+          datum.id?.toString() ??
+          DateTime.now().millisecondsSinceEpoch.toString(),
       name: name,
       initials: initials,
       lastMessage: lastMsg,
@@ -194,14 +200,15 @@ class _MessagesScreenListState extends State<MessagesScreenList>
                 .map((d) => ChatMessage.fromDatum(d))
                 .where((m) => !_deletedIds.contains(m.id))
                 .toList();
-            final int totalUnread =
-                items.where((m) => m.unreadCount > 0).length;
+            final int totalUnread = items
+                .where((m) => m.unreadCount > 0)
+                .length;
 
             return Row(
               children: [
-                const Text(
-                  'Messages',
-                  style: TextStyle(
+                Text(
+                  'Messages'.tr,
+                  style: const TextStyle(
                     color: Colors.black87,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -250,7 +257,7 @@ class _MessagesScreenListState extends State<MessagesScreenList>
                 controller: _searchController,
                 onChanged: _onSearchChanged,
                 decoration: InputDecoration(
-                  hintText: 'Search conversations...',
+                  hintText: 'Search conversations...'.tr,
                   hintStyle: TextStyle(color: Colors.grey[400], fontSize: 15),
                   prefixIcon: Icon(
                     Icons.search,
@@ -333,9 +340,9 @@ class _MessagesScreenListState extends State<MessagesScreenList>
                         .where(
                           (chat) =>
                               chat.name.toLowerCase().contains(_searchQuery) ||
-                              chat.lastMessage
-                                  .toLowerCase()
-                                  .contains(_searchQuery),
+                              chat.lastMessage.toLowerCase().contains(
+                                _searchQuery,
+                              ),
                         )
                         .toList();
                   }
@@ -355,8 +362,8 @@ class _MessagesScreenListState extends State<MessagesScreenList>
                             const SizedBox(height: 12),
                             Text(
                               _searchQuery.isNotEmpty
-                                  ? 'No conversations found'
-                                  : 'No messages yet',
+                                  ? 'No conversations found'.tr
+                                  : 'No messages yet'.tr,
                               style: TextStyle(
                                 color: Colors.grey[500],
                                 fontSize: 16,
@@ -396,25 +403,21 @@ class _MessagesScreenListState extends State<MessagesScreenList>
     final double start = (index * 0.08).clamp(0.0, 0.7);
     final double end = (start + 0.3).clamp(0.3, 1.0);
 
-    final Animation<double> fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(
-      CurvedAnimation(
-        parent: _animController,
-        curve: Interval(start, end, curve: Curves.easeOut),
-      ),
-    );
+    final Animation<double> fadeAnimation = Tween<double>(begin: 0.0, end: 1.0)
+        .animate(
+          CurvedAnimation(
+            parent: _animController,
+            curve: Interval(start, end, curve: Curves.easeOut),
+          ),
+        );
 
-    final Animation<Offset> slideAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 0.2),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _animController,
-        curve: Interval(start, end, curve: Curves.easeOutCubic),
-      ),
-    );
+    final Animation<Offset> slideAnimation =
+        Tween<Offset>(begin: const Offset(0.0, 0.2), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _animController,
+            curve: Interval(start, end, curve: Curves.easeOutCubic),
+          ),
+        );
 
     return FadeTransition(
       opacity: fadeAnimation,
@@ -434,7 +437,12 @@ class _MessagesScreenListState extends State<MessagesScreenList>
           },
           child: GestureDetector(
             onTap: () {
-              Get.to(() => MessageScreen(chat: chat, conversation_id: int.tryParse(chat.id) ?? 0,));
+              Get.to(
+                () => MessageScreen(
+                  chat: chat,
+                  conversation_id: int.tryParse(chat.id) ?? 0,
+                ),
+              );
             },
             child: _buildChatTile(chat),
           ),
@@ -450,11 +458,8 @@ class _MessagesScreenListState extends State<MessagesScreenList>
       shrinkWrap: true,
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
       itemCount: 7,
-      separatorBuilder: (context, index) => const Divider(
-        height: 1,
-        indent: 80,
-        color: Color(0xFFF1F3F5),
-      ),
+      separatorBuilder: (context, index) =>
+          const Divider(height: 1, indent: 80, color: Color(0xFFF1F3F5)),
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
           baseColor: Colors.grey[300]!,
@@ -599,9 +604,7 @@ class _MessagesScreenListState extends State<MessagesScreenList>
                   ),
                 )
               else
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
             ],
           ),
         ],
@@ -637,10 +640,7 @@ class _MessagesScreenListState extends State<MessagesScreenList>
               height: size,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.cover,
-                ),
+                image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
               ),
             ),
             placeholder: (context, url) => Shimmer.fromColors(

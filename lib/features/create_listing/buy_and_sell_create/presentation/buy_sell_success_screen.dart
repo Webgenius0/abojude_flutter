@@ -69,7 +69,7 @@ class _BuySellSuccessScreenState extends State<BuySellSuccessScreen> {
 
                       // Title
                       Text(
-                        "Listing Submitted\nSuccessfully",
+                        "Listing Submitted\nSuccessfully".tr,
                         textAlign: TextAlign.center,
                         style: TextFontStyle.textStyle22IbmPlexSansW600
                             .copyWith(
@@ -82,7 +82,8 @@ class _BuySellSuccessScreenState extends State<BuySellSuccessScreen> {
 
                       // Description
                       Text(
-                        "Your listing has been submitted and is currently awaiting admin approval. It will become visible to other users once approved.",
+                        "Your listing has been submitted and is currently awaiting admin approval. It will become visible to other users once approved."
+                            .tr,
                         textAlign: TextAlign.center,
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(
@@ -106,25 +107,26 @@ class _BuySellSuccessScreenState extends State<BuySellSuccessScreen> {
                               icon: Icons.access_time_outlined,
                               iconBg: const Color(0xFFEFF6FF),
                               iconColor: const Color(0xFF3B82F6),
-                              title: "Review Time",
-                              subtitle: "Usually within 24 hours",
+                              title: "Review Time".tr,
+                              subtitle: "Usually within 24 hours".tr,
                             ),
                             const Divider(color: Color(0xFFF3F4F6), height: 1),
                             _buildStatusItem(
                               icon: Icons.notifications_none_outlined,
                               iconBg: const Color(0xFFECFDF5),
                               iconColor: const Color(0xFF10B981),
-                              title: "Notification",
+                              title: "Notification".tr,
                               subtitle:
-                                  "You'll be notified when approved or rejected",
+                                  "You'll be notified when approved or rejected"
+                                      .tr,
                             ),
                             const Divider(color: Color(0xFFF3F4F6), height: 1),
                             _buildStatusItem(
                               icon: Icons.visibility_off_outlined,
                               iconBg: const Color(0xFFFEF2F2),
                               iconColor: const Color(0xFFEF4444),
-                              title: "Visibility",
-                              subtitle: "Hidden from public until approved",
+                              title: "Visibility".tr,
+                              subtitle: "Hidden from public until approved".tr,
                             ),
                           ],
                         ),
@@ -155,7 +157,7 @@ class _BuySellSuccessScreenState extends State<BuySellSuccessScreen> {
                               ),
                             ),
                             child: Text(
-                              "Status: $capitalizedStatus",
+                              "Status".tr + ": " + capitalizedStatus.tr,
                               style: TextStyle(
                                 color: const Color(0xFFEA580C),
                                 fontSize: 13.sp,
@@ -190,7 +192,7 @@ class _BuySellSuccessScreenState extends State<BuySellSuccessScreen> {
                       ),
                       child: Center(
                         child: Text(
-                          "Back to Home",
+                          "Back to Home".tr,
                           style: TextFontStyle.textStyle16InterW600.copyWith(
                             color: Colors.white,
                             fontSize: 15.sp,
@@ -204,12 +206,10 @@ class _BuySellSuccessScreenState extends State<BuySellSuccessScreen> {
                   // View My Listings Button
                   GestureDetector(
                     onTap: () {
-
                       Get.to(() => const MyListingsScreen());
                       getMyListRxObj.getMyList(isRefresh: true);
 
                       NavigationService.navigateTo(Routes.myListingsScreen);
-
                     },
                     child: Container(
                       width: double.infinity,
@@ -220,7 +220,7 @@ class _BuySellSuccessScreenState extends State<BuySellSuccessScreen> {
                       ),
                       child: Center(
                         child: Text(
-                          "View My Listings",
+                          "View My Listings".tr,
                           style: TextFontStyle.textStyle16InterW600.copyWith(
                             color: Color(0xFF4B5563),
                             fontSize: 15.sp,

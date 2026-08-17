@@ -211,11 +211,11 @@ class _ExploreScreenState extends State<ExploreScreen>
   }
 
   Widget _buildHeader() {
-    return const Padding(
-      padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Text(
-        'Explore',
-        style: TextStyle(
+        'Explore'.tr,
+        style: const TextStyle(
           fontSize: 26,
           fontWeight: FontWeight.bold,
           color: Color(0xFF111111),
@@ -240,7 +240,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                 controller: _searchController,
                 style: const TextStyle(fontSize: 14),
                 decoration: InputDecoration(
-                  hintText: 'What are you looking for?',
+                  hintText: 'What are you looking for?'.tr,
                   hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
                   prefixIcon: Icon(
                     Icons.search,
@@ -296,11 +296,11 @@ class _ExploreScreenState extends State<ExploreScreen>
 
   Widget _buildCategoryTabs() {
     final categories = [
-      (ListingCategory.all, 'All'),
-      (ListingCategory.buyAndSell, 'Buy & Sell'),
-      (ListingCategory.business, 'Business'),
-      (ListingCategory.jobs, 'Jobs'),
-      (ListingCategory.services, 'Services'),
+      (ListingCategory.all, 'All'.tr),
+      (ListingCategory.buyAndSell, 'Buy & Sell'.tr),
+      (ListingCategory.business, 'Business'.tr),
+      (ListingCategory.jobs, 'Jobs'.tr),
+      (ListingCategory.services, 'Services'.tr),
     ];
 
     return SingleChildScrollView(
@@ -348,7 +348,7 @@ class _ExploreScreenState extends State<ExploreScreen>
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
       child: Text(
-        '$count ${count == 1 ? 'listing' : 'listings'} found',
+        count == 1 ? '1 listing found'.tr : '$count ' + 'listings found'.tr,
         style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
       ),
     );
@@ -392,7 +392,7 @@ class _ExploreScreenState extends State<ExploreScreen>
               Icon(Icons.search_off, size: 60, color: Colors.grey[300]),
               const SizedBox(height: 12),
               Text(
-                'No listings found',
+                'No listings found'.tr,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[500],
@@ -401,7 +401,7 @@ class _ExploreScreenState extends State<ExploreScreen>
               ),
               const SizedBox(height: 6),
               Text(
-                'Try a different search or category',
+                'Try a different search or category'.tr,
                 style: TextStyle(fontSize: 13, color: Colors.grey[400]),
               ),
             ],
@@ -451,17 +451,24 @@ class _ExploreScreenState extends State<ExploreScreen>
               onTap: () {
                 final category = item.category;
                 final int? postId = int.tryParse(item.id);
+                final lowerCat = category.toLowerCase();
 
-                if (category.toLowerCase().contains('buy') ||
-                    category.toLowerCase().contains('sell')) {
+                if (lowerCat.contains('buy') ||
+                    lowerCat.contains('sell') ||
+                    lowerCat.contains('شراء') ||
+                    lowerCat.contains('بيع')) {
                   Get.to(() => ProductDetailsScreen(postId: postId));
-                } else if (category.toLowerCase().contains('business')) {
+                } else if (lowerCat.contains('business') ||
+                    lowerCat.contains('أعمال') ||
+                    lowerCat.contains('دليل')) {
                   Get.to(() => BusinessScreen(postId: postId));
-                } else if (category.toLowerCase().contains('job')) {
+                } else if (lowerCat.contains('job') ||
+                    lowerCat.contains('وظائف')) {
                   Get.to(
                     () => NavigationService.navigateTo(Routes.jobStep1Photos),
                   );
-                } else if (category.toLowerCase().contains('service')) {
+                } else if (lowerCat.contains('service') ||
+                    lowerCat.contains('خدمات')) {
                   Get.to(() => const ServicesScreen());
                 } else {
                   Get.to(() => BusinessScreen(postId: postId));

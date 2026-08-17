@@ -7,7 +7,6 @@ import 'package:dio/dio.dart';
 import 'package:abojude_flutter/features/home/model/get_category_list_model.dart';
 import 'package:abojude_flutter/networks/api_acess.dart';
 import 'package:get/get.dart';
-
 import '../../../helpers/all_routes.dart';
 import '../../../helpers/navigation_service.dart';
 
@@ -54,14 +53,25 @@ class CategoriesSection extends StatelessWidget {
 
                 return GestureDetector(
                   onTap: () {
+                    final slug = cat.slug?.toLowerCase() ?? '';
                     final lowerLabel = label.toLowerCase();
-                    if (lowerLabel.contains('buy') ||
-                        lowerLabel.contains('sell')) {
+                    if (slug.contains('buy') ||
+                        slug.contains('sell') ||
+                        lowerLabel.contains('buy') ||
+                        lowerLabel.contains('sell') ||
+                        lowerLabel.contains('شراء') ||
+                        lowerLabel.contains('بيع')) {
                       NavigationService.navigateTo(Routes.buySellStep1Photos);
-                    } else if (lowerLabel.contains('job')) {
+                    } else if (slug.contains('job') ||
+                        lowerLabel.contains('job') ||
+                        lowerLabel.contains('وظائف')) {
                       NavigationService.navigateTo(Routes.jobStep1Photos);
-                    } else if (lowerLabel.contains('business') ||
-                        lowerLabel.contains('directory')) {
+                    } else if (slug.contains('business') ||
+                        slug.contains('directory') ||
+                        lowerLabel.contains('business') ||
+                        lowerLabel.contains('directory') ||
+                        lowerLabel.contains('أعمال') ||
+                        lowerLabel.contains('دليل')) {
                       NavigationService.navigateTo(Routes.businessStep1Photos);
 
                       // Get.to(

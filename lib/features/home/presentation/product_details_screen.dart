@@ -526,7 +526,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   Widget _buildPriceAndCategory(PostDetailsData? details) {
     final category = details?.categoryName ?? 'Buy & Sell';
-    String priceStr = details?.price ?? '\$1,199';
+    String price = details?.price ?? '';
+    String priceStr = price.trim().isEmpty ? '0.00' : price;
     if (!priceStr.startsWith('\$')) {
       priceStr = '\$$priceStr';
     }
@@ -665,7 +666,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             _buildOverviewRow('Condition', 'Like New / Excellent'),
             _buildOverviewRow(
               'Location',
-              '${details?.city ?? 'Toronto'}, ${details?.province ?? 'Manitoba'}',
+              '${(details?.city ?? 'Toronto').tr}, ${(details?.province ?? 'Manitoba').tr}',
             ),
           ],
         ],
@@ -679,9 +680,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+          Text(label.tr, style: const TextStyle(color: Colors.grey, fontSize: 12)),
           Text(
-            value,
+            value.tr,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
           ),
         ],
@@ -858,7 +859,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    title.tr,
                     style: const TextStyle(
                       fontSize: 11,
                       color: Color(0xFF9CA3AF),
@@ -866,7 +867,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    value,
+                    value.tr,
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
