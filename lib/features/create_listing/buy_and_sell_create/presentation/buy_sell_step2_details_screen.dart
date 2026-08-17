@@ -15,7 +15,8 @@ class BuySellStep2DetailsScreen extends StatefulWidget {
   const BuySellStep2DetailsScreen({super.key, required this.model});
 
   @override
-  State<BuySellStep2DetailsScreen> createState() => _BuySellStep2DetailsScreenState();
+  State<BuySellStep2DetailsScreen> createState() =>
+      _BuySellStep2DetailsScreenState();
 }
 
 class _BuySellStep2DetailsScreenState extends State<BuySellStep2DetailsScreen> {
@@ -25,13 +26,21 @@ class _BuySellStep2DetailsScreenState extends State<BuySellStep2DetailsScreen> {
   late final TextEditingController _priceController;
   late String _selectedCondition;
 
-  final List<String> _conditions = ["New", "Like New", "Good", "Fair", "For Parts"];
+  final List<String> _conditions = [
+    "New",
+    "Like New",
+    "Good",
+    "Fair",
+    "For Parts",
+  ];
 
   @override
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.model.title);
-    _descriptionController = TextEditingController(text: widget.model.description);
+    _descriptionController = TextEditingController(
+      text: widget.model.description,
+    );
     _priceController = TextEditingController(text: widget.model.price);
     _selectedCondition = widget.model.condition;
   }
@@ -56,7 +65,10 @@ class _BuySellStep2DetailsScreenState extends State<BuySellStep2DetailsScreen> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 16.h,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -65,10 +77,11 @@ class _BuySellStep2DetailsScreenState extends State<BuySellStep2DetailsScreen> {
                       TextFormField(
                         controller: _titleController,
                         textInputAction: TextInputAction.next,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
+                        decoration: _buildInputDecoration(
+                          "Enter listing title".tr,
                         ),
-                        decoration: _buildInputDecoration("Enter listing title".tr),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return "Please enter a listing title".tr;
@@ -84,10 +97,11 @@ class _BuySellStep2DetailsScreenState extends State<BuySellStep2DetailsScreen> {
                         controller: _descriptionController,
                         maxLines: 5,
                         minLines: 3,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
+                        decoration: _buildInputDecoration(
+                          "Describe your item in detail...".tr,
                         ),
-                        decoration: _buildInputDecoration("Describe your item in detail...".tr),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return "Please describe your item".tr;
@@ -103,9 +117,8 @@ class _BuySellStep2DetailsScreenState extends State<BuySellStep2DetailsScreen> {
                         controller: _priceController,
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.done,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration("e.g. \$500".tr),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -135,21 +148,32 @@ class _BuySellStep2DetailsScreenState extends State<BuySellStep2DetailsScreen> {
                               });
                             },
                             child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.w,
+                                vertical: 8.h,
+                              ),
                               decoration: BoxDecoration(
-                                color: isSelected ? const Color(0xFF1D3B71) : const Color(0xFFF3F4F6),
+                                color: isSelected
+                                    ? const Color(0xFF1D3B71)
+                                    : const Color(0xFFF3F4F6),
                                 borderRadius: BorderRadius.circular(20.r),
                                 border: Border.all(
-                                  color: isSelected ? const Color(0xFF1D3B71) : const Color(0xFFE5E7EB),
+                                  color: isSelected
+                                      ? const Color(0xFF1D3B71)
+                                      : const Color(0xFFE5E7EB),
                                   width: 1.2,
                                 ),
                               ),
                               child: Text(
                                 cond.tr,
                                 style: TextStyle(
-                                  color: isSelected ? Colors.white : const Color(0xFF4B5563),
+                                  color: isSelected
+                                      ? Colors.white
+                                      : const Color(0xFF4B5563),
                                   fontSize: 13.sp,
-                                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w600
+                                      : FontWeight.normal,
                                 ),
                               ),
                             ),
@@ -168,7 +192,8 @@ class _BuySellStep2DetailsScreenState extends State<BuySellStep2DetailsScreen> {
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
                       widget.model.title = _titleController.text.trim();
-                      widget.model.description = _descriptionController.text.trim();
+                      widget.model.description = _descriptionController.text
+                          .trim();
                       // Format price clean
                       var priceText = _priceController.text.trim();
                       if (!priceText.startsWith('\$')) {

@@ -82,6 +82,8 @@ import 'package:abojude_flutter/features/profile/data/rx_contact_support/rx.dart
 import 'package:abojude_flutter/features/profile/model/contact_support_model.dart';
 import 'package:abojude_flutter/features/terms_of_service_screen/data/rx_terms_and_condition/rx.dart';
 import 'package:abojude_flutter/features/terms_of_service_screen/model/terms_and_condition_model.dart';
+import 'package:abojude_flutter/features/profile/data/rx_set_language/rx.dart';
+import 'package:abojude_flutter/features/profile/model/set_language_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 // // ------------- Register Api Access -----------------//
@@ -904,6 +906,11 @@ PostSentMessageRx postSentMessageRxObj = PostSentMessageRx(
 ReportPostRx reportPostRxObj = ReportPostRx(
   empty: ReportPostModel(),
   dataFetcher: BehaviorSubject<ReportPostModel>(),
+);
+
+SetLanguageRx setLanguageRxObj = SetLanguageRx(
+  empty: SetLanguageModel(),
+  dataFetcher: BehaviorSubject<SetLanguageModel>(),
 );
 
 

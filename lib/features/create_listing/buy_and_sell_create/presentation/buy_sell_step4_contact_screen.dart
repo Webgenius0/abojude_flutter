@@ -18,7 +18,8 @@ class BuySellStep4ContactScreen extends StatefulWidget {
   const BuySellStep4ContactScreen({super.key, required this.model});
 
   @override
-  State<BuySellStep4ContactScreen> createState() => _BuySellStep4ContactScreenState();
+  State<BuySellStep4ContactScreen> createState() =>
+      _BuySellStep4ContactScreenState();
 }
 
 class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
@@ -32,7 +33,9 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
   void initState() {
     super.initState();
     _phoneController = TextEditingController(text: widget.model.phoneNumber);
-    _whatsAppController = TextEditingController(text: widget.model.whatsAppNumber);
+    _whatsAppController = TextEditingController(
+      text: widget.model.whatsAppNumber,
+    );
     _emailController = TextEditingController(text: widget.model.emailAddress);
     _enableInAppChat = widget.model.enableInAppChat;
   }
@@ -57,12 +60,16 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 16.h,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Choose how buyers can reach you. Enable at least one contact method.".tr,
+                        "Choose how buyers can reach you. Enable at least one contact method."
+                            .tr,
                         style: TextFontStyle.textStyle14IbmPlexSansW400,
                       ),
                       SizedBox(height: 24.h),
@@ -73,9 +80,8 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
                         controller: _phoneController,
                         keyboardType: TextInputType.phone,
                         textInputAction: TextInputAction.next,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration("+1 (416) 555-0123"),
                       ),
                       SizedBox(height: 20.h),
@@ -86,9 +92,8 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
                         controller: _whatsAppController,
                         keyboardType: TextInputType.phone,
                         textInputAction: TextInputAction.next,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration("+1 (416) 555-0123"),
                       ),
                       SizedBox(height: 20.h),
@@ -99,13 +104,14 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.done,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration("your@email.com".tr),
                         validator: (value) {
                           if (value != null && value.trim().isNotEmpty) {
-                            final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                            final emailRegex = RegExp(
+                              r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                            );
                             if (!emailRegex.hasMatch(value.trim())) {
                               return "Please enter a valid email address".tr;
                             }
@@ -117,7 +123,10 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
 
                       // Enable in-App Chat Card
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 16.h,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12.r),
@@ -134,16 +143,16 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
                                 children: [
                                   Text(
                                     "Enable in-App Chat".tr,
-                                    style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
-                                      fontSize: 15.sp,
-                                    ),
+                                    style: TextFontStyle
+                                        .textStyle16IbmPlexSansW600
+                                        .copyWith(fontSize: 15.sp),
                                   ),
                                   SizedBox(height: 4.h),
                                   Text(
                                     "Allow buyers to message you in the app".tr,
-                                    style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                                      fontSize: 13.sp,
-                                    ),
+                                    style: TextFontStyle
+                                        .textStyle14IbmPlexSansW400
+                                        .copyWith(fontSize: 13.sp),
                                   ),
                                 ],
                               ),
@@ -177,15 +186,17 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
                           : () {
                               if (_formKey.currentState!.validate()) {
                                 final phone = _phoneController.text.trim();
-                                final whatsapp = _whatsAppController.text.trim();
+                                final whatsapp = _whatsAppController.text
+                                    .trim();
                                 final email = _emailController.text.trim();
- 
+
                                 if (phone.isEmpty &&
                                     whatsapp.isEmpty &&
                                     email.isEmpty &&
                                     !_enableInAppChat) {
                                   ToastUtil.showShortToast(
-                                    "Please provide or enable at least one contact method.".tr,
+                                    "Please provide or enable at least one contact method."
+                                        .tr,
                                   );
                                   return;
                                 }
@@ -197,32 +208,35 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
 
                                 createBuyAndSellCategoryRxObj
                                     .createBuyAndSellCategory(
-                                  categorySlug: "buy-sell",
-                                  title: widget.model.title,
-                                  description: widget.model.description,
-                                  price: widget.model.price,
-                                  condition: [widget.model.condition],
-                                  province: widget.model.province,
-                                  city: widget.model.city,
-                                  address: widget.model.address,
-                                  phone: phone,
-                                  whatsapp: whatsapp,
-                                  email: email,
-                                  isAppChat: _enableInAppChat ? 1 : 0,
-                                  photos: widget.model.images,
-                                ).then((res) {
-                                  ToastUtil.showShortToast(
-                                    res.message ?? "Listing drafted successfully",
-                                  );
-                                  NavigationService.navigateTo(
-                                    Routes.buySellStep5Review,
-                                    arguments: widget.model,
-                                  );
-                                }).catchError((e) {
-                                  ToastUtil.showShortToast(
-                                    "Failed to create draft listing.",
-                                  );
-                                });
+                                      categorySlug: "buy-sell",
+                                      title: widget.model.title,
+                                      description: widget.model.description,
+                                      price: widget.model.price,
+                                      condition: [widget.model.condition],
+                                      province: widget.model.province,
+                                      city: widget.model.city,
+                                      address: widget.model.address,
+                                      phone: phone,
+                                      whatsapp: whatsapp,
+                                      email: email,
+                                      isAppChat: _enableInAppChat ? 1 : 0,
+                                      photos: widget.model.images,
+                                    )
+                                    .then((res) {
+                                      ToastUtil.showShortToast(
+                                        res.message ??
+                                            "Listing drafted successfully",
+                                      );
+                                      NavigationService.navigateTo(
+                                        Routes.buySellStep5Review,
+                                        arguments: widget.model,
+                                      );
+                                    })
+                                    .catchError((e) {
+                                      ToastUtil.showShortToast(
+                                        "Failed to create draft listing.",
+                                      );
+                                    });
                               }
                             },
                     );

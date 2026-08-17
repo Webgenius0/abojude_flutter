@@ -67,7 +67,8 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Choose how buyers can reach you. Enable at least one contact method.".tr,
+                        "Choose how buyers can reach you. Enable at least one contact method."
+                            .tr,
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(color: const Color(0xFF6B7280)),
                       ),
@@ -81,7 +82,9 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                         textInputAction: TextInputAction.next,
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(color: AppColor.c2E3227),
-                        decoration: _buildInputDecoration("+1 (416) 555-0123"),
+                        decoration: _buildInputDecoration(
+                          "Enter Phone Number".tr,
+                        ),
                       ),
                       SizedBox(height: 20.h),
 
@@ -93,7 +96,9 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                         textInputAction: TextInputAction.next,
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(color: AppColor.c2E3227),
-                        decoration: _buildInputDecoration("+1 (416) 555-0123"),
+                        decoration: _buildInputDecoration(
+                          "Enter WhatsApp Number".tr,
+                        ),
                       ),
                       SizedBox(height: 20.h),
 
@@ -197,7 +202,8 @@ class _JobStep4ContactScreenState extends State<JobStep4ContactScreen> {
                                     email.isEmpty &&
                                     !_enableInAppChat) {
                                   ToastUtil.showShortToast(
-                                    "Please provide or enable at least one contact method.".tr,
+                                    "Please provide or enable at least one contact method."
+                                        .tr,
                                   );
                                   return;
                                 }

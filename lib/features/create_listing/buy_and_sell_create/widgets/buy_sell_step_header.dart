@@ -60,17 +60,17 @@ class BuySellStepHeader extends StatelessWidget implements PreferredSizeWidget {
                     children: [
                       Text(
                         'Buy & Sell'.tr,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: const Color(0xFF797A7C),
-                          fontSize: 13.sp,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(
+                              color: const Color(0xFF797A7C),
+                              fontSize: 13.sp,
+                            ),
                       ),
                       SizedBox(height: 2.h),
                       Text(
                         title.tr,
-                        style: TextFontStyle.textStyle22IbmPlexSansW600.copyWith(
-                          fontSize: 18.sp,
-                        ),
+                        style: TextFontStyle.textStyle22IbmPlexSansW600
+                            .copyWith(fontSize: 18.sp),
                       ),
                     ],
                   ),
@@ -84,7 +84,7 @@ class BuySellStepHeader extends StatelessWidget implements PreferredSizeWidget {
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Text(
-                  '$currentStep'.tr + ' ' + 'of'.tr + ' 5'.tr,
+                  '$currentStep'.tr + ' ' + 'of'.tr + ' ' + '5'.tr,
                   style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
                     fontSize: 14.sp,
                     color: const Color(0xFF1D3B71),
@@ -103,7 +103,9 @@ class BuySellStepHeader extends StatelessWidget implements PreferredSizeWidget {
                   height: 4.h,
                   margin: EdgeInsets.symmetric(horizontal: 2.w),
                   decoration: BoxDecoration(
-                    color: isActive ? const Color(0xFF1D3B71) : const Color(0xFFE5E7EB),
+                    color: isActive
+                        ? const Color(0xFF1D3B71)
+                        : const Color(0xFFE5E7EB),
                     borderRadius: BorderRadius.circular(2.r),
                   ),
                 ),
