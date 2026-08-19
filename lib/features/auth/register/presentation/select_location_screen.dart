@@ -116,9 +116,9 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                               children: [
                                 // --------------- Province Dropdown ---------------
                                 LocationDropdownField(
-                                  label: 'Province/Territory',
+                                  label: 'Province/Territory'.tr,
                                   value: _selectedProvince,
-                                  hintText: 'Select province',
+                                  hintText: 'Select province'.tr,
                                   items: provinceNames,
                                   onChanged: (value) {
                                     setState(() {
@@ -149,9 +149,9 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                 // --------------- City Dropdown ---------------
                                 if (_selectedProvince == null)
                                   LocationDropdownField(
-                                    label: 'City',
+                                    label: 'City'.tr,
                                     value: null,
-                                    hintText: 'Select province first',
+                                    hintText: 'Select province first'.tr,
                                     items: null,
                                     onChanged: null,
                                     prefixIcon: Padding(
@@ -203,9 +203,9 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                           cityModel?.data ?? [];
 
                                       return LocationDropdownField(
-                                        label: 'City',
+                                        label: 'City'.tr,
                                         value: _selectedCity,
-                                        hintText: 'Select city',
+                                        hintText: 'Select city'.tr,
                                         items: cityNames,
                                         onChanged: (value) {
                                           setState(() {

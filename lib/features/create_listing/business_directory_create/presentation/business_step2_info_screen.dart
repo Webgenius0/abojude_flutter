@@ -140,7 +140,8 @@ class _BusinessStep2InfoScreenState extends State<BusinessStep2InfoScreen> {
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration(
-                          "Tell customers about your business, services, and what makes you unique...".tr,
+                          "Tell customers about your business, services, and what makes you unique..."
+                              .tr,
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -159,7 +160,7 @@ class _BusinessStep2InfoScreenState extends State<BusinessStep2InfoScreen> {
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration(
-                          "https://yourbusiness.ca",
+                          "https://yourbusiness.ca".tr,
                         ),
                       ),
                       SizedBox(height: 24.h),
@@ -229,7 +230,7 @@ class _BusinessStep2InfoScreenState extends State<BusinessStep2InfoScreen> {
                                           const Spacer(),
                                           Text(
                                             dayHours.isOpen
-                                                ? "${dayHours.openingTime} - ${dayHours.closingTime}"
+                                                ? "${_translateTime(dayHours.openingTime)} - ${_translateTime(dayHours.closingTime)}"
                                                 : "Closed".tr,
                                             style: TextStyle(
                                               fontSize: 13.sp,
@@ -334,5 +335,17 @@ class _BusinessStep2InfoScreenState extends State<BusinessStep2InfoScreen> {
         borderSide: const BorderSide(color: Colors.red, width: 1.5),
       ),
     );
+  }
+
+  String _translateTime(String time) {
+    String formatted = time.replaceAll("AM", "AM".tr).replaceAll("PM", "PM".tr);
+    if (Get.locale?.languageCode == 'ar') {
+      const englishDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+      const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+      for (int i = 0; i < englishDigits.length; i++) {
+        formatted = formatted.replaceAll(englishDigits[i], arabicDigits[i]);
+      }
+    }
+    return formatted;
   }
 }

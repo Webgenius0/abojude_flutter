@@ -146,7 +146,11 @@ class Data {
         title: json["title"],
         companyName: json["company_name"],
         description: json["description"],
-        jobType: json["job_type"] == null ? [] : List<String>.from(json["job_type"]!.map((x) => x)),
+        jobType: json["job_type"] == null
+            ? []
+            : (json["job_type"] is List
+                ? List<String>.from(json["job_type"]!.map((x) => x.toString()))
+                : [json["job_type"].toString()]),
         province: json["province"],
         city: json["city"],
         address: json["address"],

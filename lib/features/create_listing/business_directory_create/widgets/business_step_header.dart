@@ -85,7 +85,7 @@ class BusinessStepHeader extends StatelessWidget
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Text(
-                  '$currentStep'.tr + ' ' + 'of'.tr + ' 6'.tr,
+                  '$currentStep'.tr + ' ' + 'of'.tr + ' ' + '6'.tr,
                   style: TextFontStyle.textStyle16IbmPlexSansW600.copyWith(
                     fontSize: 14.sp,
                     color: const Color(0xFF1D3B71),

@@ -21,7 +21,8 @@ class BusinessStep3GalleryScreen extends StatefulWidget {
       _BusinessStep3GalleryScreenState();
 }
 
-class _BusinessStep3GalleryScreenState extends State<BusinessStep3GalleryScreen> {
+class _BusinessStep3GalleryScreenState
+    extends State<BusinessStep3GalleryScreen> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickGalleryImage() async {
@@ -65,7 +66,8 @@ class _BusinessStep3GalleryScreenState extends State<BusinessStep3GalleryScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Showcase your business with additional photos. This step is optional.".tr,
+                      "Showcase your business with additional photos. This step is optional."
+                          .tr,
                       style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                         color: const Color(0xFF6B7280),
                         height: 1.4,
@@ -121,16 +123,18 @@ class _BusinessStep3GalleryScreenState extends State<BusinessStep3GalleryScreen>
                         : GridView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 12.w,
-                              mainAxisSpacing: 12.h,
-                              childAspectRatio: 1.0,
-                            ),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 12.w,
+                                  mainAxisSpacing: 12.h,
+                                  childAspectRatio: 1.0,
+                                ),
                             itemCount: images.length + 1,
                             itemBuilder: (context, index) {
                               if (index == images.length) {
-                                if (images.length >= 10) return const SizedBox.shrink();
+                                if (images.length >= 10)
+                                  return const SizedBox.shrink();
                                 return GestureDetector(
                                   onTap: _pickGalleryImage,
                                   child: CustomPaint(
@@ -141,7 +145,9 @@ class _BusinessStep3GalleryScreenState extends State<BusinessStep3GalleryScreen>
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: const Color(0xFFF9FAFB),
-                                        borderRadius: BorderRadius.circular(12.r),
+                                        borderRadius: BorderRadius.circular(
+                                          12.r,
+                                        ),
                                       ),
                                       child: Icon(
                                         Icons.add_a_photo_outlined,
@@ -190,7 +196,8 @@ class _BusinessStep3GalleryScreenState extends State<BusinessStep3GalleryScreen>
                           ),
                     SizedBox(height: 16.h),
                     Text(
-                      "Add up to 10 photos (PNG, JPG, or WEBP), maximum 5MB per image.".tr,
+                      "Add up to 10 photos (PNG, JPG, or WEBP), maximum 5MB per image."
+                          .tr,
                       style: TextStyle(
                         color: const Color(0xFF9CA3AF),
                         fontSize: 12.sp,
@@ -216,7 +223,10 @@ class _BusinessStep3GalleryScreenState extends State<BusinessStep3GalleryScreen>
                   SizedBox(height: 12.h),
                 ],
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 16.h,
+                  ),
                   child: BusinessButton(
                     text: "Continue".tr,
                     onTap: () {

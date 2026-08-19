@@ -25,15 +25,25 @@ class _JobStep2InfoScreenState extends State<JobStep2InfoScreen> {
   late final TextEditingController _descriptionController;
   late String _selectedJobType;
 
-  final List<String> _jobTypes = ["Full-Time", "Part-Time", "Contract", "Remote", "Temporary"];
+  final List<String> _jobTypes = [
+    "Full-Time",
+    "Part-Time",
+    "Contract",
+    "Remote",
+    "Temporary",
+  ];
 
   @override
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.model.title);
     _companyController = TextEditingController(text: widget.model.companyName);
-    _descriptionController = TextEditingController(text: widget.model.description);
-    _selectedJobType = widget.model.jobType.isNotEmpty ? widget.model.jobType : "Full-Time";
+    _descriptionController = TextEditingController(
+      text: widget.model.description,
+    );
+    _selectedJobType = widget.model.jobType.isNotEmpty
+        ? widget.model.jobType
+        : "Full-Time";
   }
 
   @override
@@ -56,7 +66,10 @@ class _JobStep2InfoScreenState extends State<JobStep2InfoScreen> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 16.h,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -65,9 +78,8 @@ class _JobStep2InfoScreenState extends State<JobStep2InfoScreen> {
                       TextFormField(
                         controller: _titleController,
                         textInputAction: TextInputAction.next,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration("Enter job title".tr),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -83,10 +95,11 @@ class _JobStep2InfoScreenState extends State<JobStep2InfoScreen> {
                       TextFormField(
                         controller: _companyController,
                         textInputAction: TextInputAction.next,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
+                        decoration: _buildInputDecoration(
+                          "Enter company name".tr,
                         ),
-                        decoration: _buildInputDecoration("Enter company name".tr),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return "Please enter a company name".tr;
@@ -102,11 +115,11 @@ class _JobStep2InfoScreenState extends State<JobStep2InfoScreen> {
                         controller: _descriptionController,
                         maxLines: 5,
                         minLines: 3,
-                        style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
-                          color: AppColor.c2E3227,
-                        ),
+                        style: TextFontStyle.textStyle14IbmPlexSansW400
+                            .copyWith(color: AppColor.c2E3227),
                         decoration: _buildInputDecoration(
-                          "Describe the role, requirements, and responsibilities...".tr,
+                          "Describe the role, requirements, and responsibilities..."
+                              .tr,
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -131,21 +144,32 @@ class _JobStep2InfoScreenState extends State<JobStep2InfoScreen> {
                               });
                             },
                             child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.w,
+                                vertical: 8.h,
+                              ),
                               decoration: BoxDecoration(
-                                color: isSelected ? const Color(0xFF1D3B71) : const Color(0xFFF3F4F6),
+                                color: isSelected
+                                    ? const Color(0xFF1D3B71)
+                                    : const Color(0xFFF3F4F6),
                                 borderRadius: BorderRadius.circular(20.r),
                                 border: Border.all(
-                                  color: isSelected ? const Color(0xFF1D3B71) : const Color(0xFFE5E7EB),
+                                  color: isSelected
+                                      ? const Color(0xFF1D3B71)
+                                      : const Color(0xFFE5E7EB),
                                   width: 1.2,
                                 ),
                               ),
                               child: Text(
                                 type.tr,
                                 style: TextStyle(
-                                  color: isSelected ? Colors.white : const Color(0xFF4B5563),
+                                  color: isSelected
+                                      ? Colors.white
+                                      : const Color(0xFF4B5563),
                                   fontSize: 13.sp,
-                                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w600
+                                      : FontWeight.normal,
                                 ),
                               ),
                             ),
@@ -165,7 +189,8 @@ class _JobStep2InfoScreenState extends State<JobStep2InfoScreen> {
                     if (_formKey.currentState!.validate()) {
                       widget.model.title = _titleController.text.trim();
                       widget.model.companyName = _companyController.text.trim();
-                      widget.model.description = _descriptionController.text.trim();
+                      widget.model.description = _descriptionController.text
+                          .trim();
                       widget.model.jobType = _selectedJobType;
 
                       NavigationService.navigateTo(

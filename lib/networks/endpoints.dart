@@ -1,7 +1,5 @@
 // ignore_for_file: constant_identifier_names, unnecessary_string_interpolations
 
-import 'package:abojude_flutter/helpers/helper_methods.dart';
-
 const String url = "https://abojude.thesyndicates.team/api";
 //const String url = "https://ruthie-gastroenterological-bee.ngrok-free.dev/api";
 const String imageUrl = "${url}";

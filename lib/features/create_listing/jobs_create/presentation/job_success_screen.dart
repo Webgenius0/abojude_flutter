@@ -70,7 +70,8 @@ class JobSuccessScreen extends StatelessWidget {
 
                       // Description
                       Text(
-                        "Your job opportunity has been submitted and is currently awaiting admin approval. It will become visible to other users once approved.".tr,
+                        "Your job opportunity has been submitted and is currently awaiting admin approval. It will become visible to other users once approved."
+                            .tr,
                         textAlign: TextAlign.center,
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(
@@ -104,7 +105,8 @@ class JobSuccessScreen extends StatelessWidget {
                               iconColor: const Color(0xFF10B981),
                               title: "Notification".tr,
                               subtitle:
-                                  "You'll be notified when approved or rejected".tr,
+                                  "You'll be notified when approved or rejected"
+                                      .tr,
                             ),
                             const Divider(color: Color(0xFFF3F4F6), height: 1),
                             _buildStatusItem(
@@ -181,12 +183,10 @@ class JobSuccessScreen extends StatelessWidget {
                   // View My Listings Button
                   GestureDetector(
                     onTap: () {
-
                       Get.to(() => const MyListingsScreen());
                       getMyListRxObj.getMyList(isRefresh: true);
 
                       NavigationService.navigateTo(Routes.myListingsScreen);
-
                     },
                     child: Container(
                       width: double.infinity,

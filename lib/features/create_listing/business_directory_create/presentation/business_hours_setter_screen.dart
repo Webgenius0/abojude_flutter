@@ -117,7 +117,7 @@ class _BusinessHoursSetterScreenState extends State<BusinessHoursSetterScreen> {
                         return DropdownMenuItem<String>(
                           value: time,
                           child: Text(
-                            time,
+                            _translateTime(time),
                             style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                               color: AppColor.c2E3227,
                             ),
@@ -149,7 +149,7 @@ class _BusinessHoursSetterScreenState extends State<BusinessHoursSetterScreen> {
                         return DropdownMenuItem<String>(
                           value: time,
                           child: Text(
-                            time,
+                            _translateTime(time),
                             style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                               color: AppColor.c2E3227,
                             ),
@@ -216,5 +216,17 @@ class _BusinessHoursSetterScreenState extends State<BusinessHoursSetterScreen> {
         borderSide: const BorderSide(color: Color(0xFF1D3B71), width: 1.5),
       ),
     );
+  }
+
+  String _translateTime(String time) {
+    String formatted = time.replaceAll("AM", "AM".tr).replaceAll("PM", "PM".tr);
+    if (Get.locale?.languageCode == 'ar') {
+      const englishDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+      const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+      for (int i = 0; i < englishDigits.length; i++) {
+        formatted = formatted.replaceAll(englishDigits[i], arabicDigits[i]);
+      }
+    }
+    return formatted;
   }
 }
