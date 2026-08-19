@@ -347,7 +347,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                       ),
                     ),
                     child: Text(
-                      cat,
+                      cat.tr,
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
@@ -381,7 +381,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             const SizedBox(height: 10),
             _buildDropdown(
               value: _filters.province,
-              hint: 'Select province',
+              hint: 'Select province'.tr,
               prefixIcon: Icons.map_outlined,
               items: provinces,
               onChanged: (val) => setState(() {

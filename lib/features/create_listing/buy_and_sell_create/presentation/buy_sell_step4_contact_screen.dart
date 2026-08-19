@@ -233,9 +233,18 @@ class _BuySellStep4ContactScreenState extends State<BuySellStep4ContactScreen> {
                                       );
                                     })
                                     .catchError((e) {
-                                      ToastUtil.showShortToast(
-                                        "Failed to create draft listing.",
-                                      );
+                                      String errorMsg = "Failed to create draft listing.".tr;
+                                      try {
+                                        if (e.response?.data != null) {
+                                          final data = e.response.data;
+                                          if (data is Map && data['message'] != null) {
+                                            errorMsg = data['message'].toString();
+                                          } else if (data is Map && data['errors'] != null) {
+                                            errorMsg = data['errors'].toString();
+                                          }
+                                        }
+                                      } catch (_) {}
+                                      ToastUtil.showShortToast(errorMsg);
                                     });
                               }
                             },

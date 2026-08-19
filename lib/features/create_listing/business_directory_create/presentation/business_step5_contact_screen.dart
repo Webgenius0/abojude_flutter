@@ -72,38 +72,41 @@ class _BusinessStep5ContactScreenState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Configure how customers can contact your business. Add at least one contact channel.".tr,
+                        "Configure how customers can contact your business. Add at least one contact channel."
+                            .tr,
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(color: const Color(0xFF6B7280)),
                       ),
                       SizedBox(height: 24.h),
 
                       // Phone Number Field
-                      _buildLabel("Phone Number".tr),
+                      _buildLabel("Phone Number"),
                       SizedBox(height: 8.h),
                       TextFormField(
                         controller: _phoneController,
                         keyboardType: TextInputType.phone,
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(color: AppColor.c2E3227),
-                        decoration: _buildInputDecoration("+1 (555) 000-0000"),
+                        decoration: _buildInputDecoration("Enter phone number"),
                       ),
                       SizedBox(height: 20.h),
 
                       // WhatsApp Number Field
-                      _buildLabel("WhatsApp Number".tr),
+                      _buildLabel("WhatsApp Number"),
                       SizedBox(height: 8.h),
                       TextFormField(
                         controller: _whatsAppController,
                         keyboardType: TextInputType.phone,
                         style: TextFontStyle.textStyle14IbmPlexSansW400
                             .copyWith(color: AppColor.c2E3227),
-                        decoration: _buildInputDecoration("+1 (555) 000-0000"),
+                        decoration: _buildInputDecoration(
+                          "Enter whatsapp number",
+                        ),
                       ),
                       SizedBox(height: 20.h),
 
                       // Email Address Field
-                      _buildLabel("Email Address".tr),
+                      _buildLabel("Email Address"),
                       SizedBox(height: 8.h),
                       TextFormField(
                         controller: _emailController,
@@ -151,7 +154,8 @@ class _BusinessStep5ContactScreenState
                                   ),
                                   SizedBox(height: 4.h),
                                   Text(
-                                    "Allow users to send messages directly through the app.".tr,
+                                    "Allow users to send messages directly through the app."
+                                        .tr,
                                     style: TextStyle(
                                       color: const Color(0xFF6B7280),
                                       fontSize: 12.sp,
@@ -189,7 +193,8 @@ class _BusinessStep5ContactScreenState
                           : () {
                               if (_formKey.currentState!.validate()) {
                                 final phone = _phoneController.text.trim();
-                                final whatsapp = _whatsAppController.text.trim();
+                                final whatsapp = _whatsAppController.text
+                                    .trim();
                                 final email = _emailController.text.trim();
 
                                 if (phone.isEmpty &&
@@ -197,7 +202,8 @@ class _BusinessStep5ContactScreenState
                                     email.isEmpty &&
                                     !_enableInAppChat) {
                                   ToastUtil.showShortToast(
-                                    "Please configure at least one active contact channel.".tr,
+                                    "Please configure at least one active contact channel."
+                                        .tr,
                                   );
                                   return;
                                 }
@@ -210,18 +216,20 @@ class _BusinessStep5ContactScreenState
                                 createBusinessRxObj
                                     .createBusiness(model: widget.model)
                                     .then((res) {
-                                  ToastUtil.showShortToast(
-                                    res.message ?? "Listing drafted successfully".tr,
-                                  );
-                                  NavigationService.navigateTo(
-                                    Routes.businessStep6Review,
-                                    arguments: widget.model,
-                                  );
-                                }).catchError((e) {
-                                  ToastUtil.showShortToast(
-                                    "Failed to draft listing.".tr,
-                                  );
-                                });
+                                      ToastUtil.showShortToast(
+                                        res.message ??
+                                            "Listing drafted successfully".tr,
+                                      );
+                                      NavigationService.navigateTo(
+                                        Routes.businessStep6Review,
+                                        arguments: widget.model,
+                                      );
+                                    })
+                                    .catchError((e) {
+                                      ToastUtil.showShortToast(
+                                        "Failed to draft listing.".tr,
+                                      );
+                                    });
                               }
                             },
                     );

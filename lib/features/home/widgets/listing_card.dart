@@ -83,8 +83,12 @@ class _ListingCardState extends State<ListingCard> {
         : Icons.image;
 
     final int? postId = item is Map
-        ? (item['id'] is int ? item['id'] as int : int.tryParse(item['id']?.toString() ?? ''))
-        : (item.id is int ? item.id as int : int.tryParse(item.id?.toString() ?? ''));
+        ? (item['id'] is int
+              ? item['id'] as int
+              : int.tryParse(item['id']?.toString() ?? ''))
+        : (item.id is int
+              ? item.id as int
+              : int.tryParse(item.id?.toString() ?? ''));
 
     return GestureDetector(
       onTap: () {
@@ -140,9 +144,7 @@ class _ListingCardState extends State<ListingCard> {
                             placeholder: (context, url) => Shimmer.fromColors(
                               baseColor: Colors.grey[300]!,
                               highlightColor: Colors.grey[100]!,
-                              child: Container(
-                                color: Colors.white,
-                              ),
+                              child: Container(color: Colors.white),
                             ),
                             errorWidget: (context, url, error) => Center(
                               child: Icon(
@@ -180,7 +182,7 @@ class _ListingCardState extends State<ListingCard> {
                           Icon(Icons.star, color: Colors.white, size: 10.sp),
                           SizedBox(width: 3.w),
                           Text(
-                            'Featured',
+                            'Featured'.tr,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 10.sp,
@@ -206,10 +208,7 @@ class _ListingCardState extends State<ListingCard> {
                       ),
                       child: Text(
                         time,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 9.sp,
-                        ),
+                        style: TextStyle(color: Colors.white, fontSize: 9.sp),
                       ),
                     ),
                   ),
@@ -260,10 +259,7 @@ class _ListingCardState extends State<ListingCard> {
                 if (isBounded) Expanded(child: imageSection) else imageSection,
                 // Info
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 8.w,
-                    vertical: 8.h,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

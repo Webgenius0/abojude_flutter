@@ -57,7 +57,8 @@ class _JobStep1PhotosScreenState extends State<JobStep1PhotosScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Add a photo to your job posting. This photo will be the main thumbnail.".tr,
+                      "Add a photo to your job posting. This photo will be the main thumbnail."
+                          .tr,
                       style: TextFontStyle.textStyle14IbmPlexSansW400.copyWith(
                         color: const Color(0xFF6B7280),
                         height: 1.4,
